@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <TopNav />
+    <SideNav />
 
-    <router-view />
+    <router-view style="width: 100%" />
   </div>
 </template>
 
@@ -11,7 +11,7 @@ import { defineAsyncComponent } from 'vue';
 
 export default {
   components: {
-    TopNav: defineAsyncComponent(() => import('@/components/TopNav.vue')),
+    SideNav: defineAsyncComponent(() => import('@/components/SideNav.vue')),
   },
 };
 </script>
@@ -19,6 +19,7 @@ export default {
 <style lang="scss">
 :root {
   --black: #101010;
+  --highlight-color: #42b983;
 }
 
 * {
@@ -52,6 +53,8 @@ html {
 .container {
   width: 100%;
   margin: auto;
+  display: flex;
+
   @media (min-width: 640px) {
     max-width: 640px;
   }
