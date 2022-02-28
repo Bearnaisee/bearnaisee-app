@@ -49,5 +49,6 @@ h4,
 h5,
 h6 {
   font-family: 'Poppins', sans-serif;
+  margin-bottom: 0.5rem;
 }
 </style>

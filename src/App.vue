@@ -1,19 +1,11 @@
 <template>
   <div class="container">
-    <SideNav />
-
     <router-view style="width: 100%" />
   </div>
 </template>
 
 <script>
-import { defineAsyncComponent } from 'vue';
-
-export default {
-  components: {
-    SideNav: defineAsyncComponent(() => import('@/components/SideNav.vue')),
-  },
-};
+export default {};
 </script>
 
 <style lang="scss">
@@ -76,5 +68,10 @@ html {
   @media (min-width: 1536px) {
     max-width: 1536px;
   }
+}
+
+a,
+button {
+  cursor: pointer;
 }
 </style>
