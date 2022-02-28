@@ -18,8 +18,9 @@ export default {
 
 <style lang="scss">
 :root {
-  --black: #101010;
-  --highlight-color: #42b983;
+  --text-primary: #101010;
+  --highlight-color: #ff7d61;
+  --border-radius: 20px;
 }
 
 * {
@@ -29,7 +30,8 @@ export default {
   box-sizing: border-box;
   transition: 0.4s;
   line-height: 1.6;
-  color: var(--black);
+  color: var(--text-primary);
+
   &::before,
   &::after {
     margin: 0;
@@ -43,11 +45,11 @@ export default {
 body,
 html {
   scroll-behavior: smooth;
-  font-family: sans-serif;
+  font-family: 'Open Sans', sans-serif;
   height: 100%;
   padding-top: 0;
   width: 100%;
-  color: var(--black);
+  color: var(--text-primary);
 }
 
 .container {
