@@ -20,7 +20,7 @@
 
         </div>
       </div>
-      <Image />
+      <Image class="bg-img" />
     </div>
     <div class="recipe-wrapper">
       <div class="recipeinfo">
@@ -140,9 +140,18 @@
   .recipe-img {
     height: 35vh;
     width: auto;
-    background-color: red;
     margin-bottom: 0%;
+    z-index: 0;
+
+    .bg-img{
+    border-radius: 0px;
+    width: 100%;
+    margin-top: 0vh;
     z-index: -1;
+    position: absolute;
+    overflow: hidden;
+
+  }
   }
 
   .recipe-top-btn{
@@ -198,9 +207,10 @@
     background-color: rgb(255, 233, 191);
     border-radius: 50px 50px 0 0;
     z-index: 1;
-    margin-top: -20%;
+    margin-top: -25%;
     width: auto;
-    height: auto;
+    height: 55vh;
+    bottom: 0;
   }
 
   a {
