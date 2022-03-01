@@ -13,6 +13,7 @@ export default {};
   --text-primary: #101010;
   --highlight-color: #ff7d61;
   --border-radius: 20px;
+  --header-text: 'Poppins', sans-serif;
 }
 
 * {

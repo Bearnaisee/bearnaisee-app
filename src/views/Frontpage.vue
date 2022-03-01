@@ -16,7 +16,13 @@
       </router-link>
     </div>
 
-    <RecipeCard />
+    <RecipeCard
+      v-for="(recipe, recipeIndex) of recipes"
+      :key="recipeIndex"
+      :title="recipe.title"
+      :time="recipe.time"
+      :tags="recipe.tags"
+    />
   </div>
 </template>
 
@@ -35,6 +41,7 @@ export default {
   data() {
     return {
       categories: ['meat', 'fish', 'poultry', 'vegetarian', 'pasta', 'soup', 'baking', 'dessert'],
+      recipes: [{ title: 'Bolo', time: 25, tags: ['Italian', 'Meat', 'Pasta'] }],
     };
   },
 };
