@@ -40,8 +40,11 @@ jobs:
       - name: Run format 💎
         run: npm run format
 
-      - name: Run lint 👀
-        run: npm run lint
+      - name: Run lint:code 👀
+        run: npm run lint:code
+
+      - name: Run lint:style
+        run: npm run lint:style
 
       - uses: EndBug/add-and-commit@v7
         with:
