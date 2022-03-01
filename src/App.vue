@@ -39,7 +39,7 @@ html {
   scroll-behavior: smooth;
   font-family: 'Open Sans', sans-serif;
   height: 100%;
-  padding-top: 0;
+  padding: 0.5rem;
   width: 100%;
   color: var(--text-primary);
 }
