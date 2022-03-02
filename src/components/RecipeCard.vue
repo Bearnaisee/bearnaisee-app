@@ -7,6 +7,10 @@
     <Title :text="title" size="h2" />
   </router-link>
 
+  <router-link :to="`/${author}`">
+    <Title :text="`by ${author}`" size="h5" style="color: #7e7e7e; margin-bottom: 5px" />
+  </router-link>
+
   <div>
     <div class="rc-icon">
       <Icon icon="time" color="#D53F29" width="18" height="18" />
@@ -27,6 +31,7 @@
 <script>
 import { defineAsyncComponent } from 'vue';
 import Icon from '@/components/Icon.vue';
+import Title from './Title.vue';
 
 export default {
   name: 'RecipeCard',
@@ -56,6 +61,8 @@ export default {
     Title: defineAsyncComponent(() => import('@/components/Title.vue')),
     Icon,
   },
+
+  Title,
 };
 </script>
 
