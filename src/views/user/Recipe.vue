@@ -193,6 +193,10 @@
       color: #7E7E7E;
     }
 
+    h3{
+      margin-top: 2rem;
+    }
+
     .recipe-wrapper {
       background-color: #FDFDFD;
       border-radius: 50px 50px 0 0;
@@ -224,7 +228,7 @@
   .container-ingre{
     display: inline-grid;
     grid-template-columns: 2fr 5fr;
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-rows: repeat(1, 1fr);
 
   }
 
