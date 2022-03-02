@@ -1,113 +1,141 @@
 <template>
-  <div class="carousel">
-    <div class="inner">
-      <div class="card" v-for="card in cards" :key="card">
-        {{ card }}
-      </div>
-    </div>
+  <div class="slider">
+    <Image v-for="(card, cardIndex) of cardsData" :key="cardIndex" :url="card.img" />
+    {{ cardsData[0].title }}
   </div>
-  <button @click="prev">prev</button>
-  <button @click="next">next</button>
 </template>
 
 <script>
+import Image from '@/components/Image.vue';
+
 export default {
-  data () {
+  name: 'RecipeSlider',
+
+  components: {
+    Image,
+  },
+
+  data() {
     return {
-      cards: [1, 2, 3, 4, 5, 6, 7, 8],
-      innerStyles: {},
-      step: '',
-      transitioning: false
-    }
+      cardsData: [
+        {
+          img: 'https://placeimg.com/100/140/animals',
+          title: 'Bolo',
+          description: 'Nem og hurtig bolo',
+          rating: 9.5,
+          stars: 4,
+        },
+        {
+          img: 'https://placeimg.com/100/140/arch',
+          title: 'Carbonara',
+          description: 'Min specielle Carbo',
+          rating: 8.4,
+          stars: 5,
+        },
+        {
+          img: 'https://placeimg.com/100/140/people',
+          title: 'Lasagne',
+          description: 'Alt hvad du skal bruge',
+          rating: 7.234,
+          stars: 2,
+        },
+        {
+          img: 'https://placeimg.com/100/140/people',
+          title: 'Lasagne',
+          description: 'Alt hvad du skal bruge',
+          rating: 7.234,
+          stars: 2,
+        },
+        {
+          img: 'https://placeimg.com/100/140/people',
+          title: 'Lasagne',
+          description: 'Alt hvad du skal bruge',
+          rating: 7.234,
+          stars: 2,
+        },
+        {
+          img: 'https://placeimg.com/100/140/people',
+          title: 'Lasagne',
+          description: 'Alt hvad du skal bruge',
+          rating: 7.234,
+          stars: 2,
+        },
+        {
+          img: 'https://placeimg.com/100/140/people',
+          title: 'Lasagne',
+          description: 'Alt hvad du skal bruge',
+          rating: 7.234,
+          stars: 2,
+        },
+        {
+          img: 'https://placeimg.com/100/140/people',
+          title: 'Lasagne',
+          description: 'Alt hvad du skal bruge',
+          rating: 7.234,
+          stars: 2,
+        },
+        {
+          img: 'https://placeimg.com/100/140/people',
+          title: 'Lasagne',
+          description: 'Alt hvad du skal bruge',
+          rating: 7.234,
+          stars: 2,
+        },
+        {
+          img: 'https://placeimg.com/100/140/people',
+          title: 'Lasagne',
+          description: 'Alt hvad du skal bruge',
+          rating: 7.234,
+          stars: 2,
+        },
+        {
+          img: 'https://placeimg.com/100/140/people',
+          title: 'Lasagne',
+          description: 'Alt hvad du skal bruge',
+          rating: 7.234,
+          stars: 2,
+        },
+        {
+          img: 'https://placeimg.com/100/140/people',
+          title: 'Lasagne',
+          description: 'Alt hvad du skal bruge',
+          rating: 7.234,
+          stars: 2,
+        },
+        // copy and paste those three items as many times as you want
+      ],
+    };
   },
-  mounted () {
-    this.setStep()
-    this.resetTranslate()
-  },
-  methods: {
-    setStep () {
-      const innerWidth = this.$refs.inner.scrollWidth
-      const totalCards = this.cards.length
-      this.step = `${innerWidth / totalCards}px`
-    },
-    next () {
-      if (this.transitioning) return
-      this.transitioning = true
-      this.moveLeft()
-      this.afterTransition(() => {
-        const card = this.cards.shift()
-        this.cards.push(card)
-        this.resetTranslate()
-        this.transitioning = false
-      })
-    },
-    prev () {
-      if (this.transitioning) return
-      this.transitioning = true
-      this.moveRight()
-      this.afterTransition(() => {
-        const card = this.cards.pop()
-        this.cards.unshift(card)
-        this.resetTranslate()
-        this.transitioning = false
-      })
-    },
-    moveLeft () {
-      this.innerStyles = {
-        transform: `translateX(-${this.step})
-                    translateX(-${this.step})`
-      }
-    },
-    moveRight () {
-      this.innerStyles = {
-        transform: `translateX(${this.step})
-                    translateX(-${this.step})`
-      }
-    },
-    afterTransition (callback) {
-      const listener = () => {
-        callback()
-        this.$refs.inner.removeEventListener('transitionend', listener)
-      }
-      this.$refs.inner.addEventListener('transitionend', listener)
-    },
-    resetTranslate () {
-      this.innerStyles = {
-        transition: 'none',
-        transform: `translateX(-${this.step})`
-      }
-    }
-  }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-.carousel {
-  width: full-width; /* ❶ */
-  overflow: hidden; /* ❷ */
+.slider {
+  width: 100%;
+  display: flex;
+  overflow: scroll;
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
 }
-
-.inner {
-  white-space: nowrap; /* ❸ */
-}
-
-.card {
-  width: 300px;
-  margin-right: 10px;
-  display: inline-flex;
-
-  /* optional */
-  height: 150px;
-  background-color: #39b1bd;
-  color: white;
-  border-radius: var(--border-radius);
-  align-items: center;
-  justify-content: center;
-}
-
-/* optional */
-button {
-  margin-right: 5px;
-  margin-top: 10px;
+Image {
+  width: 50%;
 }
 </style>
