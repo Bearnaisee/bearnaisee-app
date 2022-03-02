@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="recipe-img">
+  <div class="recipe">
+    <div class="recipe-img" :style="image">
       <div class="recipe-top-btn">
         <div class="recipe-back">
           <svg width="22" height="16" viewBox="0 0 22 16" fill="none"
@@ -20,7 +20,7 @@
 
         </div>
       </div>
-      <Image class="bg-img" />
+      <!-- <Image class="bg-img" /> -->
     </div>
     <div class="recipe-wrapper">
       <div class="recipeinfo">
@@ -71,29 +71,30 @@
         </div>
         <div>
           <h3>Ingredients</h3>
+          <div class="container-ingre">
+            <div class="recipe-grid"><b>100g</b></div>
+            <div class="recipe-grid">beef mince (optional)</div>
+          </div>
         </div>
         <div>
           <h3>Steps</h3>
-          <a @click="toggleHideSteps">
-            <div v-if="hideStep">
+          <a href="#">
+            <div>
               <h4>Step 1</h4>
               <p>uno uno uno uno uno uno uno</p>
             </div>
-            <div v-else>Step 1</div>
           </a>
-          <a @click="toggleHideSteps">
-            <div v-if="hideStep">
+          <a href="#">
+            <div>
               <h4>Step 2</h4>
               <p>dos dos dos dos dos dos</p>
             </div>
-            <div v-else>Step 2</div>
           </a>
-          <a @click="toggleHideSteps">
+          <a href="#">
             <div>
               <h4>Step 3</h4>
               <p>tres tres tres tres tres</p>
             </div>
-            <div>Step 3</div>
           </a>
         </div>
       </div>
@@ -104,16 +105,13 @@
 </template>
 
 <script>
-  import {
-    defineAsyncComponent
-  } from 'vue';
 
   export default {
     name: 'Recipe',
     data() {
       return {
         showMore: false,
-        hideStep: true
+        image: { backgroundImage: "url('https://picsum.photos/1000/1000')" }
       }
     },
     props: {
@@ -121,9 +119,6 @@
         type: String,
         default: '#D53F29',
       }
-    },
-    components: {
-      Image: defineAsyncComponent(() => import('@/components/Image.vue')),
     },
     methods: {
       toggleShowMore() {
@@ -136,99 +131,103 @@
 </script>
 
 <style lang="scss" scoped>
-  
-  .recipe-img {
-    height: 35vh;
-    width: auto;
-    margin-bottom: 0%;
-    z-index: 0;
+  .recipe{
+    overflow: scroll;
 
-    .bg-img{
-    border-radius: 0px;
-    width: 100%;
-    margin-top: 0vh;
-    z-index: -1;
-    position: absolute;
-    overflow: hidden;
-
-  }
-  }
-
-  .recipe-top-btn{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-  .recipe-back {
-    height: 50px;
-    width: 50px;
-    background-color: #E8E8E8;
-    border-radius: 50%;
-    display: flex;
-
-    svg {
-      display: block;
-      justify-content: center;
-      margin: auto;
+    .recipe-img {
+      height: 35vh;
+      width: auto;
+      margin-bottom: 0%;
+      z-index: 0;
+      object-fit: cover;
     }
-  }
 
-  .recipe-like {
-    height: 50px;
-    width: 50px;
-    background-color: #E8E8E8;
-    border-radius: 50%;
-    display: flex;
+    .recipe-top-btn{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      padding: 2vh 3vw;
+      } 
 
-    svg {
-      display: block;
-      justify-content: center;
-      margin: auto;
+    .recipe-back {
+      height: 50px;
+      width: 50px;
+      background-color: #E8E8E8;
+      border-radius: 50%;
+      display: flex;
+
+      svg {
+        display: block;
+        justify-content: center;
+        margin: auto;
+      }
     }
-  }
-.recipeinfo {
-    margin: 10%;
-  }
-  h1 {
-    font-family: var(--header-text);
+
+    .recipe-like {
+      height: 50px;
+      width: 50px;
+      background-color: #E8E8E8;
+      border-radius: 50%;
+      display: flex;
+
+      svg {
+        display: block;
+        justify-content: center;
+        margin: auto;
+      }
+    }
+  .recipeinfo {
+      margin: 10%;
+    }
+    h1 {
+      font-family: var(--header-text);
+    }
+
+    
+
+    h2 {
+      font-style: normal;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 21px;
+      color: #7E7E7E;
+    }
+
+    .recipe-wrapper {
+      background-color: #FDFDFD;
+      border-radius: 50px 50px 0 0;
+      z-index: 1;
+      margin-top: -25%;
+      width: auto;
+      height: auto;
+      bottom: 0;
+    }
+
+    a {
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .rc-wrapper {
+      display: grid;
+      grid-template-columns: 30px 150px;
+      grid-template-rows: repeat(2, 0fr);
+    }
+
+    .rc-icon {
+      margin: 0px auto;
+      text-align: center;
+      margin-top: 1.5px;
+    }
+
+  .container-ingre{
+    display: inline-grid;
+    grid-template-columns: 2fr 5fr;
+    grid-template-rows: repeat(2, 1fr);
+
   }
 
-  
 
-  h2 {
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 21px;
-    color: #7E7E7E;
   }
-
-  .recipe-wrapper {
-    background-color: rgb(255, 233, 191);
-    border-radius: 50px 50px 0 0;
-    z-index: 1;
-    margin-top: -25%;
-    width: auto;
-    height: 55vh;
-    bottom: 0;
-  }
-
-  a {
-    font-weight: bold;
-    cursor: pointer;
-    text-decoration: none;
-  }
-
-  .rc-wrapper {
-    display: grid;
-    grid-template-columns: 30px 150px;
-    grid-template-rows: repeat(2, 0fr);
-  }
-
-  .rc-icon {
-    margin: 0px auto;
-    text-align: center;
-    margin-top: 1.5px;
-  }
-
 </style>
