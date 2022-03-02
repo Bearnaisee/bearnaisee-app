@@ -22,6 +22,8 @@
       :title="recipe.title"
       :time="recipe.time"
       :tags="recipe.tags"
+      :slug="recipe.slug"
+      :author="recipe.author"
     />
   </div>
 </template>
@@ -41,7 +43,15 @@ export default {
   data() {
     return {
       categories: ['meat', 'fish', 'poultry', 'vegetarian', 'pasta', 'soup', 'baking', 'dessert'],
-      recipes: [{ title: 'Bolo', time: 25, tags: ['Italian', 'Meat', 'Pasta'] }],
+      recipes: [
+        {
+          title: 'Bolo',
+          time: 25,
+          tags: ['Italian', 'Meat', 'Pasta'],
+          author: 'fili',
+          slug: 'bolo-boys',
+        },
+      ],
     };
   },
 };
