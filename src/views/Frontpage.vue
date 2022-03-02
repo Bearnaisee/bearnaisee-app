@@ -26,6 +26,12 @@
       :author="recipe.author"
     />
   </div>
+
+  <div id="app">
+    <button type="button" class="btn" @click="showModal">Open Modal!</button>
+
+    <Modal v-show="isModalVisible" @close="closeModal" />
+  </div>
 </template>
 
 <script>
@@ -38,10 +44,12 @@ export default {
     Icon: defineAsyncComponent(() => import('@/components/Icon.vue')),
     RecipeCard: defineAsyncComponent(() => import('@/components/RecipeCard.vue')),
     Title: defineAsyncComponent(() => import('@/components/Title.vue')),
+    Modal: defineAsyncComponent(() => import('@/components/Modal.vue')),
   },
 
   data() {
     return {
+      isModalVisible: false,
       categories: ['meat', 'fish', 'poultry', 'vegetarian', 'pasta', 'soup', 'baking', 'dessert'],
       recipes: [
         {
@@ -53,6 +61,15 @@ export default {
         },
       ],
     };
+  },
+
+  methods: {
+    showModal() {
+      this.isModalVisible = true;
+    },
+    closeModal() {
+      this.isModalVisible = false;
+    },
   },
 };
 </script>
