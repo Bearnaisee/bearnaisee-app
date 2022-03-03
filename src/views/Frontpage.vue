@@ -1,27 +1,37 @@
 <template>
   <div>
-    <Title text="Bearnaise" size="h1" />
     <Title text="Top categories" size="h2" />
 
-    <div class="CategoryWrapper">
+    <div class="categories">
       <router-link
         v-for="(category, categoryIndex) of categories"
         :key="categoryIndex"
         :to="`/category/${category}`"
-        style="margin: 0 auto; text-align: center"
+        class="categories__link"
       >
-        <Icon class="CategoryWrapper__icon" :icon="category" />
-        <p class="CategoryWrapper__p">{{ category }}</p>
+        <Icon class="categories__icon" :icon="category" width="30" height="30" />
+
+        <p>{{ category }}</p>
       </router-link>
     </div>
 
     <Title text="Trending" size="h2" />
 
-    <RecipeSlider />
+    <RecipeSlider style="padding: 1rem 0" :recipes="recipes" />
 
-    <Title text="Recent" size="h2" />
+    <div class="recipes">
+      <Title text="Recent" size="h2" class="recipe__card" />
 
-    <RecipeCard />
+      <RecipeCard
+        v-for="(recipe, recipeIndex) of recipes"
+        :key="recipeIndex"
+        :title="recipe.title"
+        :time="recipe.time"
+        :tags="recipe.tags"
+        :slug="recipe.slug"
+        :author="recipe.author"
+      />
+    </div>
   </div>
 </template>
 
@@ -49,6 +59,20 @@ export default {
           author: 'fili',
           slug: 'bolo-boys',
         },
+        {
+          title: 'Lasagne',
+          time: 25,
+          tags: ['Italian', 'Meat', 'Pasta'],
+          author: 'lil mart',
+          slug: 'lasagne',
+        },
+        {
+          title: 'dunser',
+          time: 25,
+          tags: ['dansk'],
+          author: 'børge',
+          slug: 'dunser',
+        },
       ],
     };
   },
@@ -56,16 +80,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.CategoryWrapper {
+.categories {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
+  margin: 1rem 0;
+  .categories__link {
+    margin: 0 auto;
+    text-align: center;
+
+    p {
+      text-transform: capitalize;
+    }
+  }
 }
-.CategoryWrapper__icon {
-  width: 30px;
-  height: 30px;
-}
-.CategoryWrapper__p {
-  text-transform: capitalize;
+
+.recipes {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 </style>

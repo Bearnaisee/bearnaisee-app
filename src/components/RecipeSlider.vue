@@ -1,9 +1,10 @@
 <template>
   <div class="slider">
-    <div v-for="(card, cardIndex) of cardsData" :key="cardIndex">
-      <Image :url="card.img" class="slider__image" />
-      <div class="slider__card-title">{{ card.title }}</div>
-    </div>
+    <router-link :to="`/${author}/${slug}`" v-for="(card, cardIndex) of recipes" :key="cardIndex">
+      <Image :url="card.img" class="slider__image" style="width: 80vw" />
+
+      <p class="slider__card-title">{{ card.title }}</p>
+    </router-link>
   </div>
 </template>
 
@@ -17,96 +18,11 @@ export default {
     Image,
   },
 
-  data() {
-    return {
-      cardsData: [
-        {
-          img: 'https://placeimg.com/100/140/animals',
-          title: 'Bolo',
-          description: 'Nem og hurtig bolo',
-          rating: 9.5,
-          stars: 4,
-        },
-        {
-          img: 'https://placeimg.com/100/140/arch',
-          title: 'Carbonara',
-          description: 'Min specielle Carbo',
-          rating: 8.4,
-          stars: 5,
-        },
-        {
-          img: 'https://placeimg.com/100/140/people',
-          title: 'Lasagne',
-          description: 'Alt hvad du skal bruge',
-          rating: 7.234,
-          stars: 2,
-        },
-        {
-          img: 'https://placeimg.com/100/140/people',
-          title: 'Lasagne',
-          description: 'Alt hvad du skal bruge',
-          rating: 7.234,
-          stars: 2,
-        },
-        {
-          img: 'https://placeimg.com/100/140/people',
-          title: 'Lasagne',
-          description: 'Alt hvad du skal bruge',
-          rating: 7.234,
-          stars: 2,
-        },
-        {
-          img: 'https://placeimg.com/100/140/people',
-          title: 'Lasagne',
-          description: 'Alt hvad du skal bruge',
-          rating: 7.234,
-          stars: 2,
-        },
-        {
-          img: 'https://placeimg.com/100/140/people',
-          title: 'Lasagne',
-          description: 'Alt hvad du skal bruge',
-          rating: 7.234,
-          stars: 2,
-        },
-        {
-          img: 'https://placeimg.com/100/140/people',
-          title: 'Lasagne',
-          description: 'Alt hvad du skal bruge',
-          rating: 7.234,
-          stars: 2,
-        },
-        {
-          img: 'https://placeimg.com/100/140/people',
-          title: 'Lasagne',
-          description: 'Alt hvad du skal bruge',
-          rating: 7.234,
-          stars: 2,
-        },
-        {
-          img: 'https://placeimg.com/100/140/people',
-          title: 'Lasagne',
-          description: 'Alt hvad du skal bruge',
-          rating: 7.234,
-          stars: 2,
-        },
-        {
-          img: 'https://placeimg.com/100/140/people',
-          title: 'Lasagne',
-          description: 'Alt hvad du skal bruge',
-          rating: 7.234,
-          stars: 2,
-        },
-        {
-          img: 'https://placeimg.com/100/140/people',
-          title: 'Lasagne',
-          description: 'Alt hvad du skal bruge',
-          rating: 7.234,
-          stars: 2,
-        },
-        // copy and paste those three items as many times as you want
-      ],
-    };
+  props: {
+    recipes: {
+      type: Array,
+      required: true,
+    },
   },
 };
 </script>
@@ -142,10 +58,6 @@ export default {
   .slider__image {
     min-width: 200px;
     width: 100%;
-  }
-
-  .slider__card-title {
-    text-align: center;
   }
 }
 </style>
