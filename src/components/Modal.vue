@@ -36,14 +36,14 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 30%);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .modal {
-  background: #ffffff;
+  background: #fff;
   box-shadow: 2px 2px 20px 1px;
   overflow-x: auto;
   display: flex;
@@ -58,13 +58,13 @@ export default {
 
 .modal-header {
   position: relative;
-  border-bottom: 1px solid #eeeeee;
+  border-bottom: 1px solid #eee;
   color: #4aae9b;
   justify-content: space-between;
 }
 
 .modal-footer {
-  border-top: 1px solid #eeeeee;
+  border-top: 1px solid #eee;
   flex-direction: column;
   justify-content: flex-end;
 }
