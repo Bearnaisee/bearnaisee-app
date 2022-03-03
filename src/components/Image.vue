@@ -18,7 +18,7 @@ export default {
 img {
   border-radius: var(--border-radius);
   height: auto;
-  max-width: 100%;
+  width: 100%;
   aspect-ratio: 2/1;
   object-fit: cover;
 }

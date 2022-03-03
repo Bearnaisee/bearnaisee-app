@@ -40,7 +40,7 @@ html {
   scroll-behavior: smooth;
   font-family: 'Open Sans', sans-serif;
   height: 100%;
-  padding-top: 0;
+  padding: 0.5rem;
   width: 100%;
   color: var(--text-primary);
 }
@@ -48,7 +48,6 @@ html {
 .container {
   width: 100%;
   margin: auto;
-  display: flex;
 
   @media (min-width: 640px) {
     max-width: 640px;
