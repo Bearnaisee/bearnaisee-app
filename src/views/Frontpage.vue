@@ -1,7 +1,7 @@
 <template>
-   <TopNav />
-    <div style="padding: 0 1rem">
-     <Title text="Top categories" size="h2" />
+  <div style="padding: 0 1rem">
+    <TopNav />
+    <Title text="Top categories" size="h2" />
 
     <div class="categories">
       <router-link
@@ -54,7 +54,7 @@ export default {
     Title: defineAsyncComponent(() => import('@/components/Title.vue')),
     Modal: defineAsyncComponent(() => import('@/components/Modal.vue')),
     TopNav: defineAsyncComponent(() => import('@/components/TopNav.vue')),
-     RecipeSlider: defineAsyncComponent(() => import('@/components/RecipeSlider.vue')),
+    RecipeSlider: defineAsyncComponent(() => import('@/components/RecipeSlider.vue')),
   },
 
   data() {
