@@ -5,8 +5,8 @@
         <Title text="Bearnaisee" size="h1" />
       </div>
       <div class="buttons">
-        <Button type="secondary" label="Signup" />
-        <Button type="primary" label="Login" />
+        <Button kind="secondary" label="Signup" />
+        <Button kind="primary" label="Login" />
       </div>
     </div>
     <div class="search-wrapper">
@@ -29,10 +29,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.topnav-container {
-  display: flex;
-}
-
 .buttons {
   margin-left: auto;
   gap: 0.5rem;
@@ -41,10 +37,16 @@ export default {
 }
 input {
   border: 1px solid #7e7e7e;
-  width: 100vw;
+  width: 100%;
   height: 2rem;
+  border-radius: 4px;
+  margin: 10px 0px;
 }
 .top {
   margin-bottom: 1rem;
+
+  .topnav-container {
+    display: flex;
+  }
 }
 </style>

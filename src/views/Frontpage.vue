@@ -1,6 +1,7 @@
 <template>
-  <TopNav />
   <div style="padding: 0 1rem">
+    <TopNav />
+
     <Title text="Top categories" size="h2" />
 
     <div class="categories">
