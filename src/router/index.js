@@ -11,6 +11,11 @@ const routes = [
     name: 'Dashboard',
     component: () => import(/* webpackChunkName: "[request]" */ '../views/Dashboard.vue'),
   },
+  {
+    path: '/tos',
+    name: 'Tos',
+    component: () => import(/* webpackChunkName: "[request]" */ '../components/TermsOfService.vue'),
+  },
 
   {
     path: '/:username',

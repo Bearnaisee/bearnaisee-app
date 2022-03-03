@@ -1,31 +1,38 @@
 <template>
-  <TopNav />
-  <div>
-    <Title text="Top categories" size="h2" />
-    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem">
+   <TopNav />
+    <div style="padding: 0 1rem">
+     <Title text="Top categories" size="h2" />
+
+    <div class="categories">
       <router-link
         v-for="(category, categoryIndex) of categories"
         :key="categoryIndex"
         :to="`/category/${category}`"
-        style="margin: 0 auto; text-align: center"
+        class="categories__link"
       >
-        <Icon :icon="category" width="30px" height="30px" />
+        <Icon class="categories__icon" :icon="category" width="30" height="30" />
 
-        <p style="text-transform: capitalize">
-          {{ category }}
-        </p>
+        <p>{{ category }}</p>
       </router-link>
     </div>
 
-    <RecipeCard
-      v-for="(recipe, recipeIndex) of recipes"
-      :key="recipeIndex"
-      :title="recipe.title"
-      :time="recipe.time"
-      :tags="recipe.tags"
-      :slug="recipe.slug"
-      :author="recipe.author"
-    />
+    <Title text="Trending" size="h2" />
+
+    <RecipeSlider style="padding: 1rem 0" :recipes="recipes" />
+
+    <div class="recipes">
+      <Title text="Recent" size="h2" class="recipe__card" />
+
+      <RecipeCard
+        v-for="(recipe, recipeIndex) of recipes"
+        :key="recipeIndex"
+        :title="recipe.title"
+        :time="recipe.time"
+        :tags="recipe.tags"
+        :slug="recipe.slug"
+        :author="recipe.author"
+      />
+    </div>
   </div>
 
   <div id="app">
@@ -47,6 +54,7 @@ export default {
     Title: defineAsyncComponent(() => import('@/components/Title.vue')),
     Modal: defineAsyncComponent(() => import('@/components/Modal.vue')),
     TopNav: defineAsyncComponent(() => import('@/components/TopNav.vue')),
+     RecipeSlider: defineAsyncComponent(() => import('@/components/RecipeSlider.vue')),
   },
 
   data() {
@@ -60,6 +68,20 @@ export default {
           tags: ['Italian', 'Meat', 'Pasta'],
           author: 'fili',
           slug: 'bolo-boys',
+        },
+        {
+          title: 'Lasagne',
+          time: 25,
+          tags: ['Italian', 'Meat', 'Pasta'],
+          author: 'lil mart',
+          slug: 'lasagne',
+        },
+        {
+          title: 'dunser',
+          time: 25,
+          tags: ['dansk'],
+          author: 'børge',
+          slug: 'dunser',
         },
       ],
     };
@@ -76,4 +98,25 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.categories {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin: 1rem 0;
+  .categories__link {
+    margin: 0 auto;
+    text-align: center;
+
+    p {
+      text-transform: capitalize;
+    }
+  }
+}
+
+.recipes {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+</style>
