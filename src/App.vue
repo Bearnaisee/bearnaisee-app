@@ -1,4 +1,6 @@
 <template>
+  <div></div>
+
   <div class="container">
     <router-view style="width: 100%" />
   </div>
@@ -48,7 +50,6 @@ html {
 .container {
   width: 100%;
   margin: auto;
-  display: flex;
 
   @media (min-width: 640px) {
     max-width: 640px;

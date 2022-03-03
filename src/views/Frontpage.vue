@@ -1,4 +1,5 @@
 <template>
+  <TopNav />
   <div>
     <Title text="Top categories" size="h2" />
     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem">
@@ -45,6 +46,7 @@ export default {
     RecipeCard: defineAsyncComponent(() => import('@/components/RecipeCard.vue')),
     Title: defineAsyncComponent(() => import('@/components/Title.vue')),
     Modal: defineAsyncComponent(() => import('@/components/Modal.vue')),
+    TopNav: defineAsyncComponent(() => import('@/components/TopNav.vue')),
   },
 
   data() {
