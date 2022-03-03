@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding: 0 1rem">
     <Title text="Top categories" size="h2" />
 
     <div class="categories">

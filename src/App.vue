@@ -40,7 +40,7 @@ html {
   scroll-behavior: smooth;
   font-family: 'Open Sans', sans-serif;
   height: 100%;
-  padding: 0.5rem;
+  padding-top: 0;
   width: 100%;
   color: var(--text-primary);
 }

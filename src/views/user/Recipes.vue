@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Recipes</h1>
-    <img src="" alt="">
+    <img src="" alt="" />
   </div>
 </template>
 
