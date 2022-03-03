@@ -1,6 +1,7 @@
 <template>
-  <div style="padding: 0 1rem">
-    <Title text="Top categories" size="h2" />
+   <TopNav />
+    <div style="padding: 0 1rem">
+     <Title text="Top categories" size="h2" />
 
     <div class="categories">
       <router-link
@@ -33,6 +34,12 @@
       />
     </div>
   </div>
+
+  <div id="app">
+    <button type="button" class="btn" @click="showModal">Open Modal!</button>
+
+    <Modal v-show="isModalVisible" @close="closeModal" />
+  </div>
 </template>
 
 <script>
@@ -45,11 +52,14 @@ export default {
     Icon: defineAsyncComponent(() => import('@/components/Icon.vue')),
     RecipeCard: defineAsyncComponent(() => import('@/components/RecipeCard.vue')),
     Title: defineAsyncComponent(() => import('@/components/Title.vue')),
-    RecipeSlider: defineAsyncComponent(() => import('@/components/RecipeSlider.vue')),
+    Modal: defineAsyncComponent(() => import('@/components/Modal.vue')),
+    TopNav: defineAsyncComponent(() => import('@/components/TopNav.vue')),
+     RecipeSlider: defineAsyncComponent(() => import('@/components/RecipeSlider.vue')),
   },
 
   data() {
     return {
+      isModalVisible: false,
       categories: ['meat', 'fish', 'poultry', 'vegetarian', 'pasta', 'soup', 'baking', 'dessert'],
       recipes: [
         {
@@ -75,6 +85,15 @@ export default {
         },
       ],
     };
+  },
+
+  methods: {
+    showModal() {
+      this.isModalVisible = true;
+    },
+    closeModal() {
+      this.isModalVisible = false;
+    },
   },
 };
 </script>

@@ -1,4 +1,6 @@
 <template>
+  <div></div>
+
   <div class="container">
     <router-view style="width: 100%" />
   </div>

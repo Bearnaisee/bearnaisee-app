@@ -16,7 +16,7 @@ export default {
 
     type: {
       type: String,
-      default: 'primaasdasdry',
+      default: 'primary',
     },
   },
 };
@@ -30,7 +30,7 @@ export default {
   border: 2px solid var(--text-primary);
   font-weight: 700;
   font-size: 0.875rem;
-  border-radius: var(--border-radius);
+  border-radius: 4px;
   cursor: pointer;
 
   &--primary {
