@@ -1,7 +1,9 @@
 <template>
   <div class="slider">
-    <Image v-for="(card, cardIndex) of cardsData" :key="cardIndex" :url="card.img" />
-    {{ cardsData[0].title }}
+    <div v-for="(card, cardIndex) of cardsData" :key="cardIndex">
+      <Image :url="card.img" class="slider__image" />
+      <div class="slider__card-title">{{ card.title }}</div>
+    </div>
   </div>
 </template>
 
@@ -113,7 +115,9 @@ export default {
 .slider {
   width: 100%;
   display: flex;
-  overflow: scroll;
+  overflow-x: scroll;
+  gap: 1rem;
+  height: auto;
 
   /* width */
   ::-webkit-scrollbar {
@@ -134,8 +138,14 @@ export default {
   ::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
-}
-Image {
-  width: 50%;
+
+  .slider__image {
+    min-width: 200px;
+    width: 100%;
+  }
+
+  .slider__card-title {
+    text-align: center;
+  }
 }
 </style>
