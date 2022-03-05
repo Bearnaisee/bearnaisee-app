@@ -14,13 +14,13 @@
 
     <div>
       <div class="rc-icon">
-        <Icon icon="time" color="#D53F29" width="12" height="auto" />
+        <Icon icon="time" color="#D53F29" width="12" height="12" />
 
         <p style="font-size: 0.675rem">{{ time }} minutes</p>
       </div>
 
       <div class="rc-icon">
-        <Icon icon="tag" color="#D53F29" width="12" height="auto" />
+        <Icon icon="tag" color="#D53F29" width="12" height="12" />
 
         <div>
           <router-link v-for="(tag, tagIndex) of tags" :key="tagIndex" :to="`#${tag}`">
@@ -59,6 +59,7 @@ export default {
     },
     time: {
       type: Number,
+      default: null,
     },
     tags: {
       type: Array,
