@@ -2,10 +2,10 @@
   <div>
     <form @submit="login">
       <p>Email</p>
-      <input type="email" v-model="email" />
+      <input v-model="email" type="email" />
 
       <p>Password</p>
-      <input type="password" v-model="password" />
+      <input v-model="password" type="password" />
 
       <button type="submit">Login</button>
     </form>
