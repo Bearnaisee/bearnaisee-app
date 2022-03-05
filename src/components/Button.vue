@@ -1,5 +1,5 @@
 <template>
-  <button class="button" :class="`button--${kind}`" :type="type">
+  <button class="button" :class="`button--${kind}`" :type="type" @click="detectClick">
     {{ label }}
   </button>
 </template>
@@ -20,6 +20,14 @@ export default {
     kind: {
       type: String,
       default: 'primary',
+    },
+  },
+
+  emits: ['clicked'],
+
+  methods: {
+    detectClick() {
+      this.$emit('clicked');
     },
   },
 };
