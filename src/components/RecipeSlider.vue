@@ -1,6 +1,6 @@
 <template>
   <div class="slider">
-    <router-link :to="`/${author}/${slug}`" v-for="(card, cardIndex) of recipes" :key="cardIndex">
+    <router-link :to="`/${card.author}/${card.slug}`" v-for="(card, cardIndex) of recipes" :key="cardIndex">
       <Image :url="card.img" class="slider__image" style="width: 80vw" />
 
       <p class="slider__card-title">{{ card.title }}</p>
