@@ -1,5 +1,5 @@
 <template>
-  <button class="button" :class="`button--${type}`">
+  <button class="button" :class="`button--${kind}`" :type="type">
     {{ label }}
   </button>
 </template>
@@ -13,8 +13,11 @@ export default {
       type: String,
       required: true,
     },
-
     type: {
+      type: String,
+      default: 'button',
+    },
+    kind: {
       type: String,
       default: 'primary',
     },
