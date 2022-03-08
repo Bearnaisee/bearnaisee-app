@@ -1,6 +1,7 @@
 <template>
   <div style="padding: 0 1rem">
     <TopNav />
+
     <Title text="Top categories" size="h2" />
 
     <div class="categories">
@@ -31,14 +32,9 @@
         :tags="recipe.tags"
         :slug="recipe.slug"
         :author="recipe.author"
+        :image="recipe.image"
       />
     </div>
-  </div>
-
-  <div id="app">
-    <button type="button" class="btn" @click="showModal">Open Modal!</button>
-
-    <Modal v-show="isModalVisible" @close="closeModal" />
   </div>
 </template>
 
@@ -52,14 +48,12 @@ export default {
     Icon: defineAsyncComponent(() => import('@/components/Icon.vue')),
     RecipeCard: defineAsyncComponent(() => import('@/components/RecipeCard.vue')),
     Title: defineAsyncComponent(() => import('@/components/Title.vue')),
-    Modal: defineAsyncComponent(() => import('@/components/Modal.vue')),
     TopNav: defineAsyncComponent(() => import('@/components/TopNav.vue')),
     RecipeSlider: defineAsyncComponent(() => import('@/components/RecipeSlider.vue')),
   },
 
   data() {
     return {
-      isModalVisible: false,
       categories: ['meat', 'fish', 'poultry', 'vegetarian', 'pasta', 'soup', 'baking', 'dessert'],
       recipes: [
         {
@@ -68,6 +62,7 @@ export default {
           tags: ['Italian', 'Meat', 'Pasta'],
           author: 'fili',
           slug: 'bolo-boys',
+          image: 'https://picsum.photos/1000/1000',
         },
         {
           title: 'Lasagne',
@@ -75,6 +70,7 @@ export default {
           tags: ['Italian', 'Meat', 'Pasta'],
           author: 'lil mart',
           slug: 'lasagne',
+          image: 'https://picsum.photos/1000/1000',
         },
         {
           title: 'dunser',
@@ -82,18 +78,10 @@ export default {
           tags: ['dansk'],
           author: 'børge',
           slug: 'dunser',
+          image: 'https://picsum.photos/1000/1000',
         },
       ],
     };
-  },
-
-  methods: {
-    showModal() {
-      this.isModalVisible = true;
-    },
-    closeModal() {
-      this.isModalVisible = false;
-    },
   },
 };
 </script>
@@ -104,6 +92,7 @@ export default {
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
   margin: 1rem 0;
+
   .categories__link {
     margin: 0 auto;
     text-align: center;

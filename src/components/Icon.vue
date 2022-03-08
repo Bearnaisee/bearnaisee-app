@@ -212,12 +212,12 @@ export default {
 
     height: {
       type: [Number, String],
-      default: '20',
+      default: () => this.width || '20',
     },
 
     width: {
       type: [Number, String],
-      default: '20',
+      default: () => this.height || '20',
     },
 
     color: {

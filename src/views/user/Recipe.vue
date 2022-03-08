@@ -48,9 +48,9 @@
             </p>
 
             <button
-              @click="toggleShowMore"
               v-if="recipe.description.split(' ').length > 20"
               style="background: none; border: none; font-weight: 700"
+              @click="toggleShowMore"
             >
               <span v-if="showMore">Hide</span>
 
@@ -83,8 +83,8 @@
 
           <div v-for="(step, stepIndex) of recipe.steps" :key="stepIndex" style="margin-bottom: 1rem">
             <div
-              @click="switchStep(stepIndex)"
               style="display: flex; gap: 1rem; align-content: center; align-items: center"
+              @click="switchStep(stepIndex)"
             >
               <div
                 style="

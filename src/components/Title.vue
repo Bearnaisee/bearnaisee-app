@@ -35,6 +35,7 @@ export default {
     },
 
     size: {
+      type: String,
       default: 'h6',
     },
   },

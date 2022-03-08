@@ -2,13 +2,13 @@
   <div>
     <form @submit="createUser">
       <p>Username</p>
-      <input type="text" v-model="username" />
+      <input v-model="username" type="text" />
 
       <p>Email</p>
-      <input type="email" v-model="email" />
+      <input v-model="email" type="email" />
 
       <p>Password</p>
-      <input type="password" v-model="password" />
+      <input v-model="password" type="password" />
 
       <button type="submit">Signup</button>
     </form>
