@@ -40,6 +40,12 @@ import Title from './Title.vue';
 export default {
   name: 'RecipeCard',
 
+  components: {
+    Image: defineAsyncComponent(() => import('@/components/Image.vue')),
+    Title: defineAsyncComponent(() => import('@/components/Title.vue')),
+    Icon,
+  },
+
   props: {
     title: {
       type: String,
@@ -65,12 +71,6 @@ export default {
       type: Array,
       default: () => [],
     },
-  },
-
-  components: {
-    Image: defineAsyncComponent(() => import('@/components/Image.vue')),
-    Title: defineAsyncComponent(() => import('@/components/Title.vue')),
-    Icon,
   },
 
   Title,
