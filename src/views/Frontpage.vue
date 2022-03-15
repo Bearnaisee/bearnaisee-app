@@ -21,25 +21,28 @@
 
     <RecipeSlider style="padding: 1rem 0" :recipes="recipes" />
 
-    <div class="recipes">
+    <div>
       <Title text="Recent" size="h2" class="recipe__card" />
 
-      <RecipeCard
-        v-for="(recipe, recipeIndex) of recipes"
-        :key="recipeIndex"
-        :title="recipe.title"
-        :time="recipe.time"
-        :tags="recipe.tags"
-        :slug="recipe.slug"
-        :author="recipe.author"
-        :image="recipe.image"
-      />
+      <div class="recipes">
+        <RecipeCard
+          v-for="(recipe, recipeIndex) of recipes"
+          :key="recipeIndex"
+          :title="recipe.title"
+          :time="recipe.time"
+          :tags="recipe?.tags?.map((t) => t?.tag)"
+          :slug="recipe.slug"
+          :author="recipe.author"
+          :image="`https://picsum.photos/seed/${recipe.slug}/1000/1000`"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { defineAsyncComponent } from 'vue';
+import axios from 'axios';
 
 export default {
   name: 'Frontpage',
@@ -55,33 +58,27 @@ export default {
   data() {
     return {
       categories: ['meat', 'fish', 'poultry', 'vegetarian', 'pasta', 'soup', 'baking', 'dessert'],
-      recipes: [
-        {
-          title: 'Bolo',
-          time: 25,
-          tags: ['Italian', 'Meat', 'Pasta'],
-          author: 'fili',
-          slug: 'bolo-boys',
-          image: 'https://picsum.photos/1000/1000',
-        },
-        {
-          title: 'Lasagne',
-          time: 25,
-          tags: ['Italian', 'Meat', 'Pasta'],
-          author: 'lil mart',
-          slug: 'lasagne',
-          image: 'https://picsum.photos/1000/1000',
-        },
-        {
-          title: 'dunser',
-          time: 25,
-          tags: ['dansk'],
-          author: 'børge',
-          slug: 'dunser',
-          image: 'https://picsum.photos/1000/1000',
-        },
-      ],
+      recipes: null,
     };
+  },
+
+  created() {
+    this.fetchRecentRecipes();
+  },
+
+  methods: {
+    async fetchRecentRecipes() {
+      const HOST = process.env.VUE_APP_API_URL;
+      const URL = `${HOST}/recipes/recent`;
+
+      this.recipes = await axios
+        .get(URL)
+        .then((res) => res?.data?.recipes || [])
+        .catch((error) => {
+          console.error('ERROR fetching recent recipes', error);
+          return [];
+        });
+    },
   },
 };
 </script>
@@ -104,8 +101,20 @@ export default {
 }
 
 .recipes {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 2rem;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1280px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: 1536px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 </style>
