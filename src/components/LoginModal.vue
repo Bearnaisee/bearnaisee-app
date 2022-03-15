@@ -53,7 +53,7 @@
 <script>
 import axios from 'axios';
 import { defineAsyncComponent } from 'vue';
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import log from '@/helpers/log';
 
 export default {
@@ -87,7 +87,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['setUserInfo']),
+    ...mapActions(['saveUserInfo']),
 
     closeModal() {
       this.$emit('close');
@@ -127,7 +127,7 @@ export default {
         log('result', result);
 
         if (result?.user) {
-          this.setUserInfo(result.user);
+          this.saveUserInfo(result.user);
 
           this.$swal({
             icon: 'success',
@@ -176,7 +176,7 @@ export default {
         log('result', result);
 
         if (result?.user) {
-          this.setUserInfo(result.user);
+          this.saveUserInfo(result.user);
 
           this.$swal({
             icon: 'success',

@@ -5,7 +5,17 @@
 </template>
 
 <script>
-export default {};
+import { mapActions } from 'vuex';
+
+export default {
+  created() {
+    this.initStore();
+  },
+
+  methods: {
+    ...mapActions(['initStore']),
+  },
+};
 </script>
 
 <style lang="scss">
