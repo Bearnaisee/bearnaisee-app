@@ -6,26 +6,30 @@
       <Title :text="title" size="h3" />
     </router-link>
 
-    <p>
+    <p v-if="showAuthor">
       by
       <router-link :to="`/${author}`" class="card__author"> @{{ author }} </router-link>
     </p>
 
-    <div>
-      <div v-if="time" class="card__icon">
-        <Icon icon="time" color="#D53F29" width="12" height="12" />
+    <div v-if="time" class="card__icon">
+      <Icon icon="time" color="#D53F29" width="12" height="12" />
 
-        <p style="font-size: 0.675rem">{{ time }} minutes</p>
-      </div>
+      <p style="font-size: 0.675rem">{{ time }} minutes</p>
+    </div>
 
-      <div v-if="tags?.length" class="card__icon">
-        <Icon icon="tag" color="#D53F29" width="12" height="12" />
+    <div v-if="tags?.length" class="card__icon">
+      <Icon icon="tag" color="#D53F29" width="12" height="12" />
 
-        <div>
-          <router-link v-for="(tag, tagIndex) of tags" :key="tagIndex" :to="`#${tag}`">
-            {{ tagIndex === 0 ? tag : `, ${tag}` }}
-          </router-link>
-        </div>
+      <div>
+        <router-link
+          v-for="(tag, tagIndex) of tags"
+          :key="tagIndex"
+          :to="`/category/${category}`"
+          style="text-transform: capitalize"
+        >
+          {{ tagIndex > 0 && tags.length > tagIndex ? ', ' : '' }}
+          {{ tag }}
+        </router-link>
       </div>
     </div>
   </div>
@@ -52,6 +56,9 @@ export default {
       type: String,
       required: true,
     },
+    showAuthor: {
+      type: Boolean,
+    },
     slug: {
       type: String,
       required: true,
@@ -74,6 +81,8 @@ export default {
 
 <style lang="scss" scoped>
 .card {
+  width: 100%;
+
   .card__image {
     border-radius: var(--border-radius);
     width: 100%;

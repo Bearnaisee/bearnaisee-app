@@ -1,5 +1,5 @@
 <template>
-  <div style="padding: 0 1rem">
+  <div>
     <TopNav />
 
     <Title text="Top categories" size="h2" />
@@ -24,18 +24,7 @@
     <div>
       <Title text="Recent" size="h2" class="recipe__card" />
 
-      <div class="recipes">
-        <RecipeCard
-          v-for="(recipe, recipeIndex) of recipes"
-          :key="recipeIndex"
-          :title="recipe.title"
-          :time="recipe.time"
-          :tags="recipe?.tags?.map((t) => t?.tag)"
-          :slug="recipe.slug"
-          :author="recipe.author"
-          :image="`https://picsum.photos/seed/${recipe.slug}/1000/1000`"
-        />
-      </div>
+      <RecipeGrid :recipes="recipes" :show-author="true" />
     </div>
   </div>
 </template>
@@ -49,7 +38,7 @@ export default {
 
   components: {
     Icon: defineAsyncComponent(() => import('@/components/Icon.vue')),
-    RecipeCard: defineAsyncComponent(() => import('@/components/RecipeCard.vue')),
+    RecipeGrid: defineAsyncComponent(() => import('@/components/RecipeGrid.vue')),
     Title: defineAsyncComponent(() => import('@/components/Title.vue')),
     TopNav: defineAsyncComponent(() => import('@/components/TopNav.vue')),
     RecipeSlider: defineAsyncComponent(() => import('@/components/RecipeSlider.vue')),
@@ -97,24 +86,6 @@ export default {
     p {
       text-transform: capitalize;
     }
-  }
-}
-
-.recipes {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 2rem;
-
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (min-width: 1280px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  @media (min-width: 1536px) {
-    grid-template-columns: repeat(3, 1fr);
   }
 }
 </style>
