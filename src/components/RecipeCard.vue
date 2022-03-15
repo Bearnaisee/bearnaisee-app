@@ -1,25 +1,24 @@
 <template>
-  <div>
-    <div>
-      <Image />
-    </div>
+  <div class="card">
+    <Image class="card__image" :src="image" />
 
-    <router-link :to="`/${author}/${slug}`" class="rc-title">
-      <Title :text="title" size="h2" />
+    <router-link :to="`/${author}/${slug}`" class="card__title">
+      <Title :text="title" size="h3" />
     </router-link>
 
-    <router-link :to="`/${author}`">
-      <p style="color: #7e7e7e">by {{ author }}</p>
-    </router-link>
+    <p>
+      by
+      <router-link :to="`/${author}`" class="card__author"> @{{ author }} </router-link>
+    </p>
 
     <div>
-      <div class="rc-icon">
+      <div v-if="time" class="card__icon">
         <Icon icon="time" color="#D53F29" width="12" height="12" />
 
         <p style="font-size: 0.675rem">{{ time }} minutes</p>
       </div>
 
-      <div class="rc-icon">
+      <div v-if="tags?.length" class="card__icon">
         <Icon icon="tag" color="#D53F29" width="12" height="12" />
 
         <div>
@@ -34,8 +33,6 @@
 
 <script>
 import { defineAsyncComponent } from 'vue';
-import Icon from '@/components/Icon.vue';
-import Title from './Title.vue';
 
 export default {
   name: 'RecipeCard',
@@ -43,7 +40,7 @@ export default {
   components: {
     Image: defineAsyncComponent(() => import('@/components/Image.vue')),
     Title: defineAsyncComponent(() => import('@/components/Title.vue')),
-    Icon,
+    Icon: defineAsyncComponent(() => import('@/components/Icon.vue')),
   },
 
   props: {
@@ -72,22 +69,35 @@ export default {
       default: () => [],
     },
   },
-
-  Title,
 };
 </script>
 
 <style lang="scss" scoped>
-.rc-icon {
-  display: flex;
-  gap: 0.5rem;
-  align-content: center;
-  align-items: center;
-}
+.card {
+  .card__image {
+    border-radius: var(--border-radius);
+    width: 100%;
+  }
 
-.rc-title,
-h2 {
-  font-family: var(--header-text);
-  font-weight: 200;
+  .card__author {
+    color: #7e7e7e;
+
+    &:hover {
+      filter: brightness(0.15);
+    }
+  }
+
+  .card__icon {
+    display: flex;
+    gap: 0.5rem;
+    align-content: center;
+    align-items: center;
+  }
+
+  .card__title > * {
+    max-width: 100%;
+    word-wrap: break-word;
+    font-weight: 200;
+  }
 }
 </style>
