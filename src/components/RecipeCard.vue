@@ -1,6 +1,8 @@
 <template>
   <div class="card">
-    <Image class="card__image" :src="image" />
+    <router-link :to="`/${author}/${slug}`">
+      <Image class="card__image" :src="image" />
+    </router-link>
 
     <router-link :to="`/${author}/${slug}`" class="card__title">
       <Title :text="title" size="h3" />
@@ -86,6 +88,8 @@ export default {
   .card__image {
     border-radius: var(--border-radius);
     width: 100%;
+    height: auto;
+    object-fit: cover;
   }
 
   .card__author {

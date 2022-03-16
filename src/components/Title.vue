@@ -49,7 +49,6 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--header-text), sans-serif;
   line-height: 1.2;
 }
 </style>
