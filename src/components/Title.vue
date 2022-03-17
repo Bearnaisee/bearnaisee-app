@@ -49,7 +49,107 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--header-text), sans-serif;
   line-height: 1.2;
+}
+
+h1 {
+  @media (min-width: 640px) {
+  }
+
+  @media (min-width: 768px) {
+  }
+
+  @media (min-width: 1024px) {
+  }
+
+  @media (min-width: 1280px) {
+  }
+
+  @media (min-width: 1536px) {
+  }
+}
+
+h2 {
+  @media (min-width: 640px) {
+  }
+
+  @media (min-width: 768px) {
+  }
+
+  @media (min-width: 1024px) {
+  }
+
+  @media (min-width: 1280px) {
+  }
+
+  @media (min-width: 1536px) {
+  }
+}
+
+h3 {
+  @media (min-width: 640px) {
+  }
+
+  @media (min-width: 768px) {
+  }
+
+  @media (min-width: 1024px) {
+  }
+
+  @media (min-width: 1280px) {
+  }
+
+  @media (min-width: 1536px) {
+  }
+}
+
+h4 {
+  @media (min-width: 640px) {
+  }
+
+  @media (min-width: 768px) {
+  }
+
+  @media (min-width: 1024px) {
+  }
+
+  @media (min-width: 1280px) {
+  }
+
+  @media (min-width: 1536px) {
+  }
+}
+h5 {
+  @media (min-width: 640px) {
+  }
+
+  @media (min-width: 768px) {
+  }
+
+  @media (min-width: 1024px) {
+  }
+
+  @media (min-width: 1280px) {
+  }
+
+  @media (min-width: 1536px) {
+  }
+}
+
+h6 {
+  @media (min-width: 640px) {
+  }
+
+  @media (min-width: 768px) {
+  }
+
+  @media (min-width: 1024px) {
+  }
+
+  @media (min-width: 1280px) {
+  }
+
+  @media (min-width: 1536px) {
+  }
 }
 </style>
