@@ -1,22 +1,18 @@
 <template>
-  <div v-if="!loading && !userInfo">
+  <div v-if="!loading && !user">
     <!-- TODO: pimp up this shit -->
     <h1>User not found</h1>
   </div>
 
   <div v-else>
-    <!--     <div style="display: flex; align-content: center; align-items: center">
- -->
     <Image :src="avatarUrl" class="avatar" />
 
-    <!--    </div> -->
+    <h1 size="h1" class="name">{{ user?.displayName || user?.username || $route.params.username }}</h1>
 
-    <h1 size="h1" class="name">{{ userInfo.displayName || userInfo.username || $route.params.username }}</h1>
+    <p class="username">@{{ user?.username || $route.params.username }}</p>
 
-    <p class="username">@{{ userInfo.username || $route.params.username }}</p>
-
-    <p v-if="userInfo.description" class="description">
-      {{ userInfo.description }}
+    <p v-if="user?.description" class="description">
+      {{ user.description }}
     </p>
 
     <div style="display: flex; gap: 1rem">
@@ -34,7 +30,15 @@
         following
       </p>
     </div>
-    <Button label="Follow" type="button" kind="primary" style="margin-left: auto; height: fit-content" />
+
+    <Button
+      :label="following ? 'Unfollow' : 'Follow'"
+      type="button"
+      kind="primary"
+      style="margin-left: auto; height: fit-content"
+      v-if="user?.id !== getUserInfo?.id"
+      @click="followUser"
+    />
 
     <h2>Recipes</h2>
 
@@ -62,21 +66,24 @@ export default {
   data() {
     return {
       loading: true,
-      userInfo: null,
+      user: null,
       followerCount: 0,
       followingCount: 0,
       recipes: [],
+      following: false,
     };
   },
 
   computed: {
+    ...mapGetters(['getUserInfo']),
+
     avatarUrl() {
-      if (this.userInfo?.avatarUrl) {
-        return this.userInfo.avatarUrl;
+      if (this.user?.avatarUrl) {
+        return this.user.avatarUrl;
       }
 
-      if (this.userInfo?.email) {
-        const emailHash = md5(this.userInfo.email.toLowerCase());
+      if (this.user?.email) {
+        const emailHash = md5(this.user.email.toLowerCase());
 
         return `https://gravatar.com/avatar/${emailHash}?s=192`;
       }
@@ -91,10 +98,8 @@ export default {
   },
 
   methods: {
-    ...mapGetters(['getUserInfo']),
-
     async fetchUserInfo() {
-      this.userInfo = await axios
+      this.user = await axios
         .get(`${process.env.VUE_APP_API_URL}/user/${this.$route.params.username}`)
         .then((res) => res?.data)
         .catch((error) => {
@@ -104,6 +109,10 @@ export default {
       this.loading = false;
 
       this.fetchUserStats();
+
+      if (this.user.id !== this.getUserInfo.id) {
+        this.checkIfFollowing();
+      }
     },
 
     async fetchUserRecipes() {
@@ -117,9 +126,9 @@ export default {
     },
 
     async fetchUserStats() {
-      if (this.userInfo.id) {
+      if (this.user.id) {
         const stats = await axios
-          .get(`${process.env.VUE_APP_API_URL}/user/stats/${this.userInfo.id}`)
+          .get(`${process.env.VUE_APP_API_URL}/user/stats/${this.user.id}`)
           .then((res) => res?.data)
           .catch((error) => {
             console.error('Error fetching user stats', error);
@@ -128,6 +137,34 @@ export default {
         this.followerCount = abbreviateNumber(stats?.followerCount || 0);
         this.followingCount = abbreviateNumber(stats?.followingCount || 0);
       }
+    },
+
+    async checkIfFollowing() {
+      const userId = this.user.id;
+      const followerId = this.getUserInfo.id;
+
+      this.following = await axios
+        .get(`${process.env.VUE_APP_API_URL}/user/follow/${userId}/${followerId}`)
+        .then((res) => res?.data?.following || false)
+        .catch((error) => {
+          console.error('Error checking if following', error);
+          return false;
+        });
+    },
+
+    async followUser() {
+      const userId = this.user.id;
+      const followerId = this.getUserInfo.id;
+
+      await axios
+        .post(`${process.env.VUE_APP_API_URL}/user/follow/${userId}/${followerId}`)
+        .then((res) => res?.data?.following || false)
+        .catch((error) => {
+          console.error('Error checking following user', error);
+          return false;
+        });
+
+      this.checkIfFollowing();
     },
   },
 };
