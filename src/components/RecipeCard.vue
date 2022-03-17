@@ -86,6 +86,7 @@ export default {
   .card__image {
     border-radius: var(--border-radius);
     width: 100%;
+    max-height: 20rem;
   }
 
   .card__author {
