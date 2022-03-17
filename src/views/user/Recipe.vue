@@ -1,5 +1,5 @@
 <template>
-  <div class="recipe" v-if="recipe">
+  <div v-if="recipe" class="recipe">
     <div
       class="recipe__image"
       :style="{ backgroundImage: `url(${recipe?.coverImage || 'https://picsum.photos/1000/1000'})` }"
