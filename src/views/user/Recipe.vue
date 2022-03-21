@@ -265,10 +265,10 @@ export default {
       gap: 0.5rem;
       align-content: center;
       align-items: center;
-      font-size: 0.675rem;
+      font-size: 0.8rem;
 
       .recipe__tag {
-        font-size: 0.675rem;
+        font-size: 0.7rem;
         text-transform: capitalize;
       }
     }
