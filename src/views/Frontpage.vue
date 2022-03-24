@@ -19,7 +19,6 @@
           <Icon class="categories__icon" :icon="category" width="30" height="30" />
 
           <p>{{ category }}</p>
-          
         </router-link>
       </div>
 
@@ -30,7 +29,7 @@
       <div>
         <Title text="Recent" size="h2" class="recipe__card" />
 
-        <RecipeGrid :recipes="recipes" :show-author="true"  v-if="recipes?.length" />
+        <RecipeGrid v-if="recipes?.length" :recipes="recipes" :show-author="true" />
       </div>
     </div>
 
