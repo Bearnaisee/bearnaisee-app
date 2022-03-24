@@ -51,4 +51,70 @@ h5,
 h6 {
   line-height: 1.2;
 }
+
+h1 {
+  @media (min-width: 640px) {
+    font-size: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    font-size: 2rem;
+  }
+
+  @media (min-width: 1024px) {
+    font-size: 2rem;
+  }
+
+  @media (min-width: 1280px) {
+    font-size: 2rem;
+  }
+
+  @media (min-width: 1536px) {
+    font-size: 2.5rem;
+  }
+}
+
+h2 {
+  @media (min-width: 640px) {
+    font-size: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    font-size: 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    font-size: 1.5rem;
+  }
+
+  @media (min-width: 1280px) {
+    font-size: 1.5rem;
+  }
+
+  @media (min-width: 1536px) {
+    font-size: 1.5rem;
+  }
+}
+
+h3 {
+  @media (min-width: 640px) {
+    font-size: 1.17rem;
+  }
+
+  @media (min-width: 768px) {
+    font-size: 1.17rem;
+  }
+
+  @media (min-width: 1024px) {
+    font-size: 1.17rem;
+  }
+
+  @media (min-width: 1280px) {
+    font-size: 1.17rem;
+  }
+
+  @media (min-width: 1536px) {
+    font-size: 1.2rem;
+  }
+}
 </style>

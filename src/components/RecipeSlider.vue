@@ -54,8 +54,12 @@ export default {
     height: auto;
     object-fit: cover;
     max-width: 80vw;
-    max-height: 20rem;
+    max-height: 12rem;
     border-radius: var(--border-radius);
+
+    @media (min-width: 1280px) {
+      max-height: 20rem;
+    }
   }
 }
 </style>

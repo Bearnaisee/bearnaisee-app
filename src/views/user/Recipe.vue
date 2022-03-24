@@ -1,5 +1,5 @@
 <template>
-  <div class="recipe">
+  <div v-if="recipe" class="recipe">
     <div
       class="recipe__image"
       :style="{ backgroundImage: `url(${recipe?.coverImage || 'https://picsum.photos/1000/1000'})` }"
@@ -9,17 +9,17 @@
           <Icon icon="arrow" width="24" height="auto" />
         </button>
 
-        <button class="recipe__button">
-          <Icon icon="heart" color="#FF7D61" width="24" height="auto" />
+        <button class="recipe__button" @click="likeRecipe">
+          <Icon icon="heart" :color="userLikedRecipe ? '#FF7D61' : '#000'" width="24" height="auto" />
         </button>
       </div>
     </div>
 
     <div class="recipe__wrapper">
-      <Title :text="recipe.title" class="recipe__title" size="h1" />
+      <Title :text="recipe?.title" class="recipe__title" size="h1" />
 
       <div>
-        <router-link :to="`/${recipe.author}`"> By @{{ $route.params.username }} </router-link>
+        <router-link :to="`/${$route.params.username}`"> By @{{ $route.params.username }} </router-link>
 
         <div>
           <div v-if="recipe?.estimatedTime > 0" class="recipe__icon">
@@ -33,7 +33,7 @@
 
             <div>
               <router-link
-                v-for="(tag, tagIndex) of recipe.tags"
+                v-for="(tag, tagIndex) of recipe?.tags"
                 :key="tagIndex"
                 class="recipe__tag"
                 :to="`#${tag.tag}`"
@@ -51,7 +51,7 @@
         </p>
 
         <button
-          v-if="recipe.description.split(' ').length > 20"
+          v-if="recipe?.description?.split(' ').length > 20"
           class="section__description__button"
           @click="toggleShowMore"
         >
@@ -66,7 +66,7 @@
 
         <div>
           <div
-            v-for="(ingredient, ingredientIndex) of recipe.ingredients"
+            v-for="(ingredient, ingredientIndex) of recipe?.ingredients"
             :key="ingredientIndex"
             style="display: grid; grid-template-columns: 1fr 5fr"
           >
@@ -84,7 +84,7 @@
       <section class="recipe__section">
         <Title size="h3" text="Steps" class="section__title" />
 
-        <div v-for="(step, stepIndex) of recipe.recipeSteps" :key="stepIndex" style="margin-bottom: 1rem">
+        <div v-for="(step, stepIndex) of recipe?.recipeSteps" :key="stepIndex" style="margin-bottom: 1rem">
           <div
             style="display: flex; gap: 1rem; align-content: center; align-items: center"
             @click="switchStep(stepIndex)"
@@ -115,6 +115,7 @@
 
 <script>
 import { defineAsyncComponent } from 'vue';
+import { mapGetters } from 'vuex';
 import axios from 'axios';
 
 export default {
@@ -129,10 +130,13 @@ export default {
     return {
       showMore: false,
       recipe: null,
+      userLikedRecipe: false,
     };
   },
 
   computed: {
+    ...mapGetters(['getUserInfo']),
+
     computedDescription() {
       if (this.recipe?.description) {
         if (this.showMore) {
@@ -169,6 +173,10 @@ export default {
       }
 
       this.recipe = recipe;
+
+      if (this.recipe) {
+        this.checkIfLiked();
+      }
     },
 
     toggleShowMore() {
@@ -177,6 +185,31 @@ export default {
 
     switchStep(index) {
       this.recipe.recipeSteps[index].show = !this.recipe.recipeSteps[index].show;
+    },
+
+    async likeRecipe() {
+      const userId = this.getUserInfo.id;
+      const recipeId = this.recipe.id;
+
+      await axios
+        .post(`${process.env.VUE_APP_API_URL}/recipe/like/${recipeId}/${userId}`)
+        .then((res) => res?.data)
+        .catch((error) => console.error('Something went wrong liking recipe', error));
+
+      this.checkIfLiked();
+    },
+
+    async checkIfLiked() {
+      const userId = this.getUserInfo.id;
+      const recipeId = this.recipe.id;
+
+      this.userLikedRecipe = await axios
+        .get(`${process.env.VUE_APP_API_URL}/recipe/like/${recipeId}/${userId}`)
+        .then((res) => res?.data?.userLiked || false)
+        .catch((error) => {
+          console.error('Something went wrong liking recipe', error);
+          return false;
+        });
     },
   },
 };
@@ -232,10 +265,10 @@ export default {
       gap: 0.5rem;
       align-content: center;
       align-items: center;
-      font-size: 0.675rem;
+      font-size: 0.8rem;
 
       .recipe__tag {
-        font-size: 0.675rem;
+        font-size: 0.7rem;
         text-transform: capitalize;
       }
     }
