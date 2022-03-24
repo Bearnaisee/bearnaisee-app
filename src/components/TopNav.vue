@@ -72,6 +72,11 @@ input {
 }
 .top {
   margin-bottom: 1rem;
+  display: none;
+
+  @media (max-width: 1024px) {
+    display: block;
+  }
 
   .topnav-container {
     display: flex;

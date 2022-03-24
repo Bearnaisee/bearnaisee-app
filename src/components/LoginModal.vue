@@ -250,7 +250,6 @@ export default {
 
   @media (min-width: 1024px) {
     width: 50vh;
-    height: 50vh;
     min-height: 0;
     border-radius: var(--border-radius);
   }
