@@ -1,7 +1,7 @@
 <template>
   <div class="slider">
     <router-link v-for="(card, cardIndex) of recipes" :key="cardIndex" :to="`/${card.author}/${card.slug}`">
-      <Image :src="card.img" class="slider__image" />
+      <Image :src="card.coverImage" class="slider__image" />
 
       <Title class="slider__text" size="h3" :text="card.title" />
     </router-link>

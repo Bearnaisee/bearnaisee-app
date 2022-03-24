@@ -35,25 +35,26 @@ export default {
 
 <style lang="scss" scoped>
 .button {
-  padding: 0.25rem 1rem;
+  padding: 0.5rem 1rem;
   color: #fff;
-  background-color: var(--text-primary);
-  border: 2px solid var(--text-primary);
+  background-color: var(--color-black);
+  border: 2px solid var(--color-black);
   font-weight: 700;
-  font-size: 0.875rem;
+  font-size: 1rem;
   border-radius: 4px;
   cursor: pointer;
+  text-align: center;
 
   &--primary {
-    background: var(--highlight-color);
-    border: 2px solid var(--highlight-color);
+    background: var(--color-highlight);
+    border: 2px solid var(--color-highlight);
     color: #fff;
   }
 
   &--secondary {
     background: none;
-    border: 2px solid var(--highlight-color);
-    color: var(--highlight-color);
+    border: 2px solid var(--color-highlight);
+    color: var(--color-highlight);
   }
 }
 </style>

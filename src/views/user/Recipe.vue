@@ -237,8 +237,8 @@ export default {
   .recipe__button {
     background: none;
     border: none;
-    height: 50px;
-    width: 50px;
+    height: 3rem;
+    width: 3rem;
     background-color: #e8e8e8;
     border-radius: 50%;
     display: flex;

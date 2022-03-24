@@ -19,12 +19,12 @@
 
     <Title text="Trending" size="h2" />
 
-    <RecipeSlider style="padding: 1rem 0" :recipes="recipes" />
+    <RecipeSlider v-if="recipes?.length" style="padding: 1rem 0" :recipes="recipes" />
 
     <div>
       <Title text="Recent" size="h2" class="recipe__card" />
 
-      <RecipeGrid :recipes="recipes" :show-author="true" />
+      <RecipeGrid v-if="recipes?.length" :recipes="recipes" :show-author="true" />
     </div>
   </div>
 </template>
