@@ -26,7 +26,7 @@
         <router-link
           v-for="(tag, tagIndex) of tags"
           :key="tagIndex"
-          :to="`/category/${category}`"
+          :to="`/category/${tag}`"
           style="text-transform: capitalize"
         >
           {{ tagIndex > 0 && tags.length > tagIndex ? ', ' : '' }}
@@ -88,6 +88,7 @@ export default {
   .card__image {
     border-radius: var(--border-radius);
     width: 100%;
+    aspect-ratio: 3/2;
     height: auto;
     object-fit: cover;
   }

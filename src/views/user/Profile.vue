@@ -32,11 +32,11 @@
     </div>
 
     <Button
+      v-if="user?.id !== getUserInfo?.id"
       :label="following ? 'Unfollow' : 'Follow'"
       type="button"
       kind="primary"
       style="margin-left: auto; height: fit-content"
-      v-if="user?.id !== getUserInfo?.id"
       @click="followUser"
     />
 
