@@ -21,7 +21,6 @@ const routes = [
     name: 'Tos',
     component: () => import(/* webpackChunkName: "[request]" */ '../components/TermsOfService.vue'),
   },
-
   {
     path: '/:username',
     name: 'User',
@@ -52,6 +51,14 @@ const routes = [
         component: () => import(/* webpackChunkName: "[request]" */ '../views/user/Recipe.vue'),
       },
     ],
+  },
+  {
+    path: '/create',
+    name: 'Recipe',
+    props: {
+      default: true,
+    },
+    component: () => import(/* webpackChunkName: "[request]" */ '../views/user/RecipeBuilder.vue'),
   },
 ];
 
