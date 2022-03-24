@@ -12,6 +12,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "[request]" */ '../views/Dashboard.vue'),
   },
   {
+    path: '/sidenav',
+    name: 'sidenav',
+    component: () => import(/* webpackChunkName: "[request]" */ '../components/SideNav.vue'),
+  },
+  {
     path: '/tos',
     name: 'Tos',
     component: () => import(/* webpackChunkName: "[request]" */ '../components/TermsOfService.vue'),

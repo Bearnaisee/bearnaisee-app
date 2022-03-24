@@ -1,30 +1,41 @@
 <template>
-  <div>
-    <TopNav />
-
-    <Title text="Top categories" size="h2" />
-
-    <div class="categories">
-      <router-link
-        v-for="(category, categoryIndex) of categories"
-        :key="categoryIndex"
-        :to="`/category/${category}`"
-        class="categories__link"
-      >
-        <Icon class="categories__icon" :icon="category" width="30" height="30" />
-
-        <p>{{ category }}</p>
-      </router-link>
+  <div class="web-layout">
+    <div style="width: 20%" class="sidenav">
+      <SideNav />
     </div>
 
-    <Title text="Trending" size="h2" />
+    <div class="content">
+      <TopNav />
 
-    <RecipeSlider style="padding: 1rem 0" :recipes="recipes" />
+      <Title text="Top categories" size="h2" />
 
-    <div>
-      <Title text="Recent" size="h2" class="recipe__card" />
+      <div class="categories">
+        <router-link
+          v-for="(category, categoryIndex) of categories"
+          :key="categoryIndex"
+          :to="`/category/${category}`"
+          class="categories__link"
+        >
+          <Icon class="categories__icon" :icon="category" width="30" height="30" />
 
-      <RecipeGrid :recipes="recipes" :show-author="true" />
+          <p>{{ category }}</p>
+        </router-link>
+      </div>
+
+      <Title text="Trending" size="h2" />
+
+      <RecipeSlider style="padding: 1rem 0" :recipes="recipes" />
+
+      <div>
+        <Title text="Recent" size="h2" class="recipe__card" />
+
+        <RecipeGrid :recipes="recipes" :show-author="true" />
+      </div>
+    </div>
+
+    <div class="search-area">
+      <input type="text" placeholder="Search on Bearnaisee..." class="searchbar" />
+      <Button label="Search" />
     </div>
   </div>
 </template>
@@ -42,6 +53,8 @@ export default {
     Title: defineAsyncComponent(() => import('@/components/Title.vue')),
     TopNav: defineAsyncComponent(() => import('@/components/TopNav.vue')),
     RecipeSlider: defineAsyncComponent(() => import('@/components/RecipeSlider.vue')),
+    SideNav: defineAsyncComponent(() => import('@/components/SideNav.vue')),
+    Button: defineAsyncComponent(() => import('@/components/Button.vue')),
   },
 
   data() {
@@ -73,15 +86,68 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.web-layout {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+
+  @media (max-width: 1024px) {
+    display: block;
+  }
+}
+
+.content {
+  @media (min-width: 1024px) {
+    width: 60%;
+    padding-top: 2.5rem;
+  }
+}
+.search-area {
+  display: none;
+
+  @media (min-width: 1024px) {
+    display: flex;
+    width: 20%;
+    padding-top: 2.5rem;
+    height: fit-content;
+    gap: 1rem;
+  }
+
+  .searchbar {
+    text-align: center;
+    height: 2.25rem;
+    border-radius: 4px;
+    border: solid 1px var(--text-primary);
+  }
+}
+.sidenav {
+  @media (min-width: 1024px) {
+    padding-top: 1.5rem;
+  }
+}
+
 .categories {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
   margin: 1rem 0;
 
+  @media (min-width: 1024px) {
+    margin: 3rem 0;
+    gap: 3rem;
+  }
+
   .categories__link {
     margin: 0 auto;
     text-align: center;
+
+    @media (min-width: 1024px) {
+      padding: 1rem 2rem;
+      &:hover {
+        background-color: #ff7e6120;
+        border-radius: 10px;
+      }
+    }
 
     p {
       text-transform: capitalize;
