@@ -10,7 +10,7 @@
       :author="recipe?.author"
       :image="recipe?.coverImage || `https://picsum.photos/seed/${recipe.slug}/1000/1000`"
       :show-author="showAuthor"
-      style="width: 100%"
+      class="recipes__card"
     />
   </div>
 </template>
@@ -44,6 +44,10 @@ export default {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   gap: 2rem;
+
+  .recipes__card {
+    width: 100%;
+  }
 
   @media (min-width: 1024px) {
     grid-template-columns: repeat(2, 1fr);

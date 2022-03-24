@@ -1,6 +1,8 @@
 <template>
   <div class="card">
-    <Image class="card__image" :src="image" />
+    <router-link :to="`/${author}/${slug}`">
+      <Image class="card__image" :src="image" />
+    </router-link>
 
     <router-link :to="`/${author}/${slug}`" class="card__title">
       <Title :text="title" size="h3" />
@@ -24,7 +26,7 @@
         <router-link
           v-for="(tag, tagIndex) of tags"
           :key="tagIndex"
-          :to="`/category/${category}`"
+          :to="`/category/${tag}`"
           style="text-transform: capitalize"
         >
           {{ tagIndex > 0 && tags.length > tagIndex ? ', ' : '' }}
@@ -86,7 +88,9 @@ export default {
   .card__image {
     border-radius: var(--border-radius);
     width: 100%;
-    max-height: 20rem;
+    aspect-ratio: 3/2;
+    height: auto;
+    object-fit: cover;
   }
 
   .card__author {

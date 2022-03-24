@@ -102,7 +102,7 @@ export default {
     }
 
     &.router-link-exact-active {
-      color: var(--highlight-color);
+      color: var(--color-highlight);
     }
   }
 
