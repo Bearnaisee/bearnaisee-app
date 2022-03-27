@@ -1,11 +1,18 @@
 <template>
   <div class="recipe-builder">
     <h2>Upload new recipe</h2>
-    <div class="cover-upload">
-      <Icon icon="upload" width="56" height="auto" />
-      <h5>Upload image</h5>
-      <p>Click here to upload cover image</p>
+
+    <div class="cover-upload" :style="uploadImageBackground">
+      <label>
+        <Icon icon="upload" width="56" height="auto" />
+        <h5>Upload image</h5>
+
+        <p>Click here to upload cover image</p>
+
+        <input type="file" accept="image/*" @change="uploadRecipeThumbnail($event.target.files)" />
+      </label>
     </div>
+
     <div class="builder">
       <div>
         <h6>Recipe name</h6>
@@ -14,7 +21,7 @@
       <div>
         <h6>Description</h6>
 
-        <textarea type="text" rows="5"/>
+        <textarea type="text" rows="5" />
       </div>
       <div>
         <div class="slider">
@@ -62,6 +69,7 @@
 
 <script>
 import { defineAsyncComponent } from 'vue';
+import uploadImage from '@/helpers/uploadImage';
 
 export default {
   name: 'RecipeBuilder',
@@ -75,15 +83,46 @@ export default {
     return {
       time: 0,
       steps: [],
+
+      recipe: {
+        coverImage: null,
+      },
     };
   },
 
+  computed: {
+    uploadImageBackground() {
+      if (this.recipe?.coverImage) {
+        return `background: linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+          url('${this.recipe.coverImage}');`;
+      }
+
+      return 'background-color: rgba(0, 0, 0, 5%);';
+    },
+  },
   methods: {
     addStep() {
       this.steps.push({
         content: '',
         optional: false,
       });
+    },
+
+    async uploadRecipeThumbnail(files) {
+      if (files?.length) {
+        const result = await uploadImage(files[0]);
+
+        if (result?.file_name?.length && result?.bucket_name?.length) {
+          this.recipe.coverImage = `https://${result.bucket_name}.s3.eu-central-1.amazonaws.com/${result.file_name}`;
+        } else {
+          this.$swal({
+            icon: 'error',
+            title: 'Error uploading image',
+            timer: 800,
+            showConfirmButton: false,
+          });
+        }
+      }
     },
   },
 };
@@ -98,9 +137,7 @@ export default {
   gap: 1.25rem;
 
   // Image upload
-
   .cover-upload {
-    background-color: rgba(0, 0, 0, 5%);
     border: rgba(126, 126, 126, 30%);
     border-style: dashed;
     border-width: 2px;
@@ -108,19 +145,43 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 5%;
+    object-fit: cover !important;
+    background-size: cover !important;
+    object-position: center !important;
+    background-repeat: no-repeat !important;
     width: 85vw;
 
-    h5 {
-      color: rgba(0, 0, 0, 0.5);
-      font-weight: 700;
-      font-size: 14px;
-      margin-top: 2vh;
-    }
+    label {
+      align-items: center;
+      height: 100%;
+      margin-left: 0 !important;
+      justify-content: center;
+      cursor: pointer;
+      flex-direction: column;
+      width: 100% !important;
+      object-fit: cover;
+      display: flex;
+      padding: 2rem;
 
-    p {
-      color: rgba(0, 0, 0, 0.2);
-      font-size: 12px;
+      h5 {
+        color: rgba(0, 0, 0, 0.5);
+        font-weight: 700;
+        font-size: 14px;
+        margin-top: 2vh;
+      }
+
+      p {
+        color: rgba(0, 0, 0, 0.2);
+        font-size: 12px;
+      }
+
+      input {
+        position: absolute;
+        visibility: hidden;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+      }
     }
   }
 
@@ -130,7 +191,7 @@ export default {
     margin-top: 1.25rem;
   }
 
-  textarea{
+  textarea {
     border-color: rgba(126, 126, 126, 0.3);
     border-radius: 4px;
     border: 2px solid rgba($color: #7e7e7e, $alpha: 0.3);
@@ -147,7 +208,6 @@ export default {
   }
 
   // Estimated time slider
-
   .slider {
     display: flex;
     flex-direction: row;
@@ -168,9 +228,11 @@ export default {
     width: 100%;
     border: none;
   }
+
   input[type='range']:focus {
     outline: none;
   }
+
   input[type='range']::-webkit-slider-runnable-track {
     width: 100%;
     height: 5px;
@@ -180,6 +242,7 @@ export default {
     border-radius: 1px;
     border: 0px solid #000000;
   }
+
   input[type='range']::-webkit-slider-thumb {
     // Slider thump
     box-shadow: 0px 0px 0px #000000;
@@ -192,9 +255,11 @@ export default {
     -webkit-appearance: none;
     margin-top: -7px;
   }
+
   input[type='range']:focus::-webkit-slider-runnable-track {
     background: #ff7d61;
   }
+
   input[type='range']::-moz-range-track {
     width: 100%;
     height: 5px;
@@ -204,6 +269,7 @@ export default {
     border-radius: 1px;
     border: 0px solid #000000;
   }
+
   input[type='range']::-moz-range-thumb {
     box-shadow: 0px 0px 0px #000000;
     border: 1px solid #ff7d61;
@@ -213,6 +279,7 @@ export default {
     background: #ff7d61;
     cursor: pointer;
   }
+
   input[type='range']::-ms-track {
     width: 100%;
     height: 5px;
@@ -221,6 +288,7 @@ export default {
     border-color: transparent;
     color: transparent;
   }
+
   input[type='range']::-ms-fill-lower {
     background: #ff7d61;
     border: 0px solid #000000;
