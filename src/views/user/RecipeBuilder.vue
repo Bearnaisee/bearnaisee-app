@@ -16,19 +16,22 @@
     <div class="builder">
       <div>
         <h6>Recipe name</h6>
-        <input type="text" />
+        <input v-model="recipe.title" type="text" />
       </div>
+
       <div>
         <h6>Description</h6>
 
-        <textarea type="text" rows="5" />
+        <textarea v-model="recipe.description" type="text" rows="5" />
       </div>
+
       <div>
         <div class="slider">
           <h6>Estimated time</h6>
-          <p>{{ time }} min.</p>
+          <p>{{ recipe.estimatedTime }} min.</p>
         </div>
-        <input v-model.number="time" type="range" min="0" step="5" max="120" />
+
+        <input v-model.number="recipe.estimatedTime" type="range" min="0" step="5" max="240" />
       </div>
 
       <div>
@@ -36,22 +39,36 @@
         <input type="text" />
       </div>
 
-      <div>
-        <div class="ingredients">
-          <div>
-            <h6>Add ingredients</h6>
-            <input type="text" class="add-ingredients" />
-          </div>
-          <div>
-            <h6>Amount</h6>
-            <input type="text" class="amount" />
-          </div>
+      <div style="width: 100%">
+        <div class="ingredients" style="width: 100%">
+          <h6>Ingredient</h6>
+
+          <h6>Amount</h6>
+
+          <h6>Metric</h6>
+
+          <template v-for="(ingredient, ingredientIndex) of recipe.ingredients" :key="ingredientIndex">
+            <input v-model="ingredient.ingredient" type="text" style="width: auto" />
+
+            <input v-model.number="ingredient.amount" type="number" style="width: auto" />
+
+            <select v-model="ingredient.metricId" style="width: auto">
+              <option v-for="metric of getMetrics" :key="metric.id" :value="metric.id">
+                {{ metric.metric }}
+              </option>
+            </select>
+          </template>
         </div>
+
+        <Button label="Add ingredient" class="add-step" kind="secondary" @click="addIngredient" />
       </div>
+
       <div class="steps">
         <h6>Steps</h6>
-        <div v-for="(step, stepIndex) of steps" :key="stepIndex" class="description">
+
+        <div v-for="(step, stepIndex) of recipe.steps" :key="stepIndex" class="description">
           <p>Step: {{ stepIndex + 1 }}</p>
+
           <textarea v-model="step.content" type="text" placeholder="..." rows="5"></textarea>
           <p>Optional</p>
           <input v-model="step.optional" type="checkbox" />
@@ -70,6 +87,7 @@
 <script>
 import { defineAsyncComponent } from 'vue';
 import uploadImage from '@/helpers/uploadImage';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'RecipeBuilder',
@@ -81,16 +99,30 @@ export default {
 
   data() {
     return {
-      time: 0,
-      steps: [],
+      metrics: [],
 
       recipe: {
+        title: '',
+        description: '',
         coverImage: null,
+        estimatedTime: 0,
+        ingredients: [
+          {
+            amount: null,
+            metricId: null,
+            ingredientId: null,
+            ingredient: '',
+            optional: false,
+          },
+        ],
+        steps: [],
       },
     };
   },
 
   computed: {
+    ...mapGetters(['getMetrics']),
+
     uploadImageBackground() {
       if (this.recipe?.coverImage) {
         return `background: linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
@@ -100,10 +132,29 @@ export default {
       return 'background-color: rgba(0, 0, 0, 5%);';
     },
   },
+
+  created() {
+    if (!this.getMetrics?.length) {
+      this.fetchMetrics();
+    }
+  },
+
   methods: {
+    ...mapActions(['fetchMetrics']),
+
     addStep() {
-      this.steps.push({
+      this.recipe.steps.push({
         content: '',
+        optional: false,
+      });
+    },
+
+    addIngredient() {
+      this.recipe.ingredients.push({
+        amount: null,
+        metricId: null,
+        ingredientId: null,
+        ingredient: '',
         optional: false,
       });
     },
@@ -318,11 +369,10 @@ export default {
     background: #ff7d61;
   }
 
-  // Add ingradients
+  // Add ingredients
   .ingredients {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
   }
 
   // Steps

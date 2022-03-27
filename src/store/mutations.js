@@ -10,3 +10,7 @@ export const setUserInfo = (state, payload) => {
 
   state.userInfo = payload;
 };
+
+export const setMetrics = (state, payload) => {
+  state.metrics = payload;
+};
