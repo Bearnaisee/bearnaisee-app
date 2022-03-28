@@ -33,7 +33,7 @@ export default {
   @media (max-width: 1024px) {
     display: flex;
     justify-content: space-between;
-    background-color: #c4c4c4;
+    background-color: #f7e8e8;
     position: fixed;
     bottom: 0;
     width: 100%;
