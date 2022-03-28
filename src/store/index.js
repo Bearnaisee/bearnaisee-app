@@ -6,6 +6,7 @@ import * as actions from './actions';
 export default createStore({
   state: {
     userInfo: null,
+    metrics: [],
   },
   mutations,
   getters,
