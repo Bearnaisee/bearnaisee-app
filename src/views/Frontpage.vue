@@ -24,7 +24,7 @@
 
       <Title text="Trending" size="h2" />
 
-      <RecipeSlider v-if="recipes?.length" style="padding: 1rem 0" :recipes="recipes" />
+      <RecipeSlider v-if="trendingRecipes?.length" class="slider__recipes" :recipes="trendingRecipes" />
 
       <div>
         <Title text="Recent" size="h2" class="recipe__card" />
@@ -61,11 +61,14 @@ export default {
     return {
       categories: ['meat', 'fish', 'poultry', 'vegetarian', 'pasta', 'soup', 'baking', 'dessert'],
       recipes: null,
+      trendingRecipes: [],
     };
   },
 
   created() {
     this.fetchRecentRecipes();
+
+    this.fetchTrendingRecipes();
   },
 
   methods: {
@@ -74,6 +77,19 @@ export default {
       const URL = `${HOST}/recipes/recent`;
 
       this.recipes = await axios
+        .get(URL)
+        .then((res) => res?.data?.recipes || [])
+        .catch((error) => {
+          console.error('ERROR fetching recent recipes', error);
+          return [];
+        });
+    },
+
+    async fetchTrendingRecipes() {
+      const HOST = process.env.VUE_APP_API_URL;
+      const URL = `${HOST}/recipes/trending`;
+
+      this.trendingRecipes = await axios
         .get(URL)
         .then((res) => res?.data?.recipes || [])
         .catch((error) => {
@@ -152,5 +168,9 @@ export default {
       text-transform: capitalize;
     }
   }
+}
+
+.slider__recipes {
+  padding: 1rem 0;
 }
 </style>
