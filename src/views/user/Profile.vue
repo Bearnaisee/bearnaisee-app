@@ -54,9 +54,8 @@
         <p v-else>User has no recipes</p>
       </div>
     </div>
-    <div class="search-area">
-      <input type="text" placeholder="Search on Bearnaisee..." class="searchbar" />
-      <Button label="Search" />
+    <div class="search">
+      <input type="text" placeholder="Search for something..." class="searchbar" />
     </div>
   </div>
 </template>
@@ -226,11 +225,11 @@ export default {
       padding-top: 2.5rem;
     }
   }
-  .search-area {
+  .search {
     display: none;
 
     @media (min-width: 1024px) {
-      display: flex;
+      display: block;
       width: 20%;
       padding-top: 2.5rem;
       height: fit-content;
@@ -241,6 +240,8 @@ export default {
       text-align: center;
       border-radius: 4px;
       border: solid 1px var(--color-black);
+      width: 100%;
+      height: 2rem;
     }
   }
 }
