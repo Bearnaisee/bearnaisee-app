@@ -73,7 +73,6 @@ export default {
   display: flex;
   width: fit-content;
   flex-direction: column;
-  padding: 0 1rem;
 
   .buttons {
     display: none;

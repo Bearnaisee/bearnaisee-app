@@ -1,49 +1,63 @@
 <template>
-  <div v-if="!loading && !user">
-    <!-- TODO: pimp up this shit -->
-    <h1>User not found</h1>
-  </div>
-
-  <div v-else>
-    <Image :src="avatarUrl" class="avatar" />
-
-    <h1 size="h1" class="name">{{ user?.displayName || user?.username || $route.params.username }}</h1>
-
-    <p class="username">@{{ user?.username || $route.params.username }}</p>
-
-    <p v-if="user?.description" class="description">
-      {{ user.description }}
-    </p>
-
-    <div style="display: flex; gap: 1rem">
-      <p>
-        <span style="font-weight: 700">
-          {{ followerCount || 0 }}
-        </span>
-        followers
-      </p>
-
-      <p>
-        <span style="font-weight: 700">
-          {{ followingCount || 0 }}
-        </span>
-        following
-      </p>
+  <div class="web-layout">
+    <div class="sidenav">
+      <SideNav />
     </div>
 
-    <Button
-      v-if="user?.id !== getUserInfo?.id"
-      :label="following ? 'Unfollow' : 'Follow'"
-      type="button"
-      kind="primary"
-      style="margin-left: auto; height: fit-content"
-      @click="followUser"
-    />
+    <div class="content">
+      <div v-if="!loading && !user">
+        <!-- TODO: pimp up this shit -->
+        <h1>User not found</h1>
+      </div>
 
-    <h2>Recipes</h2>
+      <div v-else>
+        <Image :src="avatarUrl" class="avatar" />
 
-    <RecipeGrid v-if="recipes?.length" :recipes="recipes" />
-    <p v-else>User has no recipes</p>
+        <div class="content__social">
+          <div>
+            <h1 size="h1" class="name">{{ user?.displayName || user?.username || $route.params.username }}</h1>
+            <p class="username">@{{ user?.username || $route.params.username }}</p>
+          </div>
+          <Button
+            v-if="user?.id !== getUserInfo?.id"
+            :label="following ? 'Unfollow' : 'Follow'"
+            class="follow-button"
+            type="button"
+            kind="primary"
+            @click="followUser"
+          />
+        </div>
+
+        <p v-if="user?.description" class="description">
+          {{ user.description }}
+        </p>
+
+        <div style="display: flex; gap: 1rem">
+          <p>
+            <span style="font-weight: 700">
+              {{ followerCount || 0 }}
+            </span>
+            followers
+          </p>
+
+          <p>
+            <span style="font-weight: 700">
+              {{ followingCount || 0 }}
+            </span>
+            following
+          </p>
+        </div>
+
+        <Title text="Recipes" size="h2" class="content__title" />
+
+        <RecipeGrid v-if="recipes?.length" :recipes="recipes" />
+        <p v-else>User has no recipes</p>
+      </div>
+    </div>
+    <div class="search-area">
+      <input type="text" placeholder="Search on Bearnaisee..." class="searchbar" />
+      <Button label="Search" />
+    </div>
   </div>
 </template>
 
@@ -61,6 +75,8 @@ export default {
     Image: defineAsyncComponent(() => import('@/components/Image.vue')),
     RecipeGrid: defineAsyncComponent(() => import('@/components/RecipeGrid.vue')),
     Button: defineAsyncComponent(() => import('@/components/Button.vue')),
+    SideNav: defineAsyncComponent(() => import('@/components/SideNav.vue')),
+    Title: defineAsyncComponent(() => import('@/components/Title.vue')),
   },
 
   data() {
@@ -171,6 +187,64 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.web-layout {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+
+  @media (max-width: 1024px) {
+    display: block;
+  }
+
+  .sidenav {
+    @media (min-width: 1024px) {
+      padding-top: 1.5rem;
+      width: 20%;
+    }
+  }
+
+  .content {
+    .follow-button {
+      margin-left: auto;
+      height: fit-content;
+      margin: 20px 0px;
+    }
+
+    .content__social {
+      display: flex;
+      gap: 2.5rem;
+      place-items: center;
+    }
+
+    .content__title {
+      padding: 20px 0px;
+      padding-top: 4rem;
+    }
+
+    @media (min-width: 1024px) {
+      width: 60%;
+      padding-top: 2.5rem;
+    }
+  }
+  .search-area {
+    display: none;
+
+    @media (min-width: 1024px) {
+      display: flex;
+      width: 20%;
+      padding-top: 2.5rem;
+      height: fit-content;
+      gap: 1rem;
+    }
+
+    .searchbar {
+      text-align: center;
+      border-radius: 4px;
+      border: solid 1px var(--color-black);
+    }
+  }
+}
+
 .avatar {
   width: 12rem;
   aspect-ratio: 1/1;

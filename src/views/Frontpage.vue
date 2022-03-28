@@ -1,13 +1,13 @@
 <template>
   <div class="web-layout">
-    <div style="width: 20%" class="sidenav">
+    <div class="sidenav">
       <SideNav />
     </div>
 
     <div class="content">
       <TopNav />
 
-      <Title text="Top categories" size="h2" />
+      <Title text="Top categories" size="h2" class="content__title" />
 
       <div class="categories">
         <router-link
@@ -22,13 +22,13 @@
         </router-link>
       </div>
 
-      <Title text="Trending" size="h2" />
+      <Title text="Trending" size="h2" class="content__title" />
 
       <RecipeSlider v-if="trendingRecipes?.length" class="slider__recipes" :recipes="trendingRecipes" />
       <p v-else>No trending recipes</p>
 
       <div>
-        <Title text="Recent" size="h2" class="recipe__card" />
+        <Title text="Recent" size="h2" class="content__title" />
 
         <RecipeGrid v-if="recipes?.length" :recipes="recipes" :show-author="true" />
         <p v-else>No recent recipes</p>
@@ -112,62 +112,68 @@ export default {
   @media (max-width: 1024px) {
     display: block;
   }
-}
 
-.content {
-  @media (min-width: 1024px) {
-    width: 60%;
-    padding-top: 2.5rem;
-  }
-}
-.search-area {
-  display: none;
-
-  @media (min-width: 1024px) {
-    display: flex;
-    width: 20%;
-    padding-top: 2.5rem;
-    height: fit-content;
-    gap: 1rem;
-  }
-
-  .searchbar {
-    text-align: center;
-    border-radius: 4px;
-    border: solid 1px var(--color-black);
-  }
-}
-.sidenav {
-  @media (min-width: 1024px) {
-    padding-top: 1.5rem;
-  }
-}
-
-.categories {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  margin: 1rem 0;
-
-  @media (min-width: 1024px) {
-    margin: 3rem 0;
-    gap: 3rem;
-  }
-
-  .categories__link {
-    margin: 0 auto;
-    text-align: center;
-
+  .sidenav {
     @media (min-width: 1024px) {
-      padding: 1rem 2rem;
-      &:hover {
-        background-color: #ff7e6120;
-        border-radius: 10px;
-      }
+      padding-top: 2.5rem;
+      width: 20%;
+    }
+  }
+
+  .content {
+    @media (min-width: 1024px) {
+      width: 60%;
+      padding-top: 2.5rem;
     }
 
-    p {
-      text-transform: capitalize;
+    .content__title {
+      padding: 20px 0px;
+    }
+
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin: 1rem 0;
+
+      @media (min-width: 1024px) {
+        gap: 3rem;
+      }
+
+      .categories__link {
+        margin: 0 auto;
+        text-align: center;
+
+        @media (min-width: 1024px) {
+          padding: 1rem 2rem;
+          &:hover {
+            background-color: #ff7e6120;
+            border-radius: 10px;
+          }
+        }
+
+        p {
+          text-transform: capitalize;
+        }
+      }
+    }
+  }
+
+  .search-area {
+    display: none;
+
+    @media (min-width: 1024px) {
+      display: flex;
+      width: 20%;
+      padding-top: 2.5rem;
+      height: fit-content;
+      gap: 1rem;
+    }
+
+    .searchbar {
+      text-align: center;
+      border-radius: 4px;
+      border: solid 1px var(--color-black);
     }
   }
 }
