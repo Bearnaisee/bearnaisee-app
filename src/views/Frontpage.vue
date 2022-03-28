@@ -25,11 +25,13 @@
       <Title text="Trending" size="h2" />
 
       <RecipeSlider v-if="trendingRecipes?.length" class="slider__recipes" :recipes="trendingRecipes" />
+      <p v-else>No trending recipes</p>
 
       <div>
         <Title text="Recent" size="h2" class="recipe__card" />
 
         <RecipeGrid v-if="recipes?.length" :recipes="recipes" :show-author="true" />
+        <p v-else>No recent recipes</p>
       </div>
     </div>
 
@@ -60,7 +62,7 @@ export default {
   data() {
     return {
       categories: ['meat', 'fish', 'poultry', 'vegetarian', 'pasta', 'soup', 'baking', 'dessert'],
-      recipes: null,
+      recipes: [],
       trendingRecipes: [],
     };
   },
