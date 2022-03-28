@@ -333,7 +333,7 @@ export default {
   input[type='range']::-webkit-slider-thumb {
     // Slider thump
     box-shadow: 0px 0px 0px #000000;
-    border: 4px solid #ff7d61;
+    border: 4px solid var(--color-highlight);
     height: 18px;
     width: 18px;
     border-radius: 25px;
@@ -344,7 +344,7 @@ export default {
   }
 
   input[type='range']:focus::-webkit-slider-runnable-track {
-    background: #ff7d61;
+    background: var(--color-highlight);
   }
 
   input[type='range']::-moz-range-track {
@@ -352,18 +352,18 @@ export default {
     height: 5px;
     cursor: pointer;
     box-shadow: 0px 0px 0px #000000;
-    background: #ff7d61;
+    background: var(--color-highlight);
     border-radius: 1px;
     border: 0px solid #000000;
   }
 
   input[type='range']::-moz-range-thumb {
     box-shadow: 0px 0px 0px #000000;
-    border: 1px solid #ff7d61;
+    border: 1px solid var(--color-highlight);
     height: 18px;
     width: 18px;
     border-radius: 25px;
-    background: #ff7d61;
+    background: var(--color-highlight);
     cursor: pointer;
   }
 
@@ -377,13 +377,13 @@ export default {
   }
 
   input[type='range']::-ms-fill-lower {
-    background: #ff7d61;
+    background: var(--color-highlight);
     border: 0px solid #000000;
     border-radius: 2px;
     box-shadow: 0px 0px 0px #000000;
   }
   input[type='range']::-ms-fill-upper {
-    background: #ff7d61;
+    background: var(--color-highlight);
     border: 0px solid #000000;
     border-radius: 2px;
     box-shadow: 0px 0px 0px #000000;
@@ -391,18 +391,18 @@ export default {
   input[type='range']::-ms-thumb {
     margin-top: 1px;
     box-shadow: 0px 0px 0px #000000;
-    border: 1px solid #ff7d61;
+    border: 1px solid var(--color-highlight);
     height: 18px;
     width: 18px;
     border-radius: 25px;
-    background: #ff7d61;
+    background: var(--color-highlight);
     cursor: pointer;
   }
   input[type='range']:focus::-ms-fill-lower {
-    background: #ff7d61;
+    background: var(--color-highlight);
   }
   input[type='range']:focus::-ms-fill-upper {
-    background: #ff7d61;
+    background: var(--color-highlight);
   }
 
   // Add ingredients
@@ -453,7 +453,7 @@ export default {
       padding-bottom: 0.2em;
     }
     input[type='checkbox']:checked:before {
-      background-color: rgba($color: #ff7d61, $alpha: 0.3);
+      background-color: rgba($color: var(--color-highlight), $alpha: 0.3);
       color: #ffffff;
     }
   }
