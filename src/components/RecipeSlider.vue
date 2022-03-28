@@ -46,9 +46,6 @@ export default {
     background-color: #7e7e7e70;
   }
 
-  .slider__text {
-  }
-
   .slider__image {
     width: 30rem;
     height: auto;
@@ -56,6 +53,10 @@ export default {
     max-width: 80vw;
     max-height: 12rem;
     border-radius: var(--border-radius);
+
+    @media (max-width: 1024px) {
+      width: 20rem;
+    }
 
     @media (min-width: 1280px) {
       max-height: 20rem;
