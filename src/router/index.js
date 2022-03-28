@@ -21,7 +21,11 @@ const routes = [
     name: 'Tos',
     component: () => import(/* webpackChunkName: "[request]" */ '../components/TermsOfService.vue'),
   },
-
+  {
+    path: '/category/:category',
+    name: 'Category',
+    component: () => import(/* webpackChunkName: "[request]" */ '../views/category/Category.vue'),
+  },
   {
     path: '/:username',
     name: 'User',
