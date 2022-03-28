@@ -39,8 +39,8 @@
         <input type="text" />
       </div>
 
-      <div style="width: 100%">
-        <div class="ingredients" style="width: 100%">
+      <div>
+        <div class="ingredients">
           <h6>Ingredient</h6>
 
           <h6>Amount</h6>
@@ -48,11 +48,11 @@
           <h6>Metric</h6>
 
           <template v-for="(ingredient, ingredientIndex) of recipe.ingredients" :key="ingredientIndex">
-            <input v-model="ingredient.ingredient" type="text" style="width: auto" />
+            <input v-model="ingredient.ingredient" type="text" style="width: auto;" />
 
-            <input v-model.number="ingredient.amount" type="number" style="width: auto" />
+            <input v-model.number="ingredient.amount" type="number"/>
 
-            <select v-model="ingredient.metricId" style="width: auto">
+            <select v-model="ingredient.metricId">
               <option v-for="metric of getMetrics" :key="metric.id" :value="metric.id">
                 {{ metric.metric }}
               </option>
@@ -60,7 +60,7 @@
           </template>
         </div>
 
-        <Button label="Add ingredient" class="add-step" kind="secondary" @click="addIngredient" />
+        <Button label="Add ingredient" class="add-step" kind="secondary" @click="addIngredient" style="margin-top: 0.3rem;"/>
       </div>
 
       <div class="steps">
@@ -70,8 +70,10 @@
           <p>Step: {{ stepIndex + 1 }}</p>
 
           <textarea v-model="step.content" type="text" placeholder="..." rows="5"></textarea>
+          <div class="optional">
           <p>Optional</p>
           <input v-model="step.optional" type="checkbox" />
+          </div>
         </div>
 
         <Button kind="primary" label="+ Add step" class="add-step" @click="addStep" />
@@ -248,6 +250,8 @@ export default {
     border: 2px solid rgba($color: #7e7e7e, $alpha: 0.3);
     width: 100%;
     resize: vertical;
+    padding: 00.25rem;
+    font-family: "Poppins", sans-serif;
   }
 
   input {
@@ -256,6 +260,7 @@ export default {
     border: 2px solid rgba($color: #7e7e7e, $alpha: 0.3);
     width: 100%;
     height: 2rem;
+    padding: 0.25rem;
   }
 
   // Estimated time slider
@@ -372,7 +377,9 @@ export default {
   // Add ingredients
   .ingredients {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid: auto-flow / 0fr 0.6fr 0fr;
+    justify-content: space-between;
+    row-gap: 0.3rem;
   }
 
   // Steps
@@ -396,32 +403,44 @@ export default {
       resize: vertical;
     }
 
-    input[type='checkbox'] {
-      border-color: rgba(126, 126, 126, 0.3);
-      border-radius: 4px;
-      border: 2px solid rgba($color: #7e7e7e, $alpha: 0.3);
-      background-color: red;
-
-      .description {
-        display: flex;
-      }
-
-      input[type='checkbox']:checked {
-        background-color: deeppink;
-      }
+    .optional{
+      display: flex;
+    align-items: center;
+    gap: 0.5rem;
     }
+
+    input[type=checkbox] {
+	       cursor: pointer;
+         width: 1.5rem;
+         height: 1.5rem;
+         appearance: none;
+         
+    
+}
+input[type=checkbox]:before {
+         content: '\2714';
+         color:transparent;
+         padding: 0.1em;
+         padding-bottom: 0.2em;
+         
+}
+input[type=checkbox]:checked:before {
+         background-color: rgba($color: #ff7d61, $alpha: 0.3);
+         color: #ffffff;
+}
   }
 
   // Save and upload buttons
 
   .btns {
-    display: flex;
-    justify-content: space-evenly;
-    margin-bottom: 1.25rem;
+    display: inline-grid;
+    grid: auto-flow / 2fr 2fr;
+    column-gap: 1rem;
+    padding: 3rem 1rem;
 
     Button {
-      padding: 0.25rem 2.5rem;
       font-size: 1rem;
+      
     }
   }
 }
