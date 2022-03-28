@@ -16,7 +16,7 @@
     <div class="builder">
       <div>
         <h6>Recipe name</h6>
-        <input v-model="recipe.title" type="text" />
+        <input v-model="recipe.title" type="text" maxlength="100" />
       </div>
 
       <div>
@@ -48,7 +48,7 @@
           <h6>Metric</h6>
 
           <template v-for="(ingredient, ingredientIndex) of recipe.ingredients" :key="ingredientIndex">
-            <input v-model="ingredient.ingredient" type="text" style="width: auto" />
+            <input v-model="ingredient.ingredient" type="text" style="width: auto" maxlength="255" />
 
             <input v-model.number="ingredient.amount" type="number" />
 
