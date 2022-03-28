@@ -13,3 +13,5 @@
  * @returns {UserInfo} state.userInfo
  */
 export const getUserInfo = (state) => state?.userInfo;
+
+export const getMetrics = (state) => state?.metrics ?? [];

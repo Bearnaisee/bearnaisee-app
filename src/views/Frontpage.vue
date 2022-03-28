@@ -35,9 +35,13 @@
       </div>
     </div>
 
-    <div class="search-area">
-      <input type="text" placeholder="Search on Bearnaisee..." class="searchbar" />
-      <Button label="Search" />
+    <div class="search">
+      <div>
+        <SearchBar />
+      </div>
+      <div v-if="getUserInfo?.id">
+        <RecommendedFollow />
+      </div>
     </div>
   </div>
 </template>
@@ -45,6 +49,7 @@
 <script>
 import { defineAsyncComponent } from 'vue';
 import axios from 'axios';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'Frontpage',
@@ -56,7 +61,8 @@ export default {
     TopNav: defineAsyncComponent(() => import('@/components/TopNav.vue')),
     RecipeSlider: defineAsyncComponent(() => import('@/components/RecipeSlider.vue')),
     SideNav: defineAsyncComponent(() => import('@/components/SideNav.vue')),
-    Button: defineAsyncComponent(() => import('@/components/Button.vue')),
+    SearchBar: defineAsyncComponent(() => import('@/components/SearchBar.vue')),
+    RecommendedFollow: defineAsyncComponent(() => import('@/components/RecommendedFollow.vue')),
   },
 
   data() {
@@ -65,6 +71,10 @@ export default {
       recipes: [],
       trendingRecipes: [],
     };
+  },
+
+  computed: {
+    ...mapGetters(['getUserInfo']),
   },
 
   created() {
@@ -147,7 +157,7 @@ export default {
         @media (min-width: 1024px) {
           padding: 1rem 2rem;
           &:hover {
-            background-color: #ff7e6120;
+            background-color: #f7e8e855;
             border-radius: 10px;
           }
         }
@@ -159,21 +169,15 @@ export default {
     }
   }
 
-  .search-area {
+  .search {
     display: none;
 
     @media (min-width: 1024px) {
-      display: flex;
+      display: block;
       width: 20%;
       padding-top: 2.5rem;
       height: fit-content;
       gap: 1rem;
-    }
-
-    .searchbar {
-      text-align: center;
-      border-radius: 4px;
-      border: solid 1px var(--color-black);
     }
   }
 }
