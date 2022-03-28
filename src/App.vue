@@ -1,13 +1,20 @@
 <template>
   <div class="container">
     <router-view style="width: 100%" />
+
+    <MobileNav />
   </div>
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 import { mapActions } from 'vuex';
 
 export default {
+  components: {
+    MobileNav: defineAsyncComponent(() => import('@/components/MobileNav.vue')),
+  },
+
   created() {
     this.initStore();
   },
@@ -73,7 +80,7 @@ h6 {
 .container {
   width: 100%;
   margin: auto;
-  padding-bottom: 3rem;
+  padding-bottom: 10rem;
 
   @media (min-width: 640px) {
     max-width: min(80vw, 640px);
