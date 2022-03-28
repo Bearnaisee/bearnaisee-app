@@ -5,7 +5,7 @@
     <router-link to="#" class="nav__link"> <Icon icon="search" width="40" height="40" /> </router-link>
 
     <router-link to="#" class="nav__link">
-      <Icon icon="create" width="60" height="60" color="#e94146" />
+      <Icon icon="create" width="60" height="60" color="#ff7d61" />
     </router-link>
 
     <router-link to="#" class="nav__link"> <Icon icon="bookmark" width="40" height="40" /> </router-link>
