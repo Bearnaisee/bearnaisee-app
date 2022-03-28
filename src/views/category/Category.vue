@@ -72,8 +72,7 @@ export default {
 
   methods: {
     async fetchRecentRecipes() {
-      const HOST = process.env.VUE_APP_API_URL;
-      const URL = `${HOST}/recipes/${this.$route.params.category.toLowerCase()}/recent`;
+      const URL = `${process.env.VUE_APP_API_URL}/recipes/${this.$route.params.category.toLowerCase()}/recent`;
 
       this.recipes = await axios
         .get(URL)
@@ -85,8 +84,7 @@ export default {
     },
 
     async fetchTrendingRecipes() {
-      const HOST = process.env.VUE_APP_API_URL;
-      const URL = `${HOST}/recipes/${this.$route.params.category.toLowerCase()}/trending`;
+      const URL = `${process.env.VUE_APP_API_URL}/recipes/${this.$route.params.category.toLowerCase()}/trending`;
 
       this.trendingRecipes = await axios
         .get(URL)

@@ -95,8 +95,7 @@ export default {
 
     async login() {
       if (this.email?.length && this.password?.length) {
-        const HOST = process.env.VUE_APP_API_URL;
-        const URL = `${HOST}/user/login`;
+        const URL = `${process.env.VUE_APP_API_URL}/user/login`;
 
         const result = await axios
           .post(URL, {
@@ -143,8 +142,7 @@ export default {
 
     async register() {
       if (this.username?.length && this.email?.length && this.password?.length) {
-        const HOST = process.env.VUE_APP_API_URL;
-        const URL = `${HOST}/user/create`;
+        const URL = `${process.env.VUE_APP_API_URL}/user/create`;
 
         const result = await axios
           .post(URL, {

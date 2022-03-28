@@ -85,8 +85,7 @@ export default {
 
   methods: {
     async fetchRecentRecipes() {
-      const HOST = process.env.VUE_APP_API_URL;
-      const URL = `${HOST}/recipes/recent`;
+      const URL = `${process.env.VUE_APP_API_URL}/recipes/recent`;
 
       this.recipes = await axios
         .get(URL)
@@ -98,8 +97,7 @@ export default {
     },
 
     async fetchTrendingRecipes() {
-      const HOST = process.env.VUE_APP_API_URL;
-      const URL = `${HOST}/recipes/trending`;
+      const URL = `${process.env.VUE_APP_API_URL}/recipes/trending`;
 
       this.trendingRecipes = await axios
         .get(URL)

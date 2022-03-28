@@ -18,7 +18,6 @@ export const saveUserInfo = ({ commit }, payload) => {
 };
 
 /**
- *
  * @summary fetch ingridient metrics
  */
 export const fetchMetrics = async ({ commit }) => {

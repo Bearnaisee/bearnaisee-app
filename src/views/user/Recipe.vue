@@ -160,8 +160,7 @@ export default {
 
   methods: {
     async fetchRecipe() {
-      const HOST = process.env.VUE_APP_API_URL;
-      const URL = `${HOST}/recipe/${this.$route.params.username}/${this.$route.params.slug}`;
+      const URL = `${process.env.VUE_APP_API_URL}/recipe/${this.$route.params.username}/${this.$route.params.slug}`;
 
       const recipe = await axios
         .get(URL)
