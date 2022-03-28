@@ -1,34 +1,21 @@
 <template>
   <div class="web-layout">
-    <div class="sidenav">
+    <div style="width: 20%" class="sidenav">
       <SideNav />
     </div>
 
     <div class="content">
       <TopNav />
 
-      <Title text="Top categories" size="h2" class="content__title" />
+      <Title :text="categoryTitle" size="h1" />
 
-      <div class="categories">
-        <router-link
-          v-for="(category, categoryIndex) of categories"
-          :key="categoryIndex"
-          :to="`/category/${category}`"
-          class="categories__link"
-        >
-          <Icon class="categories__icon" :icon="category" width="30" height="30" />
-
-          <p>{{ category }}</p>
-        </router-link>
-      </div>
-
-      <Title text="Trending" size="h2" class="content__title" />
+      <Title text="Trending" size="h2" />
 
       <RecipeSlider v-if="trendingRecipes?.length" class="slider__recipes" :recipes="trendingRecipes" />
       <p v-else>No trending recipes</p>
 
       <div>
-        <Title text="Recent" size="h2" class="content__title" />
+        <Title text="Recent" size="h2" />
 
         <RecipeGrid v-if="recipes?.length" :recipes="recipes" :show-author="true" />
         <p v-else>No recent recipes</p>
@@ -47,10 +34,9 @@ import { defineAsyncComponent } from 'vue';
 import axios from 'axios';
 
 export default {
-  name: 'Frontpage',
+  name: 'Category',
 
   components: {
-    Icon: defineAsyncComponent(() => import('@/components/Icon.vue')),
     RecipeGrid: defineAsyncComponent(() => import('@/components/RecipeGrid.vue')),
     Title: defineAsyncComponent(() => import('@/components/Title.vue')),
     TopNav: defineAsyncComponent(() => import('@/components/TopNav.vue')),
@@ -61,10 +47,21 @@ export default {
 
   data() {
     return {
-      categories: ['meat', 'fish', 'poultry', 'vegetarian', 'pasta', 'soup', 'baking', 'dessert'],
-      recipes: [],
+      recipes: null,
       trendingRecipes: [],
     };
+  },
+
+  computed: {
+    /**
+     * @returns {string}
+     */
+    categoryTitle() {
+      return `${this.$route.params.category.slice(0, 1).toUpperCase()}${this.$route.params.category.slice(
+        1,
+        this.$route.params.category.length,
+      )}`;
+    },
   },
 
   created() {
@@ -76,7 +73,7 @@ export default {
   methods: {
     async fetchRecentRecipes() {
       const HOST = process.env.VUE_APP_API_URL;
-      const URL = `${HOST}/recipes/recent`;
+      const URL = `${HOST}/recipes/${this.$route.params.category.toLowerCase()}/recent`;
 
       this.recipes = await axios
         .get(URL)
@@ -89,7 +86,7 @@ export default {
 
     async fetchTrendingRecipes() {
       const HOST = process.env.VUE_APP_API_URL;
-      const URL = `${HOST}/recipes/trending`;
+      const URL = `${HOST}/recipes/${this.$route.params.category.toLowerCase()}/trending`;
 
       this.trendingRecipes = await axios
         .get(URL)
@@ -112,68 +109,62 @@ export default {
   @media (max-width: 1024px) {
     display: block;
   }
+}
 
-  .sidenav {
-    @media (min-width: 1024px) {
-      padding-top: 2.5rem;
-      width: 20%;
-    }
+.content {
+  @media (min-width: 1024px) {
+    width: 60%;
+    padding-top: 2.5rem;
+  }
+}
+.search-area {
+  display: none;
+
+  @media (min-width: 1024px) {
+    display: flex;
+    width: 20%;
+    padding-top: 2.5rem;
+    height: fit-content;
+    gap: 1rem;
   }
 
-  .content {
-    @media (min-width: 1024px) {
-      width: 60%;
-      padding-top: 2.5rem;
-    }
+  .searchbar {
+    text-align: center;
+    border-radius: 4px;
+    border: solid 1px var(--color-black);
+  }
+}
+.sidenav {
+  @media (min-width: 1024px) {
+    padding-top: 1.5rem;
+  }
+}
 
-    .content__title {
-      padding: 20px 0px;
-    }
+.categories {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin: 1rem 0;
 
-    .categories {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
-      margin: 1rem 0;
-
-      @media (min-width: 1024px) {
-        gap: 3rem;
-      }
-
-      .categories__link {
-        margin: 0 auto;
-        text-align: center;
-
-        @media (min-width: 1024px) {
-          padding: 1rem 2rem;
-          &:hover {
-            background-color: #ff7e6120;
-            border-radius: 10px;
-          }
-        }
-
-        p {
-          text-transform: capitalize;
-        }
-      }
-    }
+  @media (min-width: 1024px) {
+    margin: 3rem 0;
+    gap: 3rem;
   }
 
-  .search-area {
-    display: none;
+  .categories__link {
+    margin: 0 auto;
+    text-align: center;
 
     @media (min-width: 1024px) {
-      display: flex;
-      width: 20%;
-      padding-top: 2.5rem;
-      height: fit-content;
-      gap: 1rem;
+      padding: 1rem 2rem;
+      &:hover {
+        background-color: #ff7e6120;
+        border-radius: 10px;
+      }
     }
 
-    .searchbar {
-      text-align: center;
-      border-radius: 4px;
-      border: solid 1px var(--color-black);
+    p {
+      text-transform: capitalize;
     }
   }
 }
