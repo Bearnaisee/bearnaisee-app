@@ -12,7 +12,7 @@
 
     <button v-if="getUserInfo" type="button" class="nav__button" @click="logout">Log out</button>
 
-    <router-link v-if="getUserInfo" to="#" class="add"> Create Recipe </router-link>
+    <router-link v-if="getUserInfo" to="/create" class="add"> Create Recipe </router-link>
 
     <div v-if="!getUserInfo" class="buttons">
       <Button kind="secondary" label="Signup" @clicked="switchLoginModal(false)" />
@@ -108,10 +108,10 @@ export default {
 
   .nav__button {
     margin-top: 1.25rem;
-    border: 1px solid var(--highlight-color);
+    border: 1px solid var(--color-highlight);
     background-color: #fff;
     font-size: 1.25rem;
-    color: var(--highlight-color);
+    color: var(--color-highlight);
     text-align: left;
     width: fit-content;
     padding: 0.2rem 1rem;
@@ -119,13 +119,13 @@ export default {
 
     &:hover {
       transition: 0.2s;
-      background-color: #ff7d61;
+      background-color: var(--color-highlight);
       color: #fff;
     }
   }
 
   .add {
-    background-color: var(--highlight-color);
+    background-color: var(--color-highlight);
     width: fit-content;
     padding: 0.75rem 1.5rem;
     margin-top: 1.25rem;

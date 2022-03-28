@@ -115,9 +115,8 @@ export default {
 
   .searchbar {
     text-align: center;
-    height: 2.25rem;
     border-radius: 4px;
-    border: solid 1px var(--text-primary);
+    border: solid 1px var(--color-black);
   }
 }
 .sidenav {
