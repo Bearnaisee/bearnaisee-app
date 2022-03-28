@@ -1,9 +1,8 @@
 <template>
   <div class="container">
     <router-view style="width: 100%" />
-
-    <MobileNav />
   </div>
+  <MobileNav />
 </template>
 
 <script>
