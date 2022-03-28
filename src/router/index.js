@@ -8,19 +8,15 @@ const routes = [
     component: () => import(/* webpackChunkName: "[request]" */ '../views/Frontpage.vue'),
   },
   {
-    path: '/home',
-    name: 'Dashboard',
-    component: () => import(/* webpackChunkName: "[request]" */ '../views/Dashboard.vue'),
-  },
-  {
-    path: '/search',
-    name: 'search',
-    component: () => import(/* webpackChunkName: "[request]" */ '../views/Search.vue'),
-  },
-  {
     path: '/tos',
     name: 'Tos',
     component: () => import(/* webpackChunkName: "[request]" */ '../components/TermsOfService.vue'),
+  },
+
+  {
+    path: '/category/:category',
+    name: 'Category',
+    component: () => import(/* webpackChunkName: "[request]" */ '../views/category/Category.vue'),
   },
   {
     path: '/:username',
@@ -68,6 +64,7 @@ const routes = [
 ];
 
 const router = createRouter({
+  mode: 'history',
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });

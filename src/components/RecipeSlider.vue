@@ -1,21 +1,22 @@
 <template>
   <div class="slider">
     <router-link v-for="(card, cardIndex) of recipes" :key="cardIndex" :to="`/${card.author}/${card.slug}`">
-      <Image :url="card.img" class="slider__image" style="width: 80vw" />
+      <Image :src="card.coverImage" class="slider__image" />
 
-      <p class="slider__card-title">{{ card.title }}</p>
+      <Title class="slider__text" size="h3" :text="card.title" />
     </router-link>
   </div>
 </template>
 
 <script>
-import Image from '@/components/Image.vue';
+import { defineAsyncComponent } from 'vue';
 
 export default {
   name: 'RecipeSlider',
 
   components: {
-    Image,
+    Image: defineAsyncComponent(() => import('@/components/Image.vue')),
+    Title: defineAsyncComponent(() => import('@/components/Title.vue')),
   },
 
   props: {
@@ -32,32 +33,34 @@ export default {
   width: 100%;
   display: flex;
   overflow-x: scroll;
-  gap: 1rem;
-  height: auto;
+  gap: 2rem;
+  height: fit-content;
+  margin-bottom: 2rem;
 
-  /* width */
-  ::-webkit-scrollbar {
-    width: 10px;
+  &::-webkit-scrollbar {
+    background-color: rgba(#000, 0.02);
   }
 
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: #888;
-  }
-
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555;
+  &::-webkit-scrollbar-thumb {
+    border-radius: 999999px;
+    background-color: #7e7e7e70;
   }
 
   .slider__image {
-    min-width: 200px;
-    width: 100%;
+    width: 30rem;
+    height: auto;
+    object-fit: cover;
+    max-width: 80vw;
+    max-height: 12rem;
+    border-radius: var(--border-radius);
+
+    @media (max-width: 1024px) {
+      width: 20rem;
+    }
+
+    @media (min-width: 1280px) {
+      max-height: 20rem;
+    }
   }
 }
 </style>

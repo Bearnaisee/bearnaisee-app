@@ -1,111 +1,188 @@
 <template>
-  <div style="padding: 0 1rem">
-    <TopNav />
-
-    <Title text="Top categories" size="h2" />
-
-    <div class="categories">
-      <router-link
-        v-for="(category, categoryIndex) of categories"
-        :key="categoryIndex"
-        :to="`/category/${category}`"
-        class="categories__link"
-      >
-        <Icon class="categories__icon" :icon="category" width="30" height="30" />
-
-        <p>{{ category }}</p>
-      </router-link>
+  <div class="web-layout">
+    <div class="sidenav">
+      <SideNav />
     </div>
 
-    <Title text="Trending" size="h2" />
+    <div class="content">
+      <TopNav />
 
-    <RecipeSlider style="padding: 1rem 0" :recipes="recipes" />
+      <Title text="Top categories" size="h2" class="content__title" />
 
-    <div class="recipes">
-      <Title text="Recent" size="h2" class="recipe__card" />
+      <div class="categories">
+        <router-link
+          v-for="(category, categoryIndex) of categories"
+          :key="categoryIndex"
+          :to="`/category/${category}`"
+          class="categories__link"
+        >
+          <Icon class="categories__icon" :icon="category" width="30" height="30" />
 
-      <RecipeCard
-        v-for="(recipe, recipeIndex) of recipes"
-        :key="recipeIndex"
-        :title="recipe.title"
-        :time="recipe.time"
-        :tags="recipe.tags"
-        :slug="recipe.slug"
-        :author="recipe.author"
-        :image="recipe.image"
-      />
+          <p>{{ category }}</p>
+        </router-link>
+      </div>
+
+      <Title text="Trending" size="h2" class="content__title" />
+
+      <RecipeSlider v-if="trendingRecipes?.length" class="slider__recipes" :recipes="trendingRecipes" />
+      <p v-else>No trending recipes</p>
+
+      <div>
+        <Title text="Recent" size="h2" class="content__title" />
+
+        <RecipeGrid v-if="recipes?.length" :recipes="recipes" :show-author="true" />
+        <p v-else>No recent recipes</p>
+      </div>
+    </div>
+
+    <div class="search">
+      <div>
+        <SearchBar />
+      </div>
+      <div v-if="getUserInfo?.id">
+        <RecommendedFollow />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { defineAsyncComponent } from 'vue';
+import axios from 'axios';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'Frontpage',
 
   components: {
     Icon: defineAsyncComponent(() => import('@/components/Icon.vue')),
-    RecipeCard: defineAsyncComponent(() => import('@/components/RecipeCard.vue')),
+    RecipeGrid: defineAsyncComponent(() => import('@/components/RecipeGrid.vue')),
     Title: defineAsyncComponent(() => import('@/components/Title.vue')),
     TopNav: defineAsyncComponent(() => import('@/components/TopNav.vue')),
     RecipeSlider: defineAsyncComponent(() => import('@/components/RecipeSlider.vue')),
+    SideNav: defineAsyncComponent(() => import('@/components/SideNav.vue')),
+    SearchBar: defineAsyncComponent(() => import('@/components/SearchBar.vue')),
+    RecommendedFollow: defineAsyncComponent(() => import('@/components/RecommendedFollow.vue')),
   },
 
   data() {
     return {
       categories: ['meat', 'fish', 'poultry', 'vegetarian', 'pasta', 'soup', 'baking', 'dessert'],
-      recipes: [
-        {
-          title: 'Bolo',
-          time: 25,
-          tags: ['Italian', 'Meat', 'Pasta'],
-          author: 'fili',
-          slug: 'bolo-boys',
-          image: 'https://picsum.photos/1000/1000',
-        },
-        {
-          title: 'Lasagne',
-          time: 25,
-          tags: ['Italian', 'Meat', 'Pasta'],
-          author: 'lil mart',
-          slug: 'lasagne',
-          image: 'https://picsum.photos/1000/1000',
-        },
-        {
-          title: 'dunser',
-          time: 25,
-          tags: ['dansk'],
-          author: 'børge',
-          slug: 'dunser',
-          image: 'https://picsum.photos/1000/1000',
-        },
-      ],
+      recipes: [],
+      trendingRecipes: [],
     };
+  },
+
+  computed: {
+    ...mapGetters(['getUserInfo']),
+  },
+
+  created() {
+    this.fetchRecentRecipes();
+
+    this.fetchTrendingRecipes();
+  },
+
+  methods: {
+    async fetchRecentRecipes() {
+      const HOST = process.env.VUE_APP_API_URL;
+      const URL = `${HOST}/recipes/recent`;
+
+      this.recipes = await axios
+        .get(URL)
+        .then((res) => res?.data?.recipes || [])
+        .catch((error) => {
+          console.error('ERROR fetching recent recipes', error);
+          return [];
+        });
+    },
+
+    async fetchTrendingRecipes() {
+      const HOST = process.env.VUE_APP_API_URL;
+      const URL = `${HOST}/recipes/trending`;
+
+      this.trendingRecipes = await axios
+        .get(URL)
+        .then((res) => res?.data?.recipes || [])
+        .catch((error) => {
+          console.error('ERROR fetching recent recipes', error);
+          return [];
+        });
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.categories {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  margin: 1rem 0;
+.web-layout {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
 
-  .categories__link {
-    margin: 0 auto;
-    text-align: center;
+  @media (max-width: 1024px) {
+    display: block;
+  }
 
-    p {
-      text-transform: capitalize;
+  .sidenav {
+    @media (min-width: 1024px) {
+      padding-top: 2.5rem;
+      width: 20%;
+    }
+  }
+
+  .content {
+    @media (min-width: 1024px) {
+      width: 60%;
+      padding-top: 2.5rem;
+    }
+
+    .content__title {
+      padding: 20px 0px;
+    }
+
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin: 1rem 0;
+
+      @media (min-width: 1024px) {
+        gap: 3rem;
+      }
+
+      .categories__link {
+        margin: 0 auto;
+        text-align: center;
+
+        @media (min-width: 1024px) {
+          padding: 1rem 2rem;
+          &:hover {
+            background-color: #f7e8e855;
+            border-radius: 10px;
+          }
+        }
+
+        p {
+          text-transform: capitalize;
+        }
+      }
+    }
+  }
+
+  .search {
+    display: none;
+
+    @media (min-width: 1024px) {
+      display: block;
+      width: 20%;
+      padding-top: 2.5rem;
+      height: fit-content;
+      gap: 1rem;
     }
   }
 }
 
-.recipes {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+.slider__recipes {
+  padding: 1rem 0;
 }
 </style>

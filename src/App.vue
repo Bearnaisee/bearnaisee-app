@@ -1,21 +1,37 @@
 <template>
-  <div></div>
-
   <div class="container">
     <router-view style="width: 100%" />
+
+    <MobileNav />
   </div>
 </template>
 
 <script>
-export default {};
+import { defineAsyncComponent } from 'vue';
+import { mapActions } from 'vuex';
+
+export default {
+  components: {
+    MobileNav: defineAsyncComponent(() => import('@/components/MobileNav.vue')),
+  },
+
+  created() {
+    this.initStore();
+  },
+
+  methods: {
+    ...mapActions(['initStore']),
+  },
+};
 </script>
 
 <style lang="scss">
 :root {
-  --text-primary: #101010;
-  --highlight-color: #ff7d61;
+  --color-black: #101010;
+  --color-highlight: #ff7d61;
   --border-radius: 20px;
-  --header-text: 'Poppins', sans-serif;
+  --font-primary: 'Open Sans', sans-serif;
+  --font-secondary: 'Poppins', sans-serif;
 }
 
 * {
@@ -25,7 +41,7 @@ export default {};
   box-sizing: border-box;
   transition: 0.4s;
   line-height: 1.6;
-  color: var(--text-primary);
+  color: var(--color-black);
 
   &::before,
   &::after {
@@ -37,38 +53,53 @@ export default {};
   }
 }
 
+*,
+body,
+html {
+  font-family: var(--font-primary);
+}
+
 body,
 html {
   scroll-behavior: smooth;
-  font-family: 'Open Sans', sans-serif;
   height: 100%;
   padding-top: 0;
   width: 100%;
-  color: var(--text-primary);
+  color: var(--color-black);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-secondary);
 }
 
 .container {
   width: 100%;
   margin: auto;
+  padding-bottom: 10rem;
 
   @media (min-width: 640px) {
-    max-width: 640px;
+    max-width: min(80vw, 640px);
   }
 
   @media (min-width: 768px) {
-    max-width: 768px;
+    max-width: min(80vw, 768px);
   }
 
   @media (min-width: 1024px) {
-    max-width: 1024px;
+    max-width: min(80vw, 1024px);
   }
 
   @media (min-width: 1280px) {
-    max-width: 1280px;
+    max-width: min(80vw, 1280px);
   }
 
   @media (min-width: 1536px) {
-    max-width: 1536px;
+    max-width: min(80vw, 1536px);
   }
 }
 

@@ -1,118 +1,122 @@
 <template>
-  <div class="recipe">
-    <div class="recipe-img" :style="image">
-      <div class="recipe-top-btn">
-        <div class="recipe-back">
+  <div v-if="recipe" class="recipe">
+    <div
+      class="recipe__image"
+      :style="{ backgroundImage: `url(${recipe?.coverImage || 'https://picsum.photos/1000/1000'})` }"
+    >
+      <div class="recipe__header">
+        <button class="recipe__button">
           <Icon icon="arrow" width="24" height="auto" />
-        </div>
+        </button>
 
-        <div class="recipe-like">
-          <Icon icon="heart" color="#FF7D61" width="24" height="auto" />
-        </div>
+        <button class="recipe__button" @click="likeRecipe">
+          <Icon icon="heart" :color="userLikedRecipe ? '#FF7D61' : '#000'" width="24" height="auto" />
+        </button>
       </div>
     </div>
 
-    <div class="recipe-wrapper">
-      <div class="recipeinfo">
-        <Title :text="recipe.title" style="padding-top: 1rem" size="h1" />
+    <div class="recipe__wrapper">
+      <Title :text="recipe?.title" class="recipe__title" size="h1" />
 
-        <div style="margin-bottom: 1rem">
-          <router-link :to="`/${recipe.author}`" style="font-weight: 400"> By @{{ recipe.author }} </router-link>
-
-          <div>
-            <div class="rc-icon">
-              <Icon icon="time" color="#D53F29" width="12" height="auto" />
-
-              <p style="font-size: 0.675rem">{{ recipe.time }} minutes</p>
-            </div>
-
-            <div class="rc-icon">
-              <Icon icon="tag" color="#D53F29" width="12" height="auto" />
-
-              <div>
-                <router-link
-                  v-for="(tag, tagIndex) of recipe.tags"
-                  :key="tagIndex"
-                  :to="`#${tag}`"
-                  style="font-size: 0.675rem; font-weight: 400"
-                >
-                  {{ tagIndex === 0 ? tag : `, ${tag}` }}
-                </router-link>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <p>
-              {{ computedDescription }}
-            </p>
-
-            <button
-              v-if="recipe.description.split(' ').length > 20"
-              style="background: none; border: none; font-weight: 700"
-              @click="toggleShowMore"
-            >
-              <span v-if="showMore">Hide</span>
-
-              <span v-else>More</span>
-            </button>
-          </div>
-        </div>
+      <div>
+        <router-link :to="`/${$route.params.username}`"> By @{{ $route.params.username }} </router-link>
 
         <div>
-          <h3>Ingredients</h3>
-          <div>
-            <div
-              v-for="(ingredient, ingredientIndex) of recipe.ingredients"
-              :key="ingredientIndex"
-              style="display: grid; grid-template-columns: 1fr 5fr"
-            >
-              <p style="font-weight: 700">{{ ingredient.amount }}{{ ingredient.metric || '' }}</p>
+          <div v-if="recipe?.estimatedTime > 0" class="recipe__icon">
+            <Icon icon="time" color="#D53F29" width="12" height="auto" />
 
-              <p>
-                {{ ingredient.ingredient }}
-
-                <span v-if="ingredient.optional" style="font-weight: 700"> (optional) </span>
-              </p>
-            </div>
+            <p>{{ recipe.estimatedTime }} minutes</p>
           </div>
-        </div>
 
-        <div>
-          <h3>Steps</h3>
+          <div class="recipe__icon">
+            <Icon icon="tag" color="#D53F29" width="12" height="auto" />
 
-          <div v-for="(step, stepIndex) of recipe.steps" :key="stepIndex" style="margin-bottom: 1rem">
-            <div
-              style="display: flex; gap: 1rem; align-content: center; align-items: center"
-              @click="switchStep(stepIndex)"
-            >
-              <div
-                style="
-                  background-color: #e8e8e8;
-                  width: 3rem;
-                  height: 3rem;
-                  border-radius: 9999px;
-                  display: flex;
-                  place-items: center;
-                  place-content: center;
-                "
+            <div>
+              <router-link
+                v-for="(tag, tagIndex) of recipe?.tags"
+                :key="tagIndex"
+                class="recipe__tag"
+                :to="`#${tag.tag}`"
               >
-                <Title :text="stepIndex + 1" size="h2" style="z-index: 100; font-weight: 700" />
-              </div>
+                {{ tagIndex === 0 ? tag.tag : `, ${tag.tag}` }}
+              </router-link>
             </div>
-
-            <p v-if="step.show">
-              {{ step.text }}
-            </p>
           </div>
         </div>
       </div>
+
+      <div class="recipe__section">
+        <p>
+          {{ computedDescription }}
+        </p>
+
+        <button
+          v-if="recipe?.description?.split(' ').length > 20"
+          class="section__description__button"
+          @click="toggleShowMore"
+        >
+          <span v-if="showMore">Hide</span>
+
+          <span v-else>More</span>
+        </button>
+      </div>
+
+      <section class="recipe__section">
+        <Title size="h3" text="Ingredients" class="section__title" />
+
+        <div>
+          <div
+            v-for="(ingredient, ingredientIndex) of recipe?.ingredients"
+            :key="ingredientIndex"
+            style="display: grid; grid-template-columns: 1fr 5fr"
+          >
+            <p style="font-weight: 700">{{ ingredient.amount }}{{ ingredient.metric || '' }}</p>
+
+            <p>
+              {{ ingredient.ingredient }}
+
+              <span v-if="ingredient.optional" style="font-weight: 700"> (optional) </span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="recipe__section">
+        <Title size="h3" text="Steps" class="section__title" />
+
+        <div v-for="(step, stepIndex) of recipe?.recipeSteps" :key="stepIndex" style="margin-bottom: 1rem">
+          <div
+            style="display: flex; gap: 1rem; align-content: center; align-items: center"
+            @click="switchStep(stepIndex)"
+          >
+            <div
+              style="
+                background-color: #e8e8e8;
+                width: 3rem;
+                height: 3rem;
+                border-radius: 9999px;
+                display: flex;
+                place-items: center;
+                place-content: center;
+              "
+            >
+              <Title :text="stepIndex + 1" size="h2" style="z-index: 100; font-weight: 700" />
+            </div>
+          </div>
+
+          <p v-if="step.show">
+            {{ step.content }}
+          </p>
+        </div>
+      </section>
     </div>
   </div>
 </template>
 
 <script>
 import { defineAsyncComponent } from 'vue';
+import { mapGetters } from 'vuex';
+import axios from 'axios';
 
 export default {
   name: 'Recipe',
@@ -125,61 +129,14 @@ export default {
   data() {
     return {
       showMore: false,
-      image: { backgroundImage: "url('https://picsum.photos/1000/1000')" },
-
-      recipe: {
-        title: 'Bolognaise',
-        author: 'filip_pedersen',
-        time: 25,
-        tags: ['Italian', 'Meat', 'Pasta'],
-        description:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Venenatis lectus magna fringilla urna. Etiam tempor orci eu lobortis. Integer quis auctor elit sed vulputate mi sit. Lacinia at quis risus sed vulputate odio ut enim blandit. Nibh praesent tristique magna sit amet purus. Eleifend donec pretium vulputate sapien nec sagittis. Facilisi morbi tempus iaculis urna id volutpat. Ultrices neque ornare aenean euismod.',
-
-        steps: [
-          {
-            text: 'uno uno uno uno uno uno uno',
-            show: true,
-          },
-          {
-            text: 'dos dos dos dos dos dos',
-            show: true,
-          },
-          {
-            text: 'tres tres tres tres tres',
-            show: true,
-          },
-        ],
-
-        ingredients: [
-          {
-            metric: 'g',
-            amount: 500,
-            ingredient: 'beef minced',
-            optional: false,
-          },
-          {
-            metric: 'g',
-            amount: 200,
-            ingredient: 'spaghetti',
-            optional: false,
-          },
-          {
-            metric: 'g',
-            amount: 200,
-            ingredient: 'passata',
-            optional: false,
-          },
-          {
-            amount: 1,
-            ingredient: 'garlic',
-            optional: true,
-          },
-        ],
-      },
+      recipe: null,
+      userLikedRecipe: false,
     };
   },
 
   computed: {
+    ...mapGetters(['getUserInfo']),
+
     computedDescription() {
       if (this.recipe?.description) {
         if (this.showMore) {
@@ -197,13 +154,62 @@ export default {
     },
   },
 
+  created() {
+    this.fetchRecipe();
+  },
+
   methods: {
+    async fetchRecipe() {
+      const HOST = process.env.VUE_APP_API_URL;
+      const URL = `${HOST}/recipe/${this.$route.params.username}/${this.$route.params.slug}`;
+
+      const recipe = await axios
+        .get(URL)
+        .then((res) => res?.data)
+        .catch((error) => console.error('ERROR fetching recipe', error));
+
+      for (let i = 0; i < recipe?.recipeSteps?.length; i += 1) {
+        recipe.recipeSteps[i].show = true;
+      }
+
+      this.recipe = recipe;
+
+      if (this.recipe) {
+        this.checkIfLiked();
+      }
+    },
+
     toggleShowMore() {
       this.showMore = !this.showMore;
     },
 
     switchStep(index) {
-      this.recipe.steps[index].show = !this.recipe.steps[index].show;
+      this.recipe.recipeSteps[index].show = !this.recipe.recipeSteps[index].show;
+    },
+
+    async likeRecipe() {
+      const userId = this.getUserInfo.id;
+      const recipeId = this.recipe.id;
+
+      await axios
+        .post(`${process.env.VUE_APP_API_URL}/recipe/like/${recipeId}/${userId}`)
+        .then((res) => res?.data)
+        .catch((error) => console.error('Something went wrong liking recipe', error));
+
+      this.checkIfLiked();
+    },
+
+    async checkIfLiked() {
+      const userId = this.getUserInfo.id;
+      const recipeId = this.recipe.id;
+
+      this.userLikedRecipe = await axios
+        .get(`${process.env.VUE_APP_API_URL}/recipe/like/${recipeId}/${userId}`)
+        .then((res) => res?.data?.userLiked || false)
+        .catch((error) => {
+          console.error('Something went wrong liking recipe', error);
+          return false;
+        });
     },
   },
 };
@@ -211,7 +217,7 @@ export default {
 
 <style lang="scss" scoped>
 .recipe {
-  .recipe-img {
+  .recipe__image {
     height: 35vh;
     width: 100%;
     margin-bottom: 0%;
@@ -221,94 +227,65 @@ export default {
     top: 0;
   }
 
-  .recipe-top-btn {
+  .recipe__header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     padding: 2vh 3vw;
   }
 
-  .recipe-back {
-    height: 50px;
-    width: 50px;
+  .recipe__button {
+    background: none;
+    border: none;
+    height: 3rem;
+    width: 3rem;
     background-color: #e8e8e8;
     border-radius: 50%;
     display: flex;
-
-    svg {
-      display: block;
-      justify-content: center;
-      margin: auto;
-    }
+    place-items: center;
+    place-content: center;
   }
 
-  .recipe-like {
-    height: 50px;
-    width: 50px;
-    background-color: #e8e8e8;
-    border-radius: 50%;
-    display: flex;
-
-    svg {
-      display: block;
-      justify-content: center;
-      margin: auto;
-    }
-  }
-
-  .recipeinfo {
-    margin: 10%;
-  }
-  h1 {
-    font-family: var(--header-text);
-  }
-
-  h2 {
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 21px;
-    color: #7e7e7e;
-  }
-
-  h3 {
-    margin-top: 2rem;
-  }
-
-  .recipe-wrapper {
+  .recipe__wrapper {
+    padding: 2rem 1rem;
+    min-height: fit-content;
+    height: 100%;
     background-color: #fdfdfd;
-    border-radius: 50px 50px 0 0;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
     z-index: 10;
     margin-top: -25%;
-    width: auto;
-    height: auto;
-    bottom: 0;
+    width: 100%;
 
-    padding-bottom: 5rem;
+    .recipe__title {
+      word-wrap: break-word;
+    }
+
+    .recipe__icon {
+      display: flex;
+      gap: 0.5rem;
+      align-content: center;
+      align-items: center;
+      font-size: 0.8rem;
+
+      .recipe__tag {
+        font-size: 0.7rem;
+        text-transform: capitalize;
+      }
+    }
+
+    .recipe__section {
+      margin: 1rem 0;
+
+      .section__title {
+        margin-bottom: 1rem;
+      }
+
+      .section__description__button {
+        background: none;
+        border: none;
+        font-weight: 700;
+      }
+    }
   }
-
-  a {
-    font-weight: bold;
-    cursor: pointer;
-    text-decoration: none;
-  }
-
-  .ingredients {
-    display: inline-grid;
-    grid-template-columns: 2fr 5fr;
-    grid-template-rows: repeat(1, 1fr);
-  }
-}
-
-.rc-icon {
-  display: flex;
-  gap: 0.5rem;
-  align-content: center;
-  align-items: center;
-}
-
-.rc-title {
-  font-family: var(--header-text);
-  font-weight: 200;
 }
 </style>

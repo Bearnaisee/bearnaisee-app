@@ -1,0 +1,175 @@
+<template>
+  <div class="web-layout">
+    <div style="width: 20%" class="sidenav">
+      <SideNav />
+    </div>
+
+    <div class="content">
+      <TopNav />
+
+      <Title :text="categoryTitle" size="h1" />
+
+      <Title text="Trending" size="h2" />
+
+      <RecipeSlider v-if="trendingRecipes?.length" class="slider__recipes" :recipes="trendingRecipes" />
+      <p v-else>No trending recipes</p>
+
+      <div>
+        <Title text="Recent" size="h2" />
+
+        <RecipeGrid v-if="recipes?.length" :recipes="recipes" :show-author="true" />
+        <p v-else>No recent recipes</p>
+      </div>
+    </div>
+
+    <div class="search-area">
+      <input type="text" placeholder="Search on Bearnaisee..." class="searchbar" />
+      <Button label="Search" />
+    </div>
+  </div>
+</template>
+
+<script>
+import { defineAsyncComponent } from 'vue';
+import axios from 'axios';
+
+export default {
+  name: 'Category',
+
+  components: {
+    RecipeGrid: defineAsyncComponent(() => import('@/components/RecipeGrid.vue')),
+    Title: defineAsyncComponent(() => import('@/components/Title.vue')),
+    TopNav: defineAsyncComponent(() => import('@/components/TopNav.vue')),
+    RecipeSlider: defineAsyncComponent(() => import('@/components/RecipeSlider.vue')),
+    SideNav: defineAsyncComponent(() => import('@/components/SideNav.vue')),
+    Button: defineAsyncComponent(() => import('@/components/Button.vue')),
+  },
+
+  data() {
+    return {
+      recipes: null,
+      trendingRecipes: [],
+    };
+  },
+
+  computed: {
+    /**
+     * @returns {string}
+     */
+    categoryTitle() {
+      return `${this.$route.params.category.slice(0, 1).toUpperCase()}${this.$route.params.category.slice(
+        1,
+        this.$route.params.category.length,
+      )}`;
+    },
+  },
+
+  created() {
+    this.fetchRecentRecipes();
+
+    this.fetchTrendingRecipes();
+  },
+
+  methods: {
+    async fetchRecentRecipes() {
+      const HOST = process.env.VUE_APP_API_URL;
+      const URL = `${HOST}/recipes/${this.$route.params.category.toLowerCase()}/recent`;
+
+      this.recipes = await axios
+        .get(URL)
+        .then((res) => res?.data?.recipes || [])
+        .catch((error) => {
+          console.error('ERROR fetching recent recipes', error);
+          return [];
+        });
+    },
+
+    async fetchTrendingRecipes() {
+      const HOST = process.env.VUE_APP_API_URL;
+      const URL = `${HOST}/recipes/${this.$route.params.category.toLowerCase()}/trending`;
+
+      this.trendingRecipes = await axios
+        .get(URL)
+        .then((res) => res?.data?.recipes || [])
+        .catch((error) => {
+          console.error('ERROR fetching recent recipes', error);
+          return [];
+        });
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.web-layout {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+
+  @media (max-width: 1024px) {
+    display: block;
+  }
+}
+
+.content {
+  @media (min-width: 1024px) {
+    width: 60%;
+    padding-top: 2.5rem;
+  }
+}
+.search-area {
+  display: none;
+
+  @media (min-width: 1024px) {
+    display: flex;
+    width: 20%;
+    padding-top: 2.5rem;
+    height: fit-content;
+    gap: 1rem;
+  }
+
+  .searchbar {
+    text-align: center;
+    border-radius: 4px;
+    border: solid 1px var(--color-black);
+  }
+}
+.sidenav {
+  @media (min-width: 1024px) {
+    padding-top: 1.5rem;
+  }
+}
+
+.categories {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin: 1rem 0;
+
+  @media (min-width: 1024px) {
+    margin: 3rem 0;
+    gap: 3rem;
+  }
+
+  .categories__link {
+    margin: 0 auto;
+    text-align: center;
+
+    @media (min-width: 1024px) {
+      padding: 1rem 2rem;
+      &:hover {
+        background-color: #ff7e6120;
+        border-radius: 10px;
+      }
+    }
+
+    p {
+      text-transform: capitalize;
+    }
+  }
+}
+
+.slider__recipes {
+  padding: 1rem 0;
+}
+</style>
