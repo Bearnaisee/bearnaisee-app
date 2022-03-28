@@ -5,7 +5,7 @@
       :style="{ backgroundImage: `url(${recipe?.coverImage || 'https://picsum.photos/1000/1000'})` }"
     >
       <div class="recipe__header">
-        <button class="recipe__button">
+        <button class="recipe__button" @click="goBack">
           <Icon icon="arrow" width="24" height="auto" />
         </button>
 
@@ -100,7 +100,7 @@
                 place-content: center;
               "
             >
-              <Title :text="stepIndex + 1" size="h2" style="z-index: 100; font-weight: 700" />
+              <Title :text="(stepIndex + 1).toString()" size="h2" style="z-index: 100; font-weight: 700" />
             </div>
           </div>
 
@@ -155,14 +155,15 @@ export default {
   },
 
   created() {
-    console.log('CREATED');
     this.fetchRecipe();
   },
 
   methods: {
-    async fetchRecipe() {
-      console.log('fetchRecipe');
+    goBack() {
+      this.$router.go(-1);
+    },
 
+    async fetchRecipe() {
       const URL = `${process.env.VUE_APP_API_URL}/recipe/${this.$route.params.username}/${this.$route.params.slug}`;
 
       const recipe = await axios
@@ -171,13 +172,11 @@ export default {
         .catch((error) => console.error('ERROR fetching recipe', error));
 
       for (let i = 0; i < recipe?.recipeSteps?.length; i += 1) {
-        console.log('fetchRecipe loop', i);
-
         recipe.recipeSteps[i].show = true;
       }
 
       this.recipe = recipe;
-      console.log(this.recipe);
+
       if (this.recipe) {
         this.checkIfLiked();
       }
