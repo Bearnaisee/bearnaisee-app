@@ -36,7 +36,7 @@
                 v-for="(tag, tagIndex) of recipe?.tags"
                 :key="tagIndex"
                 class="recipe__tag"
-                :to="`#${tag.tag}`"
+                :to="`/category/${tag.tag}`"
               >
                 {{ tagIndex === 0 ? tag.tag : `, ${tag.tag}` }}
               </router-link>
@@ -155,11 +155,14 @@ export default {
   },
 
   created() {
+    console.log('CREATED');
     this.fetchRecipe();
   },
 
   methods: {
     async fetchRecipe() {
+      console.log('fetchRecipe');
+
       const URL = `${process.env.VUE_APP_API_URL}/recipe/${this.$route.params.username}/${this.$route.params.slug}`;
 
       const recipe = await axios
@@ -168,11 +171,13 @@ export default {
         .catch((error) => console.error('ERROR fetching recipe', error));
 
       for (let i = 0; i < recipe?.recipeSteps?.length; i += 1) {
+        console.log('fetchRecipe loop', i);
+
         recipe.recipeSteps[i].show = true;
       }
 
       this.recipe = recipe;
-
+      console.log(this.recipe);
       if (this.recipe) {
         this.checkIfLiked();
       }

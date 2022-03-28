@@ -4,11 +4,11 @@
 
     <router-link to="/" class="nav__link"> Home </router-link>
 
-    <router-link to="#" class="nav__link"> Profile </router-link>
+    <router-link v-if="getUserInfo?.username" :to="`/${getUserInfo.username}`" class="nav__link"> Profile </router-link>
 
-    <router-link to="#" class="nav__link"> Bookmarks </router-link>
+    <router-link v-if="getUserInfo?.id" to="/" class="nav__link"> Bookmarks </router-link>
 
-    <router-link to="#" class="nav__link"> Settings </router-link>
+    <router-link v-if="getUserInfo?.id" to="/" class="nav__link"> Settings </router-link>
 
     <button v-if="getUserInfo" type="button" class="nav__button" @click="logout">Log out</button>
 
