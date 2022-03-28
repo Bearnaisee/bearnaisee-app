@@ -48,9 +48,9 @@
           <h6>Metric</h6>
 
           <template v-for="(ingredient, ingredientIndex) of recipe.ingredients" :key="ingredientIndex">
-            <input v-model="ingredient.ingredient" type="text" style="width: auto;" />
+            <input v-model="ingredient.ingredient" type="text" style="width: auto" />
 
-            <input v-model.number="ingredient.amount" type="number"/>
+            <input v-model.number="ingredient.amount" type="number" />
 
             <select v-model="ingredient.metricId">
               <option v-for="metric of getMetrics" :key="metric.id" :value="metric.id">
@@ -60,7 +60,13 @@
           </template>
         </div>
 
-        <Button label="Add ingredient" class="add-step" kind="secondary" @click="addIngredient" style="margin-top: 0.3rem;"/>
+        <Button
+          label="Add ingredient"
+          class="add-step"
+          kind="secondary"
+          style="margin-top: 0.3rem"
+          @click="addIngredient"
+        />
       </div>
 
       <div class="steps">
@@ -69,10 +75,10 @@
         <div v-for="(step, stepIndex) of recipe.steps" :key="stepIndex" class="description">
           <p>Step: {{ stepIndex + 1 }}</p>
 
-          <textarea v-model="step.content" type="text" placeholder="..." rows="5"></textarea>
+          <textarea v-model="step.content" type="text" placeholder="" rows="5"></textarea>
           <div class="optional">
-          <p>Optional</p>
-          <input v-model="step.optional" type="checkbox" />
+            <p>Optional</p>
+            <input v-model="step.optional" type="checkbox" />
           </div>
         </div>
 
@@ -80,16 +86,17 @@
       </div>
     </div>
     <div class="btns">
-      <Button kind="secondary" label="Save draft" />
-      <Button kind="primary" label="Upload" />
+      <!-- <Button kind="secondary" label="Save draft" /> -->
+      <Button kind="primary" label="Create recipe" @clicked="saveRecipe" />
     </div>
   </div>
 </template>
 
 <script>
 import { defineAsyncComponent } from 'vue';
-import uploadImage from '@/helpers/uploadImage';
 import { mapGetters, mapActions } from 'vuex';
+import axios from 'axios';
+import uploadImage from '@/helpers/uploadImage';
 
 export default {
   name: 'RecipeBuilder',
@@ -112,9 +119,7 @@ export default {
           {
             amount: null,
             metricId: null,
-            ingredientId: null,
             ingredient: '',
-            optional: false,
           },
         ],
         steps: [],
@@ -123,7 +128,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['getMetrics']),
+    ...mapGetters(['getMetrics', 'getUserInfo']),
 
     uploadImageBackground() {
       if (this.recipe?.coverImage) {
@@ -155,9 +160,7 @@ export default {
       this.recipe.ingredients.push({
         amount: null,
         metricId: null,
-        ingredientId: null,
         ingredient: '',
-        optional: false,
       });
     },
 
@@ -176,6 +179,34 @@ export default {
           });
         }
       }
+    },
+
+    async saveRecipe() {
+      await axios
+        .post(`${process.env.VUE_APP_API_URL}/recipe`, {
+          ...this.recipe,
+          userId: this.getUserInfo.id,
+        })
+        .then(async (result) => {
+          await this.$swal({
+            icon: 'success',
+            title: 'Created recipe successfully',
+            showConfirmButton: false,
+            timer: 1000,
+          });
+
+          this.$router.push(`/${this.getUserInfo.username}/${result?.data.slug}`);
+        })
+        .catch((error) => {
+          this.$swal({
+            icon: 'error',
+            title: 'Something went wrong, please try again later',
+            timer: 800,
+            showConfirmButton: false,
+          });
+
+          console.error('Error creating recipe', error);
+        });
     },
   },
 };
@@ -251,7 +282,7 @@ export default {
     width: 100%;
     resize: vertical;
     padding: 00.25rem;
-    font-family: "Poppins", sans-serif;
+    font-family: 'Poppins', sans-serif;
   }
 
   input {
@@ -403,31 +434,28 @@ export default {
       resize: vertical;
     }
 
-    .optional{
+    .optional {
       display: flex;
-    align-items: center;
-    gap: 0.5rem;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    input[type=checkbox] {
-	       cursor: pointer;
-         width: 1.5rem;
-         height: 1.5rem;
-         appearance: none;
-         
-    
-}
-input[type=checkbox]:before {
-         content: '\2714';
-         color:transparent;
-         padding: 0.1em;
-         padding-bottom: 0.2em;
-         
-}
-input[type=checkbox]:checked:before {
-         background-color: rgba($color: #ff7d61, $alpha: 0.3);
-         color: #ffffff;
-}
+    input[type='checkbox'] {
+      cursor: pointer;
+      width: 1.5rem;
+      height: 1.5rem;
+      appearance: none;
+    }
+    input[type='checkbox']:before {
+      content: '\2714';
+      color: transparent;
+      padding: 0.1em;
+      padding-bottom: 0.2em;
+    }
+    input[type='checkbox']:checked:before {
+      background-color: rgba($color: #ff7d61, $alpha: 0.3);
+      color: #ffffff;
+    }
   }
 
   // Save and upload buttons
@@ -440,7 +468,6 @@ input[type=checkbox]:checked:before {
 
     Button {
       font-size: 1rem;
-      
     }
   }
 }
