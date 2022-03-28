@@ -117,6 +117,7 @@ export default {
     place-items: center;
     width: 100%;
     gap: 1rem;
+    padding: 0.6rem 0rem;
 
     .list__users {
       display: flex;
