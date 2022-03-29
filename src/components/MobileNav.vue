@@ -32,13 +32,21 @@ export default {
 
   @media (max-width: 1024px) {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     background-color: #f7e8e8;
     position: fixed;
     bottom: 0;
     width: 100%;
-    padding: 0.2rem 2rem;
+    padding: 0.2rem 10rem;
     align-items: center;
+  }
+
+  @media (max-width: 640px) {
+    padding: 0.2rem 3rem;
+  }
+
+  @media (max-width: 390px) {
+    padding: 0.2rem 1rem;
   }
 }
 </style>
