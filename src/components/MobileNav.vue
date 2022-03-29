@@ -5,7 +5,7 @@
     <router-link to="/" class="nav__link"> <Icon icon="search" width="40" height="40" /> </router-link>
 
     <router-link to="/create" class="nav__link">
-      <Icon icon="create" width="60" height="60" color="#ff7d61" />
+      <Icon icon="create" width="60" height="60" color="var(--color-highlight)" />
     </router-link>
 
     <router-link to="/" class="nav__link"> <Icon icon="bookmark" width="40" height="40" /> </router-link>
@@ -33,7 +33,7 @@ export default {
   @media (max-width: 1024px) {
     display: flex;
     justify-content: space-around;
-    background-color: #f7e8e8;
+    background-color: var(--color-bg);
     position: fixed;
     bottom: 0;
     width: 100%;

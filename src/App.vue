@@ -28,6 +28,7 @@ export default {
 :root {
   --color-black: #101010;
   --color-highlight: #ff7d61;
+  --color-bg: #f7e8e8;
   --border-radius: 20px;
   --font-primary: 'Open Sans', sans-serif;
   --font-secondary: 'Poppins', sans-serif;
