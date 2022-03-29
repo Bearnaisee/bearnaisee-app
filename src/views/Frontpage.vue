@@ -123,7 +123,6 @@ export default {
 
   .sidenav {
     @media (min-width: 1024px) {
-      padding-top: 2.5rem;
       width: 20%;
     }
   }
@@ -131,7 +130,10 @@ export default {
   .content {
     @media (min-width: 1024px) {
       width: 60%;
-      padding-top: 2.5rem;
+      margin-top: 2.5rem;
+      background-color: #f7e8e855;
+      border-radius: 1.5rem;
+      padding: 0 1.5rem;
     }
 
     .content__title {
@@ -143,10 +145,6 @@ export default {
       grid-template-columns: repeat(4, 1fr);
       gap: 1rem;
       margin: 1rem 0;
-
-      @media (min-width: 1024px) {
-        gap: 3rem;
-      }
 
       .categories__link {
         margin: 0 auto;
@@ -173,9 +171,6 @@ export default {
     @media (min-width: 1024px) {
       display: block;
       width: 20%;
-      padding-top: 2.5rem;
-      height: fit-content;
-      gap: 1rem;
     }
   }
 }

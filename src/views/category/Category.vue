@@ -1,36 +1,40 @@
 <template>
   <div class="web-layout">
-    <div style="width: 20%" class="sidenav">
+    <div class="sidenav">
       <SideNav />
     </div>
 
     <div class="content">
       <TopNav />
 
-      <Title :text="categoryTitle" size="h1" />
+      <Title :text="categoryTitle" size="h1" class="content__title" />
 
-      <Title text="Trending" size="h2" />
+      <Title text="Trending" size="h2" class="content__title" />
 
       <RecipeSlider v-if="trendingRecipes?.length" class="slider__recipes" :recipes="trendingRecipes" />
       <p v-else>No trending recipes</p>
 
-      <div>
-        <Title text="Recent" size="h2" />
+      <div class="content__grid">
+        <Title text="Recent" size="h2" class="content__title" />
 
         <RecipeGrid v-if="recipes?.length" :recipes="recipes" :show-author="true" />
         <p v-else>No recent recipes</p>
       </div>
     </div>
 
-    <div class="search-area">
-      <input type="text" placeholder="Search on Bearnaisee..." class="searchbar" />
-      <Button label="Search" />
+    <div class="right">
+      <SearchBar />
+      <div v-if="getUserInfo?.id">
+        <RecommendedFollow />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { defineAsyncComponent } from 'vue';
+import { mapGetters } from 'vuex';
+
 import axios from 'axios';
 
 export default {
@@ -42,7 +46,8 @@ export default {
     TopNav: defineAsyncComponent(() => import('@/components/TopNav.vue')),
     RecipeSlider: defineAsyncComponent(() => import('@/components/RecipeSlider.vue')),
     SideNav: defineAsyncComponent(() => import('@/components/SideNav.vue')),
-    Button: defineAsyncComponent(() => import('@/components/Button.vue')),
+    SearchBar: defineAsyncComponent(() => import('@/components/SearchBar.vue')),
+    RecommendedFollow: defineAsyncComponent(() => import('@/components/RecommendedFollow.vue')),
   },
 
   data() {
@@ -53,6 +58,8 @@ export default {
   },
 
   computed: {
+    ...mapGetters(['getUserInfo']),
+
     /**
      * @returns {string}
      */
@@ -112,18 +119,25 @@ export default {
 .content {
   @media (min-width: 1024px) {
     width: 60%;
-    padding-top: 2.5rem;
+    margin-top: 2.5rem;
+    background-color: #f7e8e855;
+    border-radius: 1.5rem;
+    padding: 0 1.5rem;
+  }
+
+  .content__title {
+    padding: 10px 0px;
+  }
+
+  .content__grid {
+    padding-bottom: 1.5rem;
   }
 }
-.search-area {
-  display: none;
+.right {
+  width: 20%;
 
-  @media (min-width: 1024px) {
-    display: flex;
-    width: 20%;
-    padding-top: 2.5rem;
-    height: fit-content;
-    gap: 1rem;
+  @media (max-width: 1024px) {
+    display: none;
   }
 
   .searchbar {
@@ -133,9 +147,7 @@ export default {
   }
 }
 .sidenav {
-  @media (min-width: 1024px) {
-    padding-top: 1.5rem;
-  }
+  width: 20%;
 }
 
 .categories {

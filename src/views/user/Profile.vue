@@ -197,7 +197,6 @@ export default {
 
   .sidenav {
     @media (min-width: 1024px) {
-      padding-top: 1.5rem;
       width: 20%;
     }
   }
@@ -222,7 +221,7 @@ export default {
 
     @media (min-width: 1024px) {
       width: 60%;
-      padding-top: 2.5rem;
+      margin-top: 2.5rem;
     }
   }
   .search {

@@ -6,9 +6,9 @@
 
     <router-link v-if="getUserInfo?.username" :to="`/${getUserInfo.username}`" class="nav__link"> Profile </router-link>
 
-    <router-link v-if="getUserInfo?.id" to="/" class="nav__link"> Bookmarks </router-link>
+    <router-link v-if="getUserInfo?.id" to="/bookmarks" class="nav__link"> Bookmarks </router-link>
 
-    <router-link v-if="getUserInfo?.id" to="/" class="nav__link"> Settings </router-link>
+    <router-link v-if="getUserInfo?.id" to="/settings" class="nav__link"> Settings </router-link>
 
     <button v-if="getUserInfo" type="button" class="nav__button" @click="logout">Log out</button>
 
@@ -73,6 +73,7 @@ export default {
   display: flex;
   width: fit-content;
   flex-direction: column;
+  padding-top: 2.5rem;
 
   .buttons {
     display: none;
@@ -95,13 +96,14 @@ export default {
     font-size: 1.25rem;
     text-decoration: none;
     width: 100%;
+    color: var(--color-highlight);
+
+    &.router-link-exact-active {
+      color: black;
+    }
 
     @media (min-width: 1024px) {
       margin-top: 1.25rem;
-    }
-
-    &.router-link-exact-active {
-      color: var(--color-highlight);
     }
   }
 

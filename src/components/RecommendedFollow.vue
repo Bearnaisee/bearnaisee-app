@@ -104,12 +104,11 @@ export default {
 
 <style lang="scss" scoped>
 .container {
-  background-color: #f7e8e855;
   border-radius: 10px;
   padding: 0.8rem;
 
   .container__title {
-    padding-bottom: 1.5rem;
+    padding-bottom: 0.8rem;
   }
 
   .list {

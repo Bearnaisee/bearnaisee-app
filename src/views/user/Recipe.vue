@@ -1,114 +1,127 @@
 <template>
-  <div v-if="recipe" class="recipe">
-    <div
-      class="recipe__image"
-      :style="{ backgroundImage: `url(${recipe?.coverImage || 'https://picsum.photos/1000/1000'})` }"
-    >
-      <div class="recipe__header">
-        <button class="recipe__button" @click="goBack">
-          <Icon icon="arrow" width="24" height="auto" />
-        </button>
-
-        <button class="recipe__button" @click="likeRecipe">
-          <Icon icon="heart" :color="userLikedRecipe ? '#FF7D61' : '#000'" width="24" height="auto" />
-        </button>
-      </div>
+  <div class="flex">
+    <div class="left">
+      <SideNav />
     </div>
+    <div class="middle">
+      <div v-if="recipe" class="recipe">
+        <div
+          class="recipe__image"
+          :style="{ backgroundImage: `url(${recipe?.coverImage || 'https://picsum.photos/1000/1000'})` }"
+        >
+          <div class="recipe__header">
+            <button class="recipe__button" @click="goBack">
+              <Icon icon="arrow" width="24" height="auto" />
+            </button>
 
-    <div class="recipe__wrapper">
-      <Title :text="recipe?.title" class="recipe__title" size="h1" />
-
-      <div>
-        <router-link :to="`/${$route.params.username}`"> By @{{ $route.params.username }} </router-link>
-
-        <div>
-          <div v-if="recipe?.estimatedTime > 0" class="recipe__icon">
-            <Icon icon="time" color="#D53F29" width="12" height="auto" />
-
-            <p>{{ recipe.estimatedTime }} minutes</p>
+            <button class="recipe__button" @click="likeRecipe">
+              <Icon icon="heart" :color="userLikedRecipe ? '#FF7D61' : '#000'" width="24" height="auto" />
+            </button>
           </div>
+        </div>
 
-          <div class="recipe__icon">
-            <Icon icon="tag" color="#D53F29" width="12" height="auto" />
+        <div class="recipe__wrapper">
+          <Title :text="recipe?.title" class="recipe__title" size="h1" />
+
+          <div>
+            <router-link :to="`/${$route.params.username}`"> By @{{ $route.params.username }} </router-link>
 
             <div>
-              <router-link
-                v-for="(tag, tagIndex) of recipe?.tags"
-                :key="tagIndex"
-                class="recipe__tag"
-                :to="`/category/${tag.tag}`"
-              >
-                {{ tagIndex === 0 ? tag.tag : `, ${tag.tag}` }}
-              </router-link>
+              <div v-if="recipe?.estimatedTime > 0" class="recipe__icon">
+                <Icon icon="time" color="#D53F29" width="12" height="auto" />
+
+                <p>{{ recipe.estimatedTime }} minutes</p>
+              </div>
+
+              <div class="recipe__icon">
+                <Icon icon="tag" color="#D53F29" width="12" height="auto" />
+
+                <div>
+                  <router-link
+                    v-for="(tag, tagIndex) of recipe?.tags"
+                    :key="tagIndex"
+                    class="recipe__tag"
+                    :to="`/category/${tag.tag}`"
+                  >
+                    {{ tagIndex === 0 ? tag.tag : `, ${tag.tag}` }}
+                  </router-link>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div class="recipe__section">
-        <p>
-          {{ computedDescription }}
-        </p>
-
-        <button
-          v-if="recipe?.description?.split(' ').length > 20"
-          class="section__description__button"
-          @click="toggleShowMore"
-        >
-          <span v-if="showMore">Hide</span>
-
-          <span v-else>More</span>
-        </button>
-      </div>
-
-      <section class="recipe__section">
-        <Title size="h3" text="Ingredients" class="section__title" />
-
-        <div>
-          <div
-            v-for="(ingredient, ingredientIndex) of recipe?.ingredients"
-            :key="ingredientIndex"
-            style="display: grid; grid-template-columns: 1fr 5fr"
-          >
-            <p style="font-weight: 700">{{ ingredient.amount }}{{ ingredient.metric || '' }}</p>
-
+          <div class="recipe__section">
             <p>
-              {{ ingredient.ingredient }}
-
-              <span v-if="ingredient.optional" style="font-weight: 700"> (optional) </span>
+              {{ computedDescription }}
             </p>
-          </div>
-        </div>
-      </section>
 
-      <section class="recipe__section">
-        <Title size="h3" text="Steps" class="section__title" />
-
-        <div v-for="(step, stepIndex) of recipe?.recipeSteps" :key="stepIndex" style="margin-bottom: 1rem">
-          <div
-            style="display: flex; gap: 1rem; align-content: center; align-items: center"
-            @click="switchStep(stepIndex)"
-          >
-            <div
-              style="
-                background-color: #e8e8e8;
-                width: 3rem;
-                height: 3rem;
-                border-radius: 9999px;
-                display: flex;
-                place-items: center;
-                place-content: center;
-              "
+            <button
+              v-if="recipe?.description?.split(' ').length > 20"
+              class="section__description__button"
+              @click="toggleShowMore"
             >
-              <Title :text="(stepIndex + 1).toString()" size="h2" style="z-index: 100; font-weight: 700" />
-            </div>
+              <span v-if="showMore">Hide</span>
+
+              <span v-else>More</span>
+            </button>
           </div>
 
-          <p v-if="step.show">
-            {{ step.content }}
-          </p>
+          <section class="recipe__section">
+            <Title size="h3" text="Ingredients" class="section__title" />
+
+            <div>
+              <div
+                v-for="(ingredient, ingredientIndex) of recipe?.ingredients"
+                :key="ingredientIndex"
+                style="display: grid; grid-template-columns: 1fr 5fr"
+              >
+                <p style="font-weight: 700">{{ ingredient.amount }}{{ ingredient.metric || '' }}</p>
+
+                <p>
+                  {{ ingredient.ingredient }}
+
+                  <span v-if="ingredient.optional" style="font-weight: 700"> (optional) </span>
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section class="recipe__section">
+            <Title size="h3" text="Steps" class="section__title" />
+
+            <div v-for="(step, stepIndex) of recipe?.recipeSteps" :key="stepIndex" style="margin-bottom: 1rem">
+              <div
+                style="display: flex; gap: 1rem; align-content: center; align-items: center"
+                @click="switchStep(stepIndex)"
+              >
+                <div
+                  style="
+                    background-color: #e8e8e8;
+                    width: 3rem;
+                    height: 3rem;
+                    border-radius: 9999px;
+                    display: flex;
+                    place-items: center;
+                    place-content: center;
+                  "
+                >
+                  <Title :text="(stepIndex + 1).toString()" size="h2" style="z-index: 100; font-weight: 700" />
+                </div>
+              </div>
+
+              <p v-if="step.show">
+                {{ step.content }}
+              </p>
+            </div>
+          </section>
         </div>
-      </section>
+      </div>
+    </div>
+    <div class="right">
+      <SearchBar />
+      <div v-if="getUserInfo?.id">
+        <RecommendedFollow />
+      </div>
     </div>
   </div>
 </template>
@@ -124,6 +137,9 @@ export default {
   components: {
     Icon: defineAsyncComponent(() => import('@/components/Icon.vue')),
     Title: defineAsyncComponent(() => import('@/components/Title.vue')),
+    SearchBar: defineAsyncComponent(() => import('@/components/SearchBar.vue')),
+    SideNav: defineAsyncComponent(() => import('@/components/SideNav.vue')),
+    RecommendedFollow: defineAsyncComponent(() => import('@/components/RecommendedFollow.vue')),
   },
 
   data() {
@@ -219,15 +235,45 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.flex {
+  @media (min-width: 1024px) {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+
+    .left {
+      width: 20%;
+    }
+
+    .middle {
+      width: 60%;
+      margin-top: 2.5rem;
+    }
+
+    .right {
+      width: 20%;
+
+      @media (max-width: 1024px) {
+        display: none;
+      }
+    }
+  }
+}
+
 .recipe {
   .recipe__image {
-    height: 35vh;
+    height: 25rem;
     width: 100%;
     margin-bottom: 0%;
     z-index: 1;
-    object-fit: cover;
     left: 0;
     top: 0;
+    background-size: cover;
+
+    @media (min-width: 1024px) {
+      border-top-left-radius: 1.5rem;
+      border-top-right-radius: 1.5rem;
+    }
   }
 
   .recipe__header {
@@ -253,14 +299,20 @@ export default {
     padding: 2rem 1rem;
     min-height: fit-content;
     height: 100%;
-    background-color: #fdfdfd;
+    background-color: #fafafa;
     border-radius: var(--border-radius) var(--border-radius) 0 0;
     z-index: 10;
     margin-top: -25%;
     width: 100%;
 
+    @media (min-width: 1024px) {
+      margin-top: 0;
+      border-radius: 0;
+    }
+
     .recipe__title {
       word-wrap: break-word;
+      font-size: 2rem;
     }
 
     .recipe__icon {

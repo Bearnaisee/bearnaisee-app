@@ -81,6 +81,10 @@ h6 {
   margin: auto;
   padding-bottom: 10rem;
 
+  @media (max-width: 625px) {
+    padding: 1rem;
+  }
+
   @media (min-width: 640px) {
     max-width: min(80vw, 640px);
   }

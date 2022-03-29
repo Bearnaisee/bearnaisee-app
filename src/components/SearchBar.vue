@@ -10,12 +10,19 @@ export default {
 
 <style lang="scss" scoped>
 .searchbar {
-  text-align: center;
-  border-radius: 4px;
-  border: solid 1px var(--color-black);
-  width: 100%;
-  height: 2rem;
-  margin-top: 20px;
-  margin-bottom: 1.5rem;
+  display: none;
+  @media (min-width: 1024px) {
+    text-align: center;
+    border-radius: 4px;
+    border: solid 1px var(--color-black);
+    width: 100%;
+    height: 2rem;
+    margin-bottom: 1.5rem;
+    padding: 0.2rem;
+    gap: 1rem;
+    height: fit-content;
+    margin-top: 2.5rem;
+    display: block;
+  }
 }
 </style>
