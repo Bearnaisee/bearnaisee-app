@@ -64,7 +64,7 @@
           label="Add ingredient"
           class="add-step"
           kind="secondary"
-          style="margin-top: 0.3rem"
+          style="margin-top: 1rem"
           @click="addIngredient"
         />
       </div>
@@ -87,6 +87,7 @@
     </div>
     <div class="btns">
       <!-- <Button kind="secondary" label="Save draft" /> -->
+      <Button kind="secondary" label="Cancel" @clicked="saveRecipe" />
       <Button kind="primary" label="Create recipe" @clicked="saveRecipe" />
     </div>
   </div>
@@ -411,6 +412,13 @@ export default {
     grid: auto-flow / 0fr 0.6fr 0fr;
     justify-content: space-between;
     row-gap: 0.3rem;
+
+    select{
+      border-color: rgba(126, 126, 126, 0.3);
+    border-radius: 4px;
+    border: 2px solid rgba($color: #7e7e7e, $alpha: 0.3)
+    }
+
   }
 
   // Steps
@@ -420,18 +428,25 @@ export default {
       color: rgba($color: #000000, $alpha: 0.5);
       font-size: 0.75rem;
       font-weight: 400;
+      margin-top: 0.5rem;
+      margin-bottom: 0.1rem;
     }
 
     .add-step {
       height: auto;
       font-weight: 400 !important;
       padding: 0.25rem 0.5rem;
-      margin-top: 0.5rem;
+      margin-top: 1.5rem;
     }
 
     textarea {
       width: 100%;
       resize: vertical;
+    }
+
+    .description{
+      display: grid;
+      row-gap: 1rem;
     }
 
     .optional {
@@ -440,26 +455,39 @@ export default {
       gap: 0.5rem;
     }
 
+    // Optaional Checkbox
     input[type='checkbox'] {
       cursor: pointer;
-      width: 1.5rem;
-      height: 1.5rem;
       appearance: none;
+      margin: 0;
+      width: 2em;
+      height: 2em;
+      border-radius: 0.15em;
+      transform: translateY(-0.075em);
+      display: grid;
+      place-content: center;
     }
-    input[type='checkbox']:before {
-      content: '\2714';
-      color: transparent;
-      padding: 0.1em;
-      padding-bottom: 0.2em;
+    input[type='checkbox']::before {
+      content: "";
+      width: 1.20em;
+      height: 1.20em;
+      transform: scale(0);
+      transition: 120ms transform ease-in-out;
+      font: inherit;
+      background-color: rgba($color: #ff7d61, $alpha: 1);
+      transform-origin: bottom left;
+      clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+      
     }
     input[type='checkbox']:checked:before {
-      background-color: rgba($color: #ff7d61, $alpha: 0.3);
-      color: #ffffff;
+      transform: scale(1);
     }
+
+   
+
   }
 
   // Save and upload buttons
-
   .btns {
     display: inline-grid;
     grid: auto-flow / 2fr 2fr;
