@@ -119,6 +119,7 @@ export default {
 
   @media (max-width: 1024px) {
     display: block;
+    padding: 1rem;
   }
 
   .sidenav {

@@ -104,41 +104,46 @@ export default {
 
 <style lang="scss" scoped>
 .container {
-  border-radius: 10px;
-  padding: 0.8rem;
+  display: none;
 
-  .container__title {
-    padding-bottom: 0.8rem;
-  }
+  @media (min-width: 1024px) {
+    border-radius: 10px;
+    padding: 0.8rem;
+    display: block;
 
-  .list {
-    display: flex;
-    place-items: center;
-    width: 100%;
-    gap: 1rem;
-    padding: 0.6rem 0rem;
+    .container__title {
+      padding-bottom: 0.8rem;
+    }
 
-    .list__users {
+    .list {
       display: flex;
-      flex-direction: column;
-      .displayname {
-        text-transform: capitalize;
-        font-size: 0.85rem;
-      }
-      .username {
-        font-size: 0.8rem;
-      }
-    }
+      place-items: center;
+      width: 100%;
+      gap: 1rem;
+      padding: 0.6rem 0rem;
 
-    .list__avatar {
-      width: 2.5rem;
-      aspect-ratio: 1/1;
-      border-radius: 50%;
-    }
+      .list__users {
+        display: flex;
+        flex-direction: column;
+        .displayname {
+          text-transform: capitalize;
+          font-size: 0.85rem;
+        }
+        .username {
+          font-size: 0.8rem;
+        }
+      }
 
-    .button {
-      padding: 0.15rem 0.4rem;
-      margin-left: auto;
+      .list__avatar {
+        width: 2.5rem;
+        aspect-ratio: 1/1;
+        border-radius: 50%;
+      }
+
+      .button {
+        padding: 0.15rem 0.4rem;
+        margin-left: auto;
+      }
     }
   }
 }

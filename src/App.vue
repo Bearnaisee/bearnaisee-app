@@ -83,7 +83,6 @@ h6 {
   padding-bottom: 10rem;
 
   @media (max-width: 625px) {
-    padding: 1rem;
   }
 
   @media (min-width: 640px) {
