@@ -6,7 +6,9 @@
 
     <router-link v-if="getUserInfo?.username" :to="`/${getUserInfo.username}`" class="nav__link"> Profile </router-link>
 
-    <router-link v-if="getUserInfo?.id" to="/bookmarks" class="nav__link"> Bookmarks </router-link>
+    <router-link v-if="getUserInfo?.id" :to="`/${getUserInfo.username}#bookmarks`" class="nav__link">
+      Bookmarks
+    </router-link>
 
     <router-link v-if="getUserInfo?.id" to="/settings" class="nav__link"> Settings </router-link>
 

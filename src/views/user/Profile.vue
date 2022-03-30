@@ -7,7 +7,8 @@
     <div class="content">
       <div v-if="!loading && !user">
         <!-- TODO: pimp up this shit -->
-        <h1>User not found</h1>
+        <h1>:(</h1>
+        <h1>User with the name of {{ $route.params.username }} was not found</h1>
       </div>
 
       <div v-else>
@@ -52,10 +53,38 @@
           </p>
         </div>
 
-        <Title text="Recipes" size="h2" class="content__title" />
+        <div class="tabs">
+          <button
+            class="tabs__button"
+            :class="tab === 'recipes' ? 'tabs__button--active' : ''"
+            @click="switchTab('recipes')"
+          >
+            Recipes
+          </button>
 
-        <RecipeGrid v-if="recipes?.length" :recipes="recipes" />
-        <p v-else>User has no recipes</p>
+          <button
+            class="tabs__button"
+            :class="tab === 'bookmarks' ? 'tabs__button--active' : ''"
+            @click="switchTab('bookmarks')"
+          >
+            Bookmarks
+          </button>
+        </div>
+
+        <keep-alive>
+          <div v-if="tab === 'recipes'">
+            <RecipeGrid v-if="recipes?.length" :recipes="recipes" />
+            <p v-else>User has no recipes :(</p>
+          </div>
+        </keep-alive>
+
+        <keep-alive>
+          <div v-if="tab === 'bookmarks'">
+            <RecipeGrid v-if="bookmarks?.length" :recipes="bookmarks" />
+
+            <p v-else>User has no bookmarks :(</p>
+          </div>
+        </keep-alive>
       </div>
     </div>
 
@@ -80,17 +109,18 @@ export default {
     RecipeGrid: defineAsyncComponent(() => import('@/components/RecipeGrid.vue')),
     Button: defineAsyncComponent(() => import('@/components/Button.vue')),
     SideNav: defineAsyncComponent(() => import('@/components/SideNav.vue')),
-    Title: defineAsyncComponent(() => import('@/components/Title.vue')),
   },
 
   data() {
     return {
+      tab: 'recipes',
       loading: true,
       user: null,
       followerCount: 0,
       followingCount: 0,
-      recipes: [],
       following: false,
+      recipes: [],
+      bookmarks: [],
     };
   },
 
@@ -112,12 +142,38 @@ export default {
     },
   },
 
+  watch: {
+    '$route.hash': {
+      handler() {
+        if (this.$route?.hash?.toLowerCase() === '#bookmarks') {
+          this.tab = 'bookmarks';
+        } else {
+          this.tab = 'recipes';
+        }
+      },
+    },
+  },
+
   created() {
     this.fetchUserInfo();
     this.fetchUserRecipes();
+    console.log(this.$route);
   },
 
   methods: {
+    /**
+     * @param {string} tab
+     */
+    switchTab(tab) {
+      if (tab === 'recipes') {
+        this.tab = 'recipes';
+        window.location.hash = '';
+      } else if (tab === 'bookmarks') {
+        this.tab = 'bookmarks';
+        window.location.hash = '#bookmarks';
+      }
+    },
+
     async fetchUserInfo() {
       this.user = await axios
         .get(`${process.env.VUE_APP_API_URL}/user/${this.$route.params.username}`)
@@ -128,10 +184,14 @@ export default {
 
       this.loading = false;
 
-      this.fetchUserStats();
+      if (this.user?.id) {
+        this.fetchUserStats();
 
-      if (this.user.id !== this.getUserInfo.id) {
-        this.checkIfFollowing();
+        this.fetchLikedRecipes();
+
+        if (this.user.id !== this.getUserInfo.id) {
+          this.checkIfFollowing();
+        }
       }
     },
 
@@ -141,6 +201,16 @@ export default {
         .then((res) => res?.data?.recipes || [])
         .catch((error) => {
           console.error('Error fetching recipes', error);
+          return [];
+        });
+    },
+
+    async fetchLikedRecipes() {
+      this.bookmarks = await axios
+        .get(`${process.env.VUE_APP_API_URL}/user/liked/recipes/${this.user.id}`)
+        .then((res) => res?.data?.recipes || [])
+        .catch((error) => {
+          console.error('Error fetching liked recipes', error);
           return [];
         });
     },
@@ -207,9 +277,40 @@ export default {
   }
 
   .content {
-    .content__title {
-      padding: 20px 0px;
-      padding-top: 4rem;
+    .tabs {
+      margin-top: 1rem;
+      margin-bottom: 1.25rem;
+      display: flex;
+      gap: 1rem;
+
+      .tabs__button {
+        background: none;
+        border: none;
+        padding: 0.5rem 0rem;
+        transition: 0.3s;
+        font-size: 1.25rem;
+        position: relative;
+        color: #7e7e7e;
+
+        &--active {
+          transition: 0.3s;
+          color: var(--color-black);
+
+          &::after {
+            position: absolute;
+            content: '';
+            background: var(--color-highlight);
+            bottom: -5%;
+            left: 0%;
+            z-index: 100;
+            padding: 0.175rem 1.5rem;
+          }
+        }
+
+        &:hover {
+          color: var(--color-black);
+        }
+      }
     }
 
     .content__stats {
@@ -257,11 +358,11 @@ export default {
     display: none;
 
     .searchbar {
-      text-align: center;
       border-radius: 4px;
       border: solid 1px var(--color-black);
       width: 100%;
       height: 2rem;
+      padding-left: 0.25rem;
     }
 
     @media (min-width: 1024px) {
