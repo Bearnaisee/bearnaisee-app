@@ -1,27 +1,41 @@
 <template>
   <div class="nav">
-    <router-link to="/" class="nav__link"> <Icon icon="home" width="25" height="25" /> </router-link>
+    <router-link to="/" class="nav__link">
+      <Icon icon="home" width="25" height="25" />
+    </router-link>
 
-    <router-link to="/" class="nav__link"> <Icon icon="search" width="25" height="25" /> </router-link>
+    <!-- TODO: implement search -->
+    <router-link to="/" class="nav__link">
+      <Icon icon="search" width="25" height="25" />
+    </router-link>
 
     <router-link to="/create" class="nav__link">
       <Icon icon="create" width="40" height="40" color="var(--color-highlight)" />
     </router-link>
 
-    <router-link to="/" class="nav__link"> <Icon icon="bookmark" width="25" height="25" /> </router-link>
+    <router-link :to="`/${getUserInfo.username}#bookmarks`" class="nav__link">
+      <Icon icon="bookmark" width="25" height="25" />
+    </router-link>
 
-    <router-link to="/" class="nav__link"> <Icon icon="settings" width="25" height="25" /> </router-link>
+    <router-link to="/" class="nav__link">
+      <Icon icon="settings" width="25" height="25" />
+    </router-link>
   </div>
 </template>
 
 <script>
 import { defineAsyncComponent } from 'vue';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'MobileNav',
 
   components: {
     Icon: defineAsyncComponent(() => import('@/components/Icon.vue')),
+  },
+
+  computed: {
+    ...mapGetters(['getUserInfo']),
   },
 };
 </script>

@@ -57,7 +57,7 @@
           <button
             class="tabs__button"
             :class="tab === 'recipes' ? 'tabs__button--active' : ''"
-            @click="tab = 'recipes'"
+            @click="switchTab('recipes')"
           >
             Recipes
           </button>
@@ -65,7 +65,7 @@
           <button
             class="tabs__button"
             :class="tab === 'bookmarks' ? 'tabs__button--active' : ''"
-            @click="tab = 'bookmarks'"
+            @click="switchTab('bookmarks')"
           >
             Bookmarks
           </button>
@@ -142,12 +142,38 @@ export default {
     },
   },
 
+  watch: {
+    '$route.hash': {
+      handler() {
+        if (this.$route?.hash?.toLowerCase() === '#bookmarks') {
+          this.tab = 'bookmarks';
+        } else {
+          this.tab = 'recipes';
+        }
+      },
+    },
+  },
+
   created() {
     this.fetchUserInfo();
     this.fetchUserRecipes();
+    console.log(this.$route);
   },
 
   methods: {
+    /**
+     * @param {string} tab
+     */
+    switchTab(tab) {
+      if (tab === 'recipes') {
+        this.tab = 'recipes';
+        window.location.hash = '';
+      } else if (tab === 'bookmarks') {
+        this.tab = 'bookmarks';
+        window.location.hash = '#bookmarks';
+      }
+    },
+
     async fetchUserInfo() {
       this.user = await axios
         .get(`${process.env.VUE_APP_API_URL}/user/${this.$route.params.username}`)
