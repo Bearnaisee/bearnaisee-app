@@ -9,15 +9,15 @@
       <Icon icon="search" width="25" height="25" />
     </router-link>
 
-    <router-link to="/create" class="nav__link">
+    <router-link v-if="getUserInfo?.id" to="/create" class="nav__link">
       <Icon icon="create" width="40" height="40" color="var(--color-highlight)" />
     </router-link>
 
-    <router-link :to="`/${getUserInfo.username}#bookmarks`" class="nav__link">
+    <router-link v-if="getUserInfo?.id" :to="`/${getUserInfo.username}#bookmarks`" class="nav__link">
       <Icon icon="bookmark" width="25" height="25" />
     </router-link>
 
-    <router-link to="/" class="nav__link">
+    <router-link v-if="getUserInfo?.id" to="/settings" class="nav__link">
       <Icon icon="settings" width="25" height="25" />
     </router-link>
   </div>

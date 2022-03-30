@@ -6,15 +6,15 @@
 
     <router-link v-if="getUserInfo?.username" :to="`/${getUserInfo.username}`" class="nav__link"> Profile </router-link>
 
-    <router-link v-if="getUserInfo?.id" :to="`/${getUserInfo.username}#bookmarks`" class="nav__link">
+    <router-link v-if="getUserInfo?.username" :to="`/${getUserInfo.username}#bookmarks`" class="nav__link">
       Bookmarks
     </router-link>
 
     <router-link v-if="getUserInfo?.id" to="/settings" class="nav__link"> Settings </router-link>
 
-    <button v-if="getUserInfo" type="button" class="nav__button" @click="logout">Log out</button>
+    <button v-if="getUserInfo?.id" type="button" class="nav__button" @click="logout">Log out</button>
 
-    <router-link v-if="getUserInfo" to="/create" class="add"> Create Recipe </router-link>
+    <router-link v-if="getUserInfo?.id" to="/create" class="add"> Create Recipe </router-link>
 
     <div v-if="!getUserInfo" class="buttons">
       <Button kind="secondary" label="Signup" @clicked="switchLoginModal(false)" />
