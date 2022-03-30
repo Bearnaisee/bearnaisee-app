@@ -11,13 +11,17 @@
       </div>
 
       <div v-else>
-        <Image :src="avatarUrl" class="avatar" />
+        <Image :src="avatarUrl" class="content__avatar" />
 
         <div class="content__social">
           <div>
-            <h1 size="h1" class="name">{{ user?.displayName || user?.username || $route.params.username }}</h1>
-            <p class="username">@{{ user?.username || $route.params.username }}</p>
+            <h1 size="h1" class="content__name">
+              {{ user?.displayName || user?.username || $route.params.username }}
+            </h1>
+
+            <p class="content__username">@{{ user?.username || $route.params.username }}</p>
           </div>
+
           <Button
             v-if="user?.id !== getUserInfo?.id"
             :label="following ? 'Unfollow' : 'Follow'"
@@ -32,16 +36,16 @@
           {{ user.description }}
         </p>
 
-        <div style="display: flex; gap: 1rem">
+        <div class="content__stats">
           <p>
-            <span style="font-weight: 700">
+            <span>
               {{ followerCount || 0 }}
             </span>
             followers
           </p>
 
           <p>
-            <span style="font-weight: 700">
+            <span>
               {{ followingCount || 0 }}
             </span>
             following
@@ -54,6 +58,7 @@
         <p v-else>User has no recipes</p>
       </div>
     </div>
+
     <div class="search">
       <input type="text" placeholder="Search for something..." class="searchbar" />
     </div>
@@ -202,21 +207,44 @@ export default {
   }
 
   .content {
-    .follow-button {
-      margin-left: auto;
-      height: fit-content;
-      margin: 20px 0px;
+    .content__title {
+      padding: 20px 0px;
+      padding-top: 4rem;
+    }
+
+    .content__stats {
+      display: flex;
+      gap: 1rem;
+
+      span {
+        font-weight: 700;
+      }
+    }
+
+    .content__avatar {
+      width: 12rem;
+      aspect-ratio: 1/1;
+      border-radius: 50%;
     }
 
     .content__social {
       display: flex;
       gap: 2.5rem;
       place-items: center;
-    }
 
-    .content__title {
-      padding: 20px 0px;
-      padding-top: 4rem;
+      .content__name {
+        font-size: 1.5rem;
+      }
+
+      .content__username {
+        font-size: 1.25rem;
+      }
+
+      .follow-button {
+        margin-left: auto;
+        height: fit-content;
+        margin: 20px 0px;
+      }
     }
 
     @media (min-width: 1024px) {
@@ -224,16 +252,9 @@ export default {
       margin-top: 2.5rem;
     }
   }
+
   .search {
     display: none;
-
-    @media (min-width: 1024px) {
-      display: block;
-      width: 20%;
-      padding-top: 2.5rem;
-      height: fit-content;
-      gap: 1rem;
-    }
 
     .searchbar {
       text-align: center;
@@ -242,20 +263,14 @@ export default {
       width: 100%;
       height: 2rem;
     }
+
+    @media (min-width: 1024px) {
+      display: block;
+      width: 20%;
+      padding-top: 2.5rem;
+      height: fit-content;
+      gap: 1rem;
+    }
   }
-}
-
-.avatar {
-  width: 12rem;
-  aspect-ratio: 1/1;
-  border-radius: 50%;
-}
-
-.name {
-  font-size: 1.5rem;
-}
-
-.username {
-  font-size: 1.25rem;
 }
 </style>

@@ -23,12 +23,7 @@
       <Icon icon="tag" color="#D53F29" width="12" height="12" />
 
       <div>
-        <router-link
-          v-for="(tag, tagIndex) of tags"
-          :key="tagIndex"
-          :to="`/category/${tag}`"
-          style="text-transform: capitalize"
-        >
+        <router-link v-for="(tag, tagIndex) of tags" :key="tagIndex" :to="`/category/${tag}`" class="capitalize">
           {{ tagIndex > 0 && tags.length > tagIndex ? ', ' : '' }}
           {{ tag }}
         </router-link>
