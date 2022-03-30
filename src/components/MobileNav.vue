@@ -46,7 +46,7 @@ export default {
   }
 
   @media (max-width: 390px) {
-    padding: 0.05rem 1rem;
+    padding: 0.05rem 0.5rem;
   }
 }
 </style>
