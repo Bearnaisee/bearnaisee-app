@@ -103,6 +103,7 @@
                     display: flex;
                     place-items: center;
                     place-content: center;
+                    z-index: 0;
                   "
                 >
                   <Title :text="(stepIndex + 1).toString()" size="h2" style="z-index: 100; font-weight: 700" />
