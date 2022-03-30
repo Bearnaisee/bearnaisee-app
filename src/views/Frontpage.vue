@@ -134,7 +134,7 @@ export default {
       margin-top: 2.5rem;
       background-color: #f7e8e855;
       border-radius: 1.5rem;
-      padding: 0 1.5rem;
+      padding: 0 1.5rem 1.5rem;
     }
 
     .content__title {
@@ -153,6 +153,7 @@ export default {
 
         @media (min-width: 1024px) {
           padding: 1rem 2rem;
+
           &:hover {
             background-color: #f7e8e855;
             border-radius: 10px;
