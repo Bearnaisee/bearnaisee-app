@@ -89,7 +89,7 @@
           <section class="recipe__section">
             <Title size="h3" text="Steps" class="section__title" />
 
-            <div v-for="(step, stepIndex) of recipe?.recipeSteps" :key="stepIndex" style="margin-bottom: 1rem">
+            <div v-for="(step, stepIndex) of recipe?.recipeSteps" :key="stepIndex" style="margin-bottom: 1.5rem">
               <div
                 style="display: flex; gap: 1rem; align-content: center; align-items: center"
                 @click="switchStep(stepIndex)"
