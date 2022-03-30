@@ -2,7 +2,8 @@
   <div class="top">
     <div class="topnav-container">
       <div class="topnav-logo">
-        <Title text="Bearnaisee" size="h1" />
+        <Icon class="top__mlogo" icon="logo" width="25" height="25" color="#FF7D61" />
+        <Title class="top__title" text="Bearnaisee" size="h1" />
       </div>
 
       <div v-if="!getUserInfo" class="buttons">
@@ -31,6 +32,7 @@ export default {
     Button: defineAsyncComponent(() => import('@/components/Button.vue')),
     Title: defineAsyncComponent(() => import('@/components/Title.vue')),
     LoginModal: defineAsyncComponent(() => import('@/components/LoginModal.vue')),
+    Icon: defineAsyncComponent(() => import('@/components/Icon.vue')),
   },
 
   data() {
@@ -80,6 +82,22 @@ input {
 
   .topnav-container {
     display: flex;
+
+    .topnav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      @media (max-width: 435px) {
+        .top__mlogo {
+          width: 40px;
+          height: 40px;
+        }
+        .top__title {
+          display: none;
+        }
+      }
+    }
   }
 }
 </style>
