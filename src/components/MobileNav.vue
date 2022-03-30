@@ -45,8 +45,12 @@ export default {
     padding: 0.05rem 3rem;
   }
 
-  @media (max-width: 390px) {
+  @media (max-width: 640px) {
     padding: 0.05rem 1rem;
+  }
+
+  @media (max-width: 390px) {
+    padding: 0.05rem 0.5rem;
   }
 }
 </style>
