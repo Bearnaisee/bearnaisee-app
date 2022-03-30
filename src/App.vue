@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    <router-view style="width: 100%" />
+    <div style="width: 100%">
+      <router-view />
+    </div>
   </div>
   <MobileNav />
 </template>
