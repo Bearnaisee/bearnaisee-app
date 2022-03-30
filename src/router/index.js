@@ -12,7 +12,6 @@ const routes = [
     name: 'Tos',
     component: () => import(/* webpackChunkName: "[request]" */ '../components/TermsOfService.vue'),
   },
-
   {
     path: '/category/:category',
     name: 'Category',
@@ -52,6 +51,15 @@ const routes = [
       requiresAuth: true,
     },
     component: () => import(/* webpackChunkName: "[request]" */ '../views/user/RecipeBuilder.vue'),
+  },
+  {
+    path: '/settings',
+    name: 'UserSettings',
+    meta: {
+      title: 'Settings',
+      requiresAuth: true,
+    },
+    component: () => import(/* webpackChunkName: "[request]" */ '../views/user/Settings.vue'),
   },
 ];
 
