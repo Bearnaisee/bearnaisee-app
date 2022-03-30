@@ -10,6 +10,9 @@
 
         <Button kind="primary" label="Login" @clicked="switchLoginModal(true)" />
       </div>
+      <div v-if="getUserInfo" class="buttons">
+        <button type="button" class="nav__button" @click="logout">Log out</button>
+      </div>
     </div>
 
     <div class="search-wrapper">
@@ -22,7 +25,7 @@
 
 <script>
 import { defineAsyncComponent } from 'vue';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
   name: 'Frontpage',
@@ -45,12 +48,19 @@ export default {
   },
 
   methods: {
+    ...mapMutations(['setUserInfo']),
     /**
      * @param {boolean | null} tab
      */
     switchLoginModal(tab = null) {
       this.startTab = tab;
       this.showLoginModal = !this.showLoginModal;
+    },
+
+    logout() {
+      this.setUserInfo(null);
+      localStorage.clear();
+      window.location.reload();
     },
   },
 };
@@ -62,6 +72,17 @@ export default {
   gap: 0.5rem;
   display: flex;
   align-items: center;
+
+  .nav__button {
+    border: 1px solid var(--color-highlight);
+    background-color: #fff;
+    font-size: 1rem;
+    color: var(--color-highlight);
+    text-align: left;
+    width: fit-content;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+  }
 }
 input {
   border: 1px solid #7e7e7e;
