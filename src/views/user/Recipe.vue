@@ -15,7 +15,11 @@
               <Icon icon="arrow" width="24" height="auto" />
             </button>
 
-            <button class="recipe__button" @click="likeRecipe">
+            <button
+              v-if="getUserInfo?.id && recipe?.userId && recipe?.userId !== getUserInfo?.id"
+              class="recipe__button"
+              @click="likeRecipe"
+            >
               <Icon icon="heart" :color="userLikedRecipe ? '#FF7D61' : '#000'" width="24" height="auto" />
             </button>
           </div>
