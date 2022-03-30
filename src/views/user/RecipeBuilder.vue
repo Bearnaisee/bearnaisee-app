@@ -16,6 +16,7 @@
     <div class="builder">
       <div>
         <h6>Recipe name</h6>
+
         <input v-model="recipe.title" type="text" maxlength="100" />
       </div>
 
@@ -28,6 +29,7 @@
       <div>
         <div class="slider">
           <h6>Estimated time</h6>
+
           <p>{{ recipe.estimatedTime }} min.</p>
         </div>
 
@@ -36,7 +38,12 @@
 
       <div>
         <h6>Tags</h6>
-        <input type="text" />
+
+        <input v-model="newTag" type="text" maxlength="45" @keydown.enter="addTag" />
+
+        <div v-if="recipe?.tags?.length" class="tags__list">
+          <Tag v-for="(tag, tagIndex) of recipe.tags" :key="tagIndex" :label="tag" @click="removeTag(tagIndex)" />
+        </div>
       </div>
 
       <div>
@@ -76,6 +83,7 @@
           <p>Step: {{ stepIndex + 1 }}</p>
 
           <textarea v-model="step.content" type="text" placeholder="" rows="5"></textarea>
+
           <div class="optional">
             <p>Optional</p>
             <input v-model="step.optional" type="checkbox" />
@@ -85,10 +93,8 @@
         <Button kind="primary" label="+ Add step" class="add-step" @click="addStep" />
       </div>
     </div>
-    <div class="btns">
-      <!-- <Button kind="secondary" label="Save draft" /> -->
-      <Button kind="primary" label="Create recipe" @clicked="saveRecipe" />
-    </div>
+
+    <Button kind="primary" label="Create recipe" @clicked="saveRecipe" />
   </div>
 </template>
 
@@ -104,11 +110,12 @@ export default {
   components: {
     Button: defineAsyncComponent(() => import('@/components/Button.vue')),
     Icon: defineAsyncComponent(() => import('@/components/Icon.vue')),
+    Tag: defineAsyncComponent(() => import('@/components/Tag.vue')),
   },
 
   data() {
     return {
-      metrics: [],
+      newTag: '',
 
       recipe: {
         title: '',
@@ -123,6 +130,7 @@ export default {
           },
         ],
         steps: [],
+        tags: [],
       },
     };
   },
@@ -162,6 +170,26 @@ export default {
         metricId: null,
         ingredient: '',
       });
+    },
+
+    addTag() {
+      const cleanedNewTag = this.newTag
+        ?.trim()
+        ?.toLowerCase()
+        ?.replaceAll(/[^a-z0-9-]/gi, '');
+
+      if (cleanedNewTag.length && this.recipe.tags.indexOf(cleanedNewTag) === -1) {
+        this.recipe.tags.push(cleanedNewTag);
+      }
+
+      this.newTag = '';
+    },
+
+    /**
+     * @param {number} index
+     */
+    removeTag(index) {
+      this.recipe.tags.splice(index, 1);
     },
 
     async uploadRecipeThumbnail(files) {
@@ -219,6 +247,8 @@ export default {
   min-height: 100vh;
   justify-content: center;
   gap: 1.25rem;
+  margin: auto;
+  width: 85vw;
 
   // Image upload
   .cover-upload {
@@ -269,6 +299,18 @@ export default {
     }
   }
 
+  .tags__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: auto;
+    margin-top: 1rem;
+
+    p {
+      cursor: pointer;
+    }
+  }
+
   h6 {
     color: rgba(0, 0, 0, 0.2);
     font-size: 14px;
@@ -290,7 +332,7 @@ export default {
     border-radius: 4px;
     border: 2px solid rgba($color: #7e7e7e, $alpha: 0.3);
     width: 100%;
-    height: 2rem;
+    // height: 2rem;
     padding: 0.25rem;
   }
 
@@ -455,19 +497,6 @@ export default {
     input[type='checkbox']:checked:before {
       background-color: rgba($color: var(--color-highlight), $alpha: 0.3);
       color: #ffffff;
-    }
-  }
-
-  // Save and upload buttons
-
-  .btns {
-    display: inline-grid;
-    grid: auto-flow / 2fr 2fr;
-    column-gap: 1rem;
-    padding: 3rem 1rem;
-
-    Button {
-      font-size: 1rem;
     }
   }
 }
