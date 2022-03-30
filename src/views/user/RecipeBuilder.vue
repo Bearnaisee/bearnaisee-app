@@ -82,7 +82,7 @@
         <div v-for="(step, stepIndex) of recipe.steps" :key="stepIndex" class="description">
           <p>Step: {{ stepIndex + 1 }}</p>
 
-          <textarea v-model="step.content" type="text" placeholder="" rows="5"></textarea>
+          <textarea v-model="step.content" type="text" rows="5"></textarea>
 
           <div class="optional">
             <p>Optional</p>

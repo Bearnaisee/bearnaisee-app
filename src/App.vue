@@ -116,4 +116,12 @@ button {
 a {
   text-decoration: none;
 }
+
+.bold {
+  font-weight: 700;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
 </style>

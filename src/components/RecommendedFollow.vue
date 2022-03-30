@@ -7,7 +7,7 @@
     <div v-for="user in users" :key="user.id" class="list">
       <div>
         <router-link :to="`/${user.username}`">
-          <img :src="user.avatarUrl" alt="" class="list__avatar" />
+          <img :src="user.avatarUrl" :alt="`${user.username || ''} profile image`" class="list__avatar" />
         </router-link>
       </div>
       <div class="list__users">

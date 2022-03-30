@@ -3,6 +3,7 @@
     <div class="left">
       <SideNav />
     </div>
+
     <div class="middle">
       <div v-if="recipe" class="recipe">
         <div
@@ -73,14 +74,16 @@
               <div
                 v-for="(ingredient, ingredientIndex) of recipe?.ingredients"
                 :key="ingredientIndex"
-                style="display: grid; grid-template-columns: 1fr 5fr"
+                class="recipe__ingredient"
               >
-                <p style="font-weight: 700">{{ ingredient.amount }}{{ ingredient.metric || '' }}</p>
+                <p>
+                  {{ ingredient.amount }} <span class="bold">{{ ingredient.metric || '' }}</span>
+                </p>
 
                 <p>
-                  {{ ingredient.ingredient }}
+                  <span class="capitalize">{{ ingredient.ingredient }}</span>
 
-                  <span v-if="ingredient.optional" style="font-weight: 700"> (optional) </span>
+                  <span v-if="ingredient.optional" class="bold"> (optional) </span>
                 </p>
               </div>
             </div>
@@ -89,25 +92,9 @@
           <section class="recipe__section">
             <Title size="h3" text="Steps" class="section__title" />
 
-            <div v-for="(step, stepIndex) of recipe?.recipeSteps" :key="stepIndex" style="margin-bottom: 1.5rem">
-              <div
-                style="display: flex; gap: 1rem; align-content: center; align-items: center"
-                @click="switchStep(stepIndex)"
-              >
-                <div
-                  style="
-                    background-color: #e8e8e8;
-                    width: 3rem;
-                    height: 3rem;
-                    border-radius: 9999px;
-                    display: flex;
-                    place-items: center;
-                    place-content: center;
-                    z-index: 0;
-                  "
-                >
-                  <Title :text="(stepIndex + 1).toString()" size="h2" style="z-index: 100; font-weight: 700" />
-                </div>
+            <div v-for="(step, stepIndex) of recipe?.recipeSteps" :key="stepIndex" class="step">
+              <div class="step__circle" @click="switchStep(stepIndex)">
+                <Title :text="(stepIndex + 1).toString()" size="h3" class="step__circle__text" />
               </div>
 
               <p v-if="step.show">
@@ -259,87 +246,117 @@ export default {
       }
     }
   }
-}
 
-.recipe {
-  .recipe__image {
-    height: 25rem;
-    width: 100%;
-    margin-bottom: 0%;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    background-size: cover;
+  .recipe {
+    .recipe__image {
+      height: 25rem;
+      width: 100%;
+      margin-bottom: 0%;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      background-size: cover;
 
-    @media (min-width: 1024px) {
-      border-top-left-radius: 1.5rem;
-      border-top-right-radius: 1.5rem;
-    }
-  }
-
-  .recipe__header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 2vh 3vw;
-  }
-
-  .recipe__button {
-    background: none;
-    border: none;
-    height: 3rem;
-    width: 3rem;
-    background-color: #e8e8e8;
-    border-radius: 50%;
-    display: flex;
-    place-items: center;
-    place-content: center;
-  }
-
-  .recipe__wrapper {
-    padding: 2rem 1rem;
-    min-height: fit-content;
-    height: 100%;
-    background-color: #fafafa;
-    border-radius: var(--border-radius) var(--border-radius) 0 0;
-    z-index: 10;
-    margin-top: -25%;
-    width: 100%;
-
-    @media (min-width: 1024px) {
-      margin-top: 0;
-      border-radius: 0;
+      @media (min-width: 1024px) {
+        border-top-left-radius: 1.5rem;
+        border-top-right-radius: 1.5rem;
+      }
     }
 
-    .recipe__title {
-      word-wrap: break-word;
-      font-size: 2rem;
-    }
-
-    .recipe__icon {
+    .recipe__header {
       display: flex;
-      gap: 0.5rem;
-      align-content: center;
-      align-items: center;
-      font-size: 0.8rem;
-
-      .recipe__tag {
-        font-size: 0.7rem;
-        text-transform: capitalize;
-      }
+      flex-direction: row;
+      justify-content: space-between;
+      padding: 2vh 3vw;
     }
 
-    .recipe__section {
-      margin: 1rem 0;
+    .recipe__button {
+      background: none;
+      border: none;
+      height: 3rem;
+      width: 3rem;
+      background-color: #e8e8e8;
+      border-radius: 50%;
+      display: flex;
+      place-items: center;
+      place-content: center;
+    }
 
-      .section__title {
-        margin-bottom: 1rem;
+    .recipe__wrapper {
+      padding: 2rem 1rem;
+      min-height: fit-content;
+      height: 100%;
+      background-color: #fafafa;
+      border-radius: var(--border-radius) var(--border-radius) 0 0;
+      z-index: 10;
+      margin-top: -25%;
+      width: 100%;
+
+      @media (min-width: 1024px) {
+        margin-top: 0;
+        border-radius: 0;
       }
 
-      .section__description__button {
-        background: none;
-        border: none;
-        font-weight: 700;
+      .recipe__title {
+        word-wrap: break-word;
+        font-size: 2rem;
+      }
+
+      .recipe__icon {
+        display: flex;
+        gap: 0.5rem;
+        align-content: center;
+        align-items: center;
+        font-size: 0.8rem;
+
+        .recipe__tag {
+          font-size: 0.7rem;
+          text-transform: capitalize;
+        }
+      }
+
+      .recipe__section {
+        margin: 1rem 0;
+
+        .section__title {
+          margin-bottom: 1rem;
+        }
+
+        .section__description__button {
+          background: none;
+          border: none;
+          font-weight: 700;
+        }
+
+        .recipe__ingredient {
+          display: grid;
+          grid-template-columns: 1fr 5fr;
+        }
+
+        .step {
+          margin-bottom: 1.5rem;
+
+          .step__circle {
+            display: flex;
+            gap: 1rem;
+            align-content: center;
+            align-items: center;
+            background-color: #e8e8e8;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 9999px;
+            display: flex;
+            place-items: center;
+            place-content: center;
+            z-index: 0;
+            margin-bottom: 0.5rem;
+
+            .step__circle__text {
+              z-index: 100;
+              font-weight: 700;
+            }
+          }
+        }
       }
     }
   }
