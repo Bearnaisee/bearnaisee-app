@@ -223,7 +223,7 @@ export default {
             timer: 1000,
           });
 
-          this.$router.push(`/${this.getUserInfo.username}/${result?.data.slug}`);
+          this.$router.push(`/${this.getUserInfo.username}/${result?.data.recipe.slug}`);
         })
         .catch((error) => {
           this.$swal({
