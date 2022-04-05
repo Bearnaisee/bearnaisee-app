@@ -29,6 +29,24 @@
       </div>
     </div>
   </div>
+
+  <!-- Hacky way to set meta title -->
+  <Teleport to="head">
+    <title>{{ metaTitle || 'Category | Bearnaisee' }}</title>
+    <meta name="title" :content="metaTitle || 'Category | Bearnaisee'" />
+    <meta name="description" :content="metaDescription" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" :content="`https://bearnais.ee/${$route.params.category}`" />
+    <meta property="og:title" :content="metaTitle || 'Category | Bearnaisee'" />
+    <meta property="og:description" :content="metaDescription" />
+    <meta property="og:image" :content="null" />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" :content="`https://bearnais.ee/${$route.params.category}`" />
+    <meta property="twitter:title" :content="metaTitle || 'Category | Bearnaisee'" />
+    <meta property="twitter:description" :content="metaDescription" />
+  </Teleport>
 </template>
 
 <script>
@@ -69,20 +87,25 @@ export default {
         this.$route.params.category.length,
       )}`;
     },
+
+    metaTitle() {
+      return `${this.categoryTitle} | Bearnaisee`;
+    },
+
+    metaDescription() {
+      return `Share recipes easily with friends and family on Bearnaise. The recipes are made for you who have neither the time nor the resources to cook.`;
+    },
   },
 
   created() {
     this.fetchRecentRecipes();
-
     this.fetchTrendingRecipes();
   },
 
   methods: {
     async fetchRecentRecipes() {
-      const URL = `${process.env.VUE_APP_API_URL}/recipes/${this.$route.params.category.toLowerCase()}/recent`;
-
       this.recipes = await axios
-        .get(URL)
+        .get(`${process.env.VUE_APP_API_URL}/recipes/${this.$route.params.category.toLowerCase()}/recent`)
         .then((res) => res?.data?.recipes || [])
         .catch((error) => {
           console.error('ERROR fetching recent recipes', error);
@@ -91,10 +114,8 @@ export default {
     },
 
     async fetchTrendingRecipes() {
-      const URL = `${process.env.VUE_APP_API_URL}/recipes/${this.$route.params.category.toLowerCase()}/trending`;
-
       this.trendingRecipes = await axios
-        .get(URL)
+        .get(`${process.env.VUE_APP_API_URL}/recipes/${this.$route.params.category.toLowerCase()}/trending`)
         .then((res) => res?.data?.recipes || [])
         .catch((error) => {
           console.error('ERROR fetching recent recipes', error);

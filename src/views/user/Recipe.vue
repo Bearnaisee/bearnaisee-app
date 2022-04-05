@@ -116,12 +116,32 @@
       </div>
     </div>
   </div>
+
+  <!-- Hacky way to set meta title -->
+  <Teleport to="head">
+    <title>{{ metaTitle || 'Bearnaisee' }}</title>
+    <meta name="title" :content="metaTitle" />
+    <meta name="description" :content="metaDescription" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" :content="`https://bearnais.ee/${$route.params.username}/${$route.params.slug}`" />
+    <meta property="og:title" :content="metaTitle" />
+    <meta property="og:description" :content="metaDescription" />
+    <meta property="og:image" :content="recipe?.coverImage || null" />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" :content="`https://bearnais.ee/${$route.params.username}/${$route.params.slug}`" />
+    <meta property="twitter:title" :content="metaTitle" />
+    <meta property="twitter:description" :content="metaDescription" />
+    <meta property="twitter:image" :content="recipe?.coverImage || null" />
+  </Teleport>
 </template>
 
 <script>
 import { defineAsyncComponent } from 'vue';
 import { mapGetters } from 'vuex';
 import axios from 'axios';
+import unslugText from '@/helpers/unslugText';
 
 export default {
   name: 'Recipe',
@@ -160,6 +180,17 @@ export default {
 
       return '';
     },
+
+    metaTitle() {
+      return `${this.recipe?.title || unslugText(this.$route?.params?.slug) || 'Recipe'} | Bearnaisee`;
+    },
+
+    metaDescription() {
+      return (
+        this?.recipe?.description ||
+        `Share recipes easily with friends and family on Bearnaise. The recipes are made for you who have neither the time nor the resources to cook.`
+      );
+    },
   },
 
   created() {
@@ -172,10 +203,8 @@ export default {
     },
 
     async fetchRecipe() {
-      const URL = `${process.env.VUE_APP_API_URL}/recipe/${this.$route.params.username}/${this.$route.params.slug}`;
-
       const recipe = await axios
-        .get(URL)
+        .get(`${process.env.VUE_APP_API_URL}/recipe/${this.$route.params.username}/${this.$route.params.slug}`)
         .then((res) => res?.data)
         .catch((error) => console.error('ERROR fetching recipe', error));
 
@@ -185,7 +214,7 @@ export default {
 
       this.recipe = recipe;
 
-      if (this.recipe) {
+      if (this.getUserInfo?.id !== this.recipe?.userId) {
         this.checkIfLiked();
       }
     },

@@ -33,6 +33,22 @@
       </form>
     </div>
   </div>
+  <!-- Hacky way to set meta title -->
+  <Teleport to="head">
+    <title>{{ metaTitle || 'Settings | Bearnaisee' }}</title>
+    <meta name="title" :content="metaTitle || 'Bearnaisee'" />
+    <meta name="description" :content="metaDescription" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" :content="`https://bearnais.ee/settings`" />
+    <meta property="og:title" :content="metaTitle || 'Settings | Bearnaisee'" />
+    <meta property="og:description" :content="metaDescription" />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" :content="`https://bearnais.ee/settings`" />
+    <meta property="twitter:title" :content="metaTitle || 'Settings | Bearnaisee'" />
+    <meta property="twitter:description" :content="metaDescription" />
+  </Teleport>
 </template>
 
 <script>
@@ -62,6 +78,14 @@ export default {
 
   computed: {
     ...mapGetters(['getUserInfo']),
+
+    metaTitle() {
+      return 'Settings | Bearnaisee';
+    },
+
+    metaDescription() {
+      return `Share recipes easily with friends and family on Bearnaise. The recipes are made for you who have neither the time nor the resources to cook.`;
+    },
   },
 
   watch: {
