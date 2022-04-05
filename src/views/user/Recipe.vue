@@ -354,10 +354,10 @@ export default {
       }
 
       .recipe__section {
-        margin: 1rem 0;
+        margin: 2.5rem 0;
 
         .section__title {
-          margin-bottom: 1rem;
+          margin-bottom: 0.5rem;
         }
 
         .section__description__button {
