@@ -327,7 +327,7 @@ export default {
     cursor: pointer;
     box-shadow: 0px 0px 0px #000000;
     background: rgba($color: #7e7e7e, $alpha: 0.3);
-    border-radius: 1px;
+    border-radius: 50px;
     border: 0px solid #000000;
   }
 
@@ -354,8 +354,7 @@ export default {
     cursor: pointer;
     box-shadow: 0px 0px 0px #000000;
     background: #ff7d61;
-    border-radius: 1px;
-    border: 0px solid #000000;
+    border-radius: 100px;
   }
 
   input[type='range']::-moz-range-thumb {
@@ -417,6 +416,10 @@ export default {
       border-color: rgba(126, 126, 126, 0.3);
     border-radius: 4px;
     border: 2px solid rgba($color: #7e7e7e, $alpha: 0.3)
+    }
+
+    @media (min-width: 1024px) {
+      grid: auto-flow / 0.5fr 0.3fr 0.1fr;
     }
 
   }
