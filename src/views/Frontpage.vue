@@ -146,6 +146,10 @@ export default {
       grid-template-columns: repeat(4, 1fr);
       margin: 1rem 0;
 
+      @media (max-width: 1024px) {
+        gap: 0.8rem;
+      }
+
       .categories__link {
         margin: 0 auto;
         text-align: center;

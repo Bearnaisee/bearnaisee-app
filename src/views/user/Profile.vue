@@ -265,6 +265,7 @@ export default {
   display: flex;
   flex-direction: row;
   gap: 2rem;
+  padding: 1rem;
 
   @media (max-width: 1024px) {
     display: block;
