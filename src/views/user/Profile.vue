@@ -92,6 +92,25 @@
       <input type="text" placeholder="Search for something..." class="searchbar" />
     </div>
   </div>
+
+  <!-- Hacky way to set meta title -->
+  <Teleport to="head">
+    <title>{{ metaTitle || 'Bearnaisee' }}</title>
+    <meta name="title" :content="metaTitle || 'Bearnaisee'" />
+    <meta name="description" :content="metaDescription" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" :content="`https://bearnais.ee/${$route.params.username}`" />
+    <meta property="og:title" :content="metaTitle || 'Bearnaisee'" />
+    <meta property="og:description" :content="metaDescription" />
+    <meta property="og:image" :content="avatarUrl || null" />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" :content="`https://bearnais.ee/${$route.params.username}`" />
+    <meta property="twitter:title" :content="metaTitle || 'Profile | Bearnaisee'" />
+    <meta property="twitter:description" :content="metaDescription" />
+    <meta property="twitter:image" :content="avatarUrl || null" />
+  </Teleport>
 </template>
 
 <script>
@@ -140,6 +159,16 @@ export default {
 
       return 'http://www.gravatar.com/avatar/?d=mp&s=192';
     },
+
+    metaTitle() {
+      return `${this?.user?.username || this?.$route?.params?.username} (@${
+        this?.$route?.params?.username
+      }) | Bearnaisee`;
+    },
+
+    metaDescription() {
+      return '';
+    },
   },
 
   watch: {
@@ -157,7 +186,6 @@ export default {
   created() {
     this.fetchUserInfo();
     this.fetchUserRecipes();
-    console.log(this.$route);
   },
 
   methods: {
@@ -189,7 +217,7 @@ export default {
 
         this.fetchLikedRecipes();
 
-        if (this.user.id !== this.getUserInfo.id) {
+        if (this.getUserInfo?.id && this.user.id !== this.getUserInfo.id) {
           this.checkIfFollowing();
         }
       }

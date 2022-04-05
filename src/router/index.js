@@ -20,9 +20,7 @@ const routes = [
   {
     path: '/:username',
     name: 'User',
-    props: {
-      default: true,
-    },
+
     component: () => import(/* webpackChunkName: "[request]" */ '../views/user/User.vue'),
     children: [
       {
@@ -33,9 +31,7 @@ const routes = [
       {
         path: '/:username/:slug',
         name: 'UserRecipe',
-        props: {
-          default: true,
-        },
+
         component: () => import(/* webpackChunkName: "[request]" */ '../views/user/Recipe.vue'),
       },
     ],
@@ -43,9 +39,7 @@ const routes = [
   {
     path: '/create',
     name: 'CreateRecipe',
-    props: {
-      default: true,
-    },
+
     meta: {
       title: 'Create Recipe',
       requiresAuth: true,

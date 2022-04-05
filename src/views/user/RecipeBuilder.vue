@@ -96,6 +96,24 @@
 
     <Button kind="primary" label="Create recipe" @clicked="saveRecipe" />
   </div>
+
+  <!-- Hacky way to set meta title -->
+  <Teleport to="head">
+    <title>{{ metaTitle || 'Create Recipe | Bearnaisee' }}</title>
+    <meta name="title" :content="metaTitle || 'Create Recipe | Bearnaisee'" />
+    <meta name="description" :content="metaDescription" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" :content="`https://bearnais.ee/create`" />
+    <meta property="og:title" :content="metaTitle || 'Create Recipe | Bearnaisee'" />
+    <meta property="og:description" :content="metaDescription" />
+    <meta property="og:image" :content="null" />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" :content="`https://bearnais.ee/create`" />
+    <meta property="twitter:title" :content="metaTitle || 'Create Recipe | Bearnaisee'" />
+    <meta property="twitter:description" :content="metaDescription" />
+  </Teleport>
 </template>
 
 <script>
@@ -145,6 +163,14 @@ export default {
       }
 
       return 'background-color: rgba(0, 0, 0, 5%);';
+    },
+
+    metaTitle() {
+      return 'Create Recipe | Bearnaisee';
+    },
+
+    metaDescription() {
+      return `Share recipes easily with friends and family on Bearnaise. The recipes are made for you who have neither the time nor the resources to cook.`;
     },
   },
 

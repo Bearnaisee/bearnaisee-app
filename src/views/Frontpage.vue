@@ -75,6 +75,14 @@ export default {
 
   computed: {
     ...mapGetters(['getUserInfo']),
+
+    metaTitle() {
+      return 'Home | Bearnaisee';
+    },
+
+    metaDescription() {
+      return `Share recipes easily with friends and family on Bearnaise. The recipes are made for you who have neither the time nor the resources to cook.`;
+    },
   },
 
   created() {
@@ -85,10 +93,8 @@ export default {
 
   methods: {
     async fetchRecentRecipes() {
-      const URL = `${process.env.VUE_APP_API_URL}/recipes/recent`;
-
       this.recipes = await axios
-        .get(URL)
+        .get(`${process.env.VUE_APP_API_URL}/recipes/recent`)
         .then((res) => res?.data?.recipes || [])
         .catch((error) => {
           console.error('ERROR fetching recent recipes', error);
@@ -97,10 +103,8 @@ export default {
     },
 
     async fetchTrendingRecipes() {
-      const URL = `${process.env.VUE_APP_API_URL}/recipes/trending`;
-
       this.trendingRecipes = await axios
-        .get(URL)
+        .get(`${process.env.VUE_APP_API_URL}/recipes/trending`)
         .then((res) => res?.data?.recipes || [])
         .catch((error) => {
           console.error('ERROR fetching recent recipes', error);
