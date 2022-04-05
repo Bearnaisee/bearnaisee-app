@@ -22,6 +22,8 @@
             >
               <Icon icon="heart" :color="userLikedRecipe ? '#FF7D61' : '#000'" width="24" height="auto" />
             </button>
+
+            <button v-if="recipe?.userId == getUserInfo?.id" class="recipe__button edit">Edit</button>
           </div>
         </div>
 
@@ -311,6 +313,11 @@ export default {
       display: flex;
       place-items: center;
       place-content: center;
+    }
+
+    .edit {
+      font-weight: bold;
+      font-size: 1rem;
     }
 
     .recipe__wrapper {
