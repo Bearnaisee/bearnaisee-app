@@ -107,7 +107,6 @@
     <meta property="og:url" :content="`https://bearnais.ee/create`" />
     <meta property="og:title" :content="metaTitle || 'Create Recipe | Bearnaisee'" />
     <meta property="og:description" :content="metaDescription" />
-    <meta property="og:image" :content="null" />
 
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" :content="`https://bearnais.ee/create`" />

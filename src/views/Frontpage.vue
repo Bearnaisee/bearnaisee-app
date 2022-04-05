@@ -44,6 +44,23 @@
       </div>
     </div>
   </div>
+
+  <!-- Hacky way to set meta title -->
+  <Teleport to="head">
+    <title>{{ metaTitle || 'Bearnaisee' }}</title>
+    <meta name="title" :content="metaTitle || 'Bearnaisee'" />
+    <meta name="description" :content="metaDescription" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" :content="`https://bearnais.ee`" />
+    <meta property="og:title" :content="metaTitle || 'Bearnaisee'" />
+    <meta property="og:description" :content="metaDescription" />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" :content="`https://bearnais.ee`" />
+    <meta property="twitter:title" :content="metaTitle || 'Bearnaisee'" />
+    <meta property="twitter:description" :content="metaDescription" />
+  </Teleport>
 </template>
 
 <script>
