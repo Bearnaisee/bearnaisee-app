@@ -47,19 +47,19 @@ export default {
   }
 
   .slider__image {
-    width: 30rem;
-    height: auto;
     object-fit: cover;
-    max-width: 80vw;
-    max-height: 12rem;
     border-radius: var(--border-radius);
 
+    // mobile
     @media (max-width: 1024px) {
-      width: 20rem;
+      height: 10rem;
+      width: 15rem;
     }
 
-    @media (min-width: 1280px) {
-      max-height: 20rem;
+    // dekstop
+    @media (min-width: 1024px) {
+      height: 15rem;
+      width: 25rem;
     }
   }
 }

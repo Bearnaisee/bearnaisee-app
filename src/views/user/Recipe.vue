@@ -286,6 +286,7 @@ export default {
       left: 0;
       top: 0;
       background-size: cover;
+      background-position: center;
 
       @media (min-width: 1024px) {
         border-top-left-radius: 1.5rem;
@@ -360,7 +361,11 @@ export default {
 
         .recipe__ingredient {
           display: grid;
-          grid-template-columns: 1fr 5fr;
+          grid-template-columns: 1fr 7fr;
+
+          @media (max-width: 1024px) {
+            grid-template-columns: 1fr 3fr;
+          }
         }
 
         .step {

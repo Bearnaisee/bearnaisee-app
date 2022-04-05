@@ -1,100 +1,112 @@
 <template>
-  <div class="recipe-builder">
-    <h2>Upload new recipe</h2>
-
-    <div class="cover-upload" :style="uploadImageBackground">
-      <label>
-        <Icon icon="upload" width="56" height="auto" />
-        <h5>Upload image</h5>
-
-        <p>Click here to upload cover image</p>
-
-        <input type="file" accept="image/*" @change="uploadRecipeThumbnail($event.target.files)" />
-      </label>
+  <div class="flex">
+    <div class="left">
+      <SideNav />
     </div>
+    <div class="middle">
+      <div class="recipe-builder">
+        <h2>Create recipe</h2>
 
-    <div class="builder">
-      <div>
-        <h6>Recipe name</h6>
+        <div class="cover-upload" :style="uploadImageBackground">
+          <label>
+            <Icon icon="upload" width="56" height="auto" />
+            <h5>Upload image</h5>
 
-        <input v-model="recipe.title" type="text" maxlength="100" />
-      </div>
+            <p>Click here to upload cover image</p>
 
-      <div>
-        <h6>Description</h6>
-
-        <textarea v-model="recipe.description" type="text" rows="5" />
-      </div>
-
-      <div>
-        <div class="slider">
-          <h6>Estimated time</h6>
-
-          <p>{{ recipe.estimatedTime }} min.</p>
+            <input type="file" accept="image/*" @change="uploadRecipeThumbnail($event.target.files)" />
+          </label>
         </div>
 
-        <input v-model.number="recipe.estimatedTime" type="range" min="0" step="5" max="240" />
-      </div>
+        <div class="builder">
+          <div>
+            <h6>Recipe name</h6>
 
-      <div>
-        <h6>Tags</h6>
+            <input v-model="recipe.title" type="text" maxlength="100" />
+          </div>
 
-        <input v-model="newTag" type="text" maxlength="45" @keydown.enter="addTag" />
+          <div>
+            <h6>Description</h6>
 
-        <div v-if="recipe?.tags?.length" class="tags__list">
-          <Tag v-for="(tag, tagIndex) of recipe.tags" :key="tagIndex" :label="tag" @click="removeTag(tagIndex)" />
-        </div>
-      </div>
+            <textarea v-model="recipe.description" type="text" rows="5" />
+          </div>
 
-      <div>
-        <div class="ingredients">
-          <h6>Ingredient</h6>
+          <div>
+            <div class="slider">
+              <h6>Estimated time</h6>
 
-          <h6>Amount</h6>
+              <p>{{ recipe.estimatedTime }} min.</p>
+            </div>
 
-          <h6>Metric</h6>
+            <input v-model.number="recipe.estimatedTime" type="range" min="0" step="5" max="240" />
+          </div>
 
-          <template v-for="(ingredient, ingredientIndex) of recipe.ingredients" :key="ingredientIndex">
-            <input v-model="ingredient.ingredient" type="text" style="width: auto" maxlength="255" />
+          <div>
+            <h6>Tags</h6>
 
-            <input v-model.number="ingredient.amount" type="number" />
+            <input v-model="newTag" type="text" maxlength="45" @keydown.enter="addTag" />
 
-            <select v-model="ingredient.metricId">
-              <option v-for="metric of getMetrics" :key="metric.id" :value="metric.id">
-                {{ metric.metric }}
-              </option>
-            </select>
-          </template>
-        </div>
+            <div v-if="recipe?.tags?.length" class="tags__list">
+              <Tag v-for="(tag, tagIndex) of recipe.tags" :key="tagIndex" :label="tag" @click="removeTag(tagIndex)" />
+            </div>
+          </div>
 
-        <Button
-          label="Add ingredient"
-          class="add-step"
-          kind="secondary"
-          style="margin-top: 0.3rem"
-          @click="addIngredient"
-        />
-      </div>
+          <div>
+            <div class="ingredients">
+              <h6>Ingredient</h6>
 
-      <div class="steps">
-        <h6>Steps</h6>
+              <h6>Amount</h6>
 
-        <div v-for="(step, stepIndex) of recipe.steps" :key="stepIndex" class="description">
-          <p>Step: {{ stepIndex + 1 }}</p>
+              <h6>Metric</h6>
 
-          <textarea v-model="step.content" type="text" rows="5"></textarea>
+              <template v-for="(ingredient, ingredientIndex) of recipe.ingredients" :key="ingredientIndex">
+                <input v-model="ingredient.ingredient" type="text" style="width: auto" maxlength="255" />
 
-          <div class="optional">
-            <p>Optional</p>
-            <input v-model="step.optional" type="checkbox" />
+                <input v-model.number="ingredient.amount" type="number" />
+
+                <select v-model="ingredient.metricId">
+                  <option v-for="metric of getMetrics" :key="metric.id" :value="metric.id">
+                    {{ metric.metric }}
+                  </option>
+                </select>
+              </template>
+            </div>
+
+            <Button
+              label="Add ingredient"
+              class="add-step"
+              kind="secondary"
+              style="margin-top: 0.3rem"
+              @click="addIngredient"
+            />
+          </div>
+
+          <div class="steps">
+            <h6>Steps</h6>
+
+            <div v-for="(step, stepIndex) of recipe.steps" :key="stepIndex" class="description">
+              <p>Step: {{ stepIndex + 1 }}</p>
+
+              <textarea v-model="step.content" type="text" rows="5"></textarea>
+
+              <div class="optional">
+                <p>Optional</p>
+                <input v-model="step.optional" type="checkbox" />
+              </div>
+            </div>
+
+            <Button kind="primary" label="+ Add step" class="add-step" @click="addStep" />
           </div>
         </div>
-
-        <Button kind="primary" label="+ Add step" class="add-step" @click="addStep" />
+        <div class="middle__buttons">
+          <router-link to="/" class="cancel">Cancel</router-link>
+          <Button kind="primary" class="create" label="Create recipe" @clicked="saveRecipe" />
+        </div>
       </div>
     </div>
-
-    <Button kind="primary" label="Create recipe" @clicked="saveRecipe" />
+    <div class="right">
+      <SearchBar />
+    </div>
   </div>
 
   <!-- Hacky way to set meta title -->
@@ -128,6 +140,8 @@ export default {
     Button: defineAsyncComponent(() => import('@/components/Button.vue')),
     Icon: defineAsyncComponent(() => import('@/components/Icon.vue')),
     Tag: defineAsyncComponent(() => import('@/components/Tag.vue')),
+    SideNav: defineAsyncComponent(() => import('@/components/SideNav.vue')),
+    SearchBar: defineAsyncComponent(() => import('@/components/SearchBar.vue')),
   },
 
   data() {
@@ -266,262 +280,310 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.recipe-builder {
-  display: grid;
-  height: 100%;
-  min-height: 100vh;
-  justify-content: center;
-  gap: 1.25rem;
-  margin: auto;
-  width: 85vw;
-
-  // Image upload
-  .cover-upload {
-    border: rgba(126, 126, 126, 30%);
-    border-style: dashed;
-    border-width: 2px;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    object-fit: cover !important;
-    background-size: cover !important;
-    object-position: center !important;
-    background-repeat: no-repeat !important;
-    width: 85vw;
-
-    label {
-      align-items: center;
-      height: 100%;
-      margin-left: 0 !important;
-      justify-content: center;
-      cursor: pointer;
-      flex-direction: column;
-      width: 100% !important;
-      object-fit: cover;
-      display: flex;
-      padding: 2rem;
-
-      h5 {
-        color: rgba(0, 0, 0, 0.5);
-        font-weight: 700;
-        font-size: 14px;
-        margin-top: 2vh;
-      }
-
-      p {
-        color: rgba(0, 0, 0, 0.2);
-        font-size: 12px;
-      }
-
-      input {
-        position: absolute;
-        visibility: hidden;
-        opacity: 0;
-        width: 100%;
-        height: 100%;
-      }
-    }
-  }
-
-  .tags__list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin: auto;
-    margin-top: 1rem;
-
-    p {
-      cursor: pointer;
-    }
-  }
-
-  h6 {
-    color: rgba(0, 0, 0, 0.2);
-    font-size: 14px;
-    margin-top: 1.25rem;
-  }
-
-  textarea {
-    border-color: rgba(126, 126, 126, 0.3);
-    border-radius: 4px;
-    border: 2px solid rgba($color: #7e7e7e, $alpha: 0.3);
-    width: 100%;
-    resize: vertical;
-    padding: 00.25rem;
-    font-family: 'Poppins', sans-serif;
-  }
-
-  input {
-    border-color: rgba(126, 126, 126, 0.3);
-    border-radius: 4px;
-    border: 2px solid rgba($color: #7e7e7e, $alpha: 0.3);
-    width: 100%;
-    // height: 2rem;
-    padding: 0.25rem;
-  }
-
-  // Estimated time slider
-  .slider {
+.flex {
+  @media (min-width: 1024px) {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    gap: 2rem;
 
-    p {
-      color: rgba(0, 0, 0, 0.5);
-      font-weight: 700;
+    .left {
+      width: 20%;
+    }
+
+    .middle {
+      width: 60%;
+      margin-top: 2.5rem;
+
+      .middle__buttons {
+        display: flex;
+        gap: 1.5rem;
+        width: 100%;
+        place-content: flex-end;
+
+        .cancel {
+          display: flex;
+          padding: 0.2rem 1rem;
+          border-radius: 4px;
+          border: 1px solid var(--color-highlight);
+          background-color: #fff;
+          color: var(--color-highlight);
+          place-items: center;
+
+          &:hover {
+            transition: 0.2s;
+            background-color: var(--color-highlight);
+            color: #fff;
+          }
+        }
+      }
+    }
+
+    .right {
+      width: 20%;
+
+      @media (max-width: 1024px) {
+        display: none;
+      }
+    }
+  }
+  .recipe-builder {
+    display: grid;
+    height: 100%;
+    min-height: 100vh;
+    gap: 1.25rem;
+    margin: auto;
+
+    @media (max-width: 1024px) {
+      padding: 1rem;
+    }
+
+    // Image upload
+    .cover-upload {
+      border: rgba(126, 126, 126, 30%);
+      border-style: dashed;
+      border-width: 2px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      object-fit: cover !important;
+      background-size: cover !important;
+      object-position: center !important;
+      background-repeat: no-repeat !important;
+
+      label {
+        align-items: center;
+        height: 100%;
+        margin-left: 0 !important;
+        justify-content: center;
+        cursor: pointer;
+        flex-direction: column;
+        width: 100% !important;
+        object-fit: cover;
+        display: flex;
+        padding: 2rem;
+
+        h5 {
+          color: rgba(0, 0, 0, 0.5);
+          font-weight: 700;
+          font-size: 14px;
+          margin-top: 2vh;
+        }
+
+        p {
+          color: rgba(0, 0, 0, 0.2);
+          font-size: 12px;
+        }
+
+        input {
+          position: absolute;
+          visibility: hidden;
+          opacity: 0;
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+
+    .tags__list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: auto;
+      margin-top: 1rem;
+
+      p {
+        cursor: pointer;
+      }
+    }
+
+    h6 {
+      color: rgba(0, 0, 0, 0.2);
       font-size: 14px;
       margin-top: 1.25rem;
     }
-  }
-
-  input[type='range'] {
-    height: 25px;
-    -webkit-appearance: none;
-    margin: 10px 0;
-    width: 100%;
-    border: none;
-  }
-
-  input[type='range']:focus {
-    outline: none;
-  }
-
-  input[type='range']::-webkit-slider-runnable-track {
-    width: 100%;
-    height: 5px;
-    cursor: pointer;
-    box-shadow: 0px 0px 0px #000000;
-    background: rgba($color: #7e7e7e, $alpha: 0.3);
-    border-radius: 1px;
-    border: 0px solid #000000;
-  }
-
-  input[type='range']::-webkit-slider-thumb {
-    // Slider thump
-    box-shadow: 0px 0px 0px #000000;
-    border: 4px solid var(--color-highlight);
-    height: 18px;
-    width: 18px;
-    border-radius: 25px;
-    background: #ffffff;
-    cursor: pointer;
-    -webkit-appearance: none;
-    margin-top: -7px;
-  }
-
-  input[type='range']:focus::-webkit-slider-runnable-track {
-    background: var(--color-highlight);
-  }
-
-  input[type='range']::-moz-range-track {
-    width: 100%;
-    height: 5px;
-    cursor: pointer;
-    box-shadow: 0px 0px 0px #000000;
-    background: var(--color-highlight);
-    border-radius: 1px;
-    border: 0px solid #000000;
-  }
-
-  input[type='range']::-moz-range-thumb {
-    box-shadow: 0px 0px 0px #000000;
-    border: 1px solid var(--color-highlight);
-    height: 18px;
-    width: 18px;
-    border-radius: 25px;
-    background: var(--color-highlight);
-    cursor: pointer;
-  }
-
-  input[type='range']::-ms-track {
-    width: 100%;
-    height: 5px;
-    cursor: pointer;
-    background: transparent;
-    border-color: transparent;
-    color: transparent;
-  }
-
-  input[type='range']::-ms-fill-lower {
-    background: var(--color-highlight);
-    border: 0px solid #000000;
-    border-radius: 2px;
-    box-shadow: 0px 0px 0px #000000;
-  }
-  input[type='range']::-ms-fill-upper {
-    background: var(--color-highlight);
-    border: 0px solid #000000;
-    border-radius: 2px;
-    box-shadow: 0px 0px 0px #000000;
-  }
-  input[type='range']::-ms-thumb {
-    margin-top: 1px;
-    box-shadow: 0px 0px 0px #000000;
-    border: 1px solid var(--color-highlight);
-    height: 18px;
-    width: 18px;
-    border-radius: 25px;
-    background: var(--color-highlight);
-    cursor: pointer;
-  }
-  input[type='range']:focus::-ms-fill-lower {
-    background: var(--color-highlight);
-  }
-  input[type='range']:focus::-ms-fill-upper {
-    background: var(--color-highlight);
-  }
-
-  // Add ingredients
-  .ingredients {
-    display: grid;
-    grid: auto-flow / 0fr 0.6fr 0fr;
-    justify-content: space-between;
-    row-gap: 0.3rem;
-  }
-
-  // Steps
-
-  .steps {
-    p {
-      color: rgba($color: #000000, $alpha: 0.5);
-      font-size: 0.75rem;
-      font-weight: 400;
-    }
-
-    .add-step {
-      height: auto;
-      font-weight: 400 !important;
-      padding: 0.25rem 0.5rem;
-      margin-top: 0.5rem;
-    }
 
     textarea {
+      border-color: rgba(126, 126, 126, 0.3);
+      border-radius: 4px;
+      border: 2px solid rgba($color: #7e7e7e, $alpha: 0.3);
       width: 100%;
       resize: vertical;
+      padding: 00.25rem;
+      font-family: 'Poppins', sans-serif;
     }
 
-    .optional {
+    input {
+      border-color: rgba(126, 126, 126, 0.3);
+      border-radius: 4px;
+      border: 2px solid rgba($color: #7e7e7e, $alpha: 0.3);
+      width: 100%;
+      // height: 2rem;
+      padding: 0.25rem;
+    }
+
+    // Estimated time slider
+    .slider {
       display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      flex-direction: row;
+      justify-content: space-between;
+
+      p {
+        color: rgba(0, 0, 0, 0.5);
+        font-weight: 700;
+        font-size: 14px;
+        margin-top: 1.25rem;
+      }
     }
 
-    input[type='checkbox'] {
+    input[type='range'] {
+      height: 25px;
+      -webkit-appearance: none;
+      margin: 10px 0;
+      width: 100%;
+      border: none;
+    }
+
+    input[type='range']:focus {
+      outline: none;
+    }
+
+    input[type='range']::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 5px;
       cursor: pointer;
-      width: 1.5rem;
-      height: 1.5rem;
-      appearance: none;
+      box-shadow: 0px 0px 0px #000000;
+      background: rgba($color: #7e7e7e, $alpha: 0.3);
+      border-radius: 1px;
+      border: 0px solid #000000;
     }
-    input[type='checkbox']:before {
-      content: '\2714';
+
+    input[type='range']::-webkit-slider-thumb {
+      // Slider thump
+      box-shadow: 0px 0px 0px #000000;
+      border: 4px solid var(--color-highlight);
+      height: 18px;
+      width: 18px;
+      border-radius: 25px;
+      background: #ffffff;
+      cursor: pointer;
+      -webkit-appearance: none;
+      margin-top: -7px;
+    }
+
+    input[type='range']:focus::-webkit-slider-runnable-track {
+      background: var(--color-highlight);
+    }
+
+    input[type='range']::-moz-range-track {
+      width: 100%;
+      height: 5px;
+      cursor: pointer;
+      box-shadow: 0px 0px 0px #000000;
+      background: var(--color-highlight);
+      border-radius: 1px;
+      border: 0px solid #000000;
+    }
+
+    input[type='range']::-moz-range-thumb {
+      box-shadow: 0px 0px 0px #000000;
+      border: 1px solid var(--color-highlight);
+      height: 18px;
+      width: 18px;
+      border-radius: 25px;
+      background: var(--color-highlight);
+      cursor: pointer;
+    }
+
+    input[type='range']::-ms-track {
+      width: 100%;
+      height: 5px;
+      cursor: pointer;
+      background: transparent;
+      border-color: transparent;
       color: transparent;
-      padding: 0.1em;
-      padding-bottom: 0.2em;
     }
-    input[type='checkbox']:checked:before {
-      background-color: rgba($color: var(--color-highlight), $alpha: 0.3);
-      color: #ffffff;
+
+    input[type='range']::-ms-fill-lower {
+      background: var(--color-highlight);
+      border: 0px solid #000000;
+      border-radius: 2px;
+      box-shadow: 0px 0px 0px #000000;
+    }
+    input[type='range']::-ms-fill-upper {
+      background: var(--color-highlight);
+      border: 0px solid #000000;
+      border-radius: 2px;
+      box-shadow: 0px 0px 0px #000000;
+    }
+    input[type='range']::-ms-thumb {
+      margin-top: 1px;
+      box-shadow: 0px 0px 0px #000000;
+      border: 1px solid var(--color-highlight);
+      height: 18px;
+      width: 18px;
+      border-radius: 25px;
+      background: var(--color-highlight);
+      cursor: pointer;
+    }
+    input[type='range']:focus::-ms-fill-lower {
+      background: var(--color-highlight);
+    }
+    input[type='range']:focus::-ms-fill-upper {
+      background: var(--color-highlight);
+    }
+
+    // Add ingredients
+    .ingredients {
+      display: grid;
+      grid: auto-flow / 0fr 0.6fr 0fr;
+      justify-content: space-between;
+      row-gap: 0.3rem;
+    }
+
+    // Steps
+
+    .steps {
+      p {
+        color: rgba($color: #000000, $alpha: 0.5);
+        font-size: 0.75rem;
+        font-weight: 400;
+      }
+
+      .add-step {
+        height: auto;
+        font-weight: 400 !important;
+        padding: 0.25rem 0.5rem;
+        margin-top: 0.5rem;
+      }
+
+      textarea {
+        width: 100%;
+        resize: vertical;
+      }
+
+      .optional {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      input[type='checkbox'] {
+        cursor: pointer;
+        width: 1.5rem;
+        height: 1.5rem;
+        appearance: none;
+      }
+      input[type='checkbox']:before {
+        content: '\2714';
+        color: transparent;
+        padding: 0.1em;
+        padding-bottom: 0.2em;
+      }
+      input[type='checkbox']:checked:before {
+        background-color: rgba($color: var(--color-highlight), $alpha: 0.3);
+        color: #ffffff;
+      }
     }
   }
 }
