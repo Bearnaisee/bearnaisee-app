@@ -167,7 +167,7 @@ export default {
     },
 
     metaDescription() {
-      return '';
+      return process?.env?.VUE_APP_META_DESC;
     },
   },
 

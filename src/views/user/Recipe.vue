@@ -186,10 +186,7 @@ export default {
     },
 
     metaDescription() {
-      return (
-        this?.recipe?.description ||
-        `Share recipes easily with friends and family on Bearnaise. The recipes are made for you who have neither the time nor the resources to cook.`
-      );
+      return this?.recipe?.description || process?.env?.VUE_APP_META_DESC;
     },
   },
 

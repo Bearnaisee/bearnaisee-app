@@ -98,7 +98,7 @@ export default {
     },
 
     metaDescription() {
-      return `Share recipes easily with friends and family on Bearnaise. The recipes are made for you who have neither the time nor the resources to cook.`;
+      return process?.env?.VUE_APP_META_DESC;
     },
   },
 
