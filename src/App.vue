@@ -31,7 +31,7 @@ export default {
   --color-black: #101010;
   --color-highlight: #ff7d61;
   --color-bg: #f7e8e8;
-  --border-radius: 20px;
+  --border-radius: 0.4rem;
   --font-primary: 'Open Sans', sans-serif;
   --font-secondary: 'Poppins', sans-serif;
 }
