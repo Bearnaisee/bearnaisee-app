@@ -27,12 +27,45 @@
       <RecipeSlider v-if="trendingRecipes?.length" class="slider__recipes" :recipes="trendingRecipes" />
       <p v-else>No trending recipes</p>
 
-      <div>
+      <div class="tabs">
+        <button
+          class="tabs__button"
+          :class="tab === 'recipes' ? 'tabs__button--active' : ''"
+          @click="switchTab('recipes')"
+        >
+          Recent
+        </button>
+
+        <button
+          v-if="getUserInfo?.id"
+          class="tabs__button"
+          :class="tab === 'feed' ? 'tabs__button--active' : ''"
+          @click="switchTab('feed')"
+        >
+          Feed
+        </button>
+      </div>
+
+      <keep-alive>
+        <div v-if="tab === 'recipes'">
+          <RecipeGrid v-if="recipes?.length" :recipes="recipes" />
+          <p v-else>No recent recipes :(</p>
+        </div>
+      </keep-alive>
+
+      <keep-alive>
+        <div v-if="tab === 'feed'">
+          <RecipeGrid v-if="feed?.length" :recipes="feed" />
+
+          <p v-else>User has no feed :(</p>
+        </div>
+      </keep-alive>
+      <!-- <div>
         <Title text="Recent" size="h2" class="content__title" />
 
         <RecipeGrid v-if="recipes?.length" :recipes="recipes" :show-author="true" />
         <p v-else>No recent recipes</p>
-      </div>
+      </div> -->
     </div>
 
     <div class="search">
@@ -84,9 +117,11 @@ export default {
 
   data() {
     return {
+      tab: 'recipes',
       categories: ['meat', 'fish', 'poultry', 'vegetarian', 'pasta', 'soup', 'baking', 'dessert'],
       recipes: [],
       trendingRecipes: [],
+      feed: [],
     };
   },
 
@@ -102,13 +137,38 @@ export default {
     },
   },
 
+  watch: {
+    getUserInfo: {
+      handler() {
+        if (this.getUserInfo?.id) {
+          this.fetchfeedRecipes();
+        }
+      },
+    },
+  },
+
   created() {
     this.fetchRecentRecipes();
 
     this.fetchTrendingRecipes();
+
+    this.fetchfeedRecipes();
   },
 
   methods: {
+    /**
+     * @param {string} tab
+     */
+    switchTab(tab) {
+      if (tab === 'recipes') {
+        this.tab = 'recipes';
+      } else if (tab === 'feed') {
+        this.fetchfeedRecipes();
+
+        this.tab = 'feed';
+      }
+    },
+
     async fetchRecentRecipes() {
       this.recipes = await axios
         .get(`${process.env.VUE_APP_API_URL}/recipes/recent`)
@@ -119,10 +179,22 @@ export default {
         });
     },
 
+    async fetchfeedRecipes() {
+      if (!this.getUserInfo?.id || this.feed?.length) return;
+
+      this.feed = await axios
+        .get(`${process.env.VUE_APP_API_URL}/feed/${this.getUserInfo.id}`)
+        .then((res) => res?.data?.feed ?? [])
+        .catch((error) => {
+          console.error('ERROR fetching feed recipes', error);
+          return [];
+        });
+    },
+
     async fetchTrendingRecipes() {
       this.trendingRecipes = await axios
         .get(`${process.env.VUE_APP_API_URL}/recipes/trending`)
-        .then((res) => res?.data?.recipes || [])
+        .then((res) => res?.data?.recipes ?? [])
         .catch((error) => {
           console.error('ERROR fetching recent recipes', error);
           return [];
@@ -150,6 +222,42 @@ export default {
   }
 
   .content {
+    .tabs {
+      margin-top: 1rem;
+      margin-bottom: 1.25rem;
+      display: flex;
+      gap: 1rem;
+
+      .tabs__button {
+        background: none;
+        border: none;
+        padding: 0.5rem 0rem;
+        transition: 0.3s;
+        font-size: 1.25rem;
+        position: relative;
+        color: #7e7e7e;
+
+        &--active {
+          transition: 0.3s;
+          color: var(--color-black);
+
+          &::after {
+            position: absolute;
+            content: '';
+            background: var(--color-highlight);
+            bottom: -5%;
+            left: 0%;
+            z-index: 100;
+            padding: 0.175rem 1.5rem;
+          }
+        }
+
+        &:hover {
+          color: var(--color-black);
+        }
+      }
+    }
+
     @media (min-width: 1024px) {
       width: 60%;
       margin-top: 2.5rem;
