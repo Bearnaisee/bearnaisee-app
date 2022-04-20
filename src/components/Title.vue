@@ -7,7 +7,7 @@
     {{ text }}
   </h2>
 
-  <h3 v-else-if="size === 'h3'">
+  <h3 v-else-if="size === 'h3'" class="ellipsis">
     {{ text }}
   </h3>
 
@@ -98,7 +98,7 @@ h2 {
 
 h3 {
   @media (min-width: 640px) {
-    font-size: 1.17rem;
+    font-size: 1rem;
   }
 
   @media (min-width: 768px) {

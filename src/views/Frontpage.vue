@@ -260,20 +260,19 @@ export default {
 
     @media (min-width: 1024px) {
       width: 60%;
-      margin-top: 2.5rem;
-      background-color: #f7e8e855;
-      border-radius: 1.5rem;
-      padding: 0 1.5rem 1.5rem;
+      padding: 1rem 1.5rem 1.5rem;
+      border-left: 1px solid rgb(239, 243, 244);
+      border-right: 1px solid rgb(239, 243, 244);
     }
 
     .content__title {
-      padding: 20px 0px;
+      padding-bottom: 0.75rem;
     }
 
     .categories {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      margin: 1rem 0;
+      margin: 0.75rem 0 2rem 0;
 
       @media (max-width: 1024px) {
         gap: 0.8rem;
@@ -301,6 +300,9 @@ export default {
 
   .search {
     display: none;
+    height: 100%;
+    position: sticky;
+    top: 0;
 
     @media (min-width: 1024px) {
       display: block;
@@ -310,6 +312,6 @@ export default {
 }
 
 .slider__recipes {
-  padding: 1rem 0;
+  padding: 0.5rem 0;
 }
 </style>

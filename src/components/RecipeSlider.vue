@@ -37,6 +37,10 @@ export default {
   height: fit-content;
   margin-bottom: 2rem;
 
+  @media (min-width: 1024px) {
+    margin-bottom: 2.5rem;
+  }
+
   &::-webkit-scrollbar {
     background-color: rgba(#000, 0.02);
   }

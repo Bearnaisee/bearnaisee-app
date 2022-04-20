@@ -11,6 +11,7 @@ export default {
 <style lang="scss" scoped>
 .searchbar {
   display: none;
+
   @media (min-width: 1024px) {
     text-align: center;
     border-radius: 4px;
@@ -21,7 +22,7 @@ export default {
     padding: 0.2rem;
     gap: 1rem;
     height: fit-content;
-    margin-top: 2.5rem;
+    margin-top: 1rem;
     display: block;
   }
 }

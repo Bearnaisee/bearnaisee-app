@@ -42,7 +42,7 @@ export default {
   width: 100%;
   max-width: 100vw;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   gap: 2rem;
 
   .recipes__card {
