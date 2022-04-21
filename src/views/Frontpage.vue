@@ -277,6 +277,10 @@ export default {
       @media (max-width: 1024px) {
         gap: 0.8rem;
       }
+      .categories__icon:hover {
+        transform: scale(1.5);
+        filter: invert(59%) sepia(70%) saturate(6357%)  brightness(109%) contrast(100%);}
+
 
       .categories__link {
         margin: 0 auto;
@@ -288,6 +292,7 @@ export default {
           &:hover {
             background-color: #f7e8e855;
             border-radius: 10px;
+            
           }
         }
 
