@@ -8,16 +8,12 @@
       <Title :text="title" size="h3" />
     </router-link>
 
-    <p v-if="showAuthor">
-      by
-      <router-link :to="`/${author}`" class="card__author"> @{{ author }} </router-link>
-    </p>
-
-    <div v-if="time" class="card__icon">
-      <Icon icon="time" color="#D53F29" width="12" height="12" />
-
-      <p style="font-size: 0.675rem">{{ time }} minutes</p>
-    </div>
+    <router-link :to="`/${author}/`">
+      <div class="flex">
+        <img :src="avatar" alt="" class="card__avatar" />
+        <p class="card__author">{{ author }}</p>
+      </div>
+    </router-link>
   </div>
 </template>
 
@@ -30,7 +26,6 @@ export default {
   components: {
     Image: defineAsyncComponent(() => import('@/components/Image.vue')),
     Title: defineAsyncComponent(() => import('@/components/Title.vue')),
-    Icon: defineAsyncComponent(() => import('@/components/Icon.vue')),
   },
 
   props: {
@@ -53,6 +48,10 @@ export default {
       type: String,
       required: true,
     },
+    avatar: {
+      type: String,
+      required: true,
+    },
     time: {
       type: Number,
       default: null,
@@ -68,20 +67,39 @@ export default {
 <style lang="scss" scoped>
 .card {
   width: 100%;
+  border: 1px solid #eff3f4;
+  border-radius: var(--border-radius);
+  box-shadow: 0 1px 5px rgb(0 0 0 / 5%);
 
   .card__image {
-    border-radius: var(--border-radius);
     width: 100%;
     aspect-ratio: 3/2;
     height: auto;
     object-fit: cover;
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
   }
 
-  .card__author {
-    color: #7e7e7e;
+  .card__avatar {
+    width: 2rem;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    margin-left: 0.5rem;
+  }
 
-    &:hover {
-      filter: brightness(0.15);
+  .flex {
+    display: flex;
+    place-items: center;
+    gap: 0.5rem;
+
+    .card__author {
+      color: #7e7e7e;
+      margin: 1rem 0rem;
+      text-transform: capitalize;
+
+      &:hover {
+        filter: brightness(0.15);
+      }
     }
   }
 
@@ -96,6 +114,19 @@ export default {
     max-width: 100%;
     word-wrap: break-word;
     font-weight: 200;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 16rem;
+    margin-left: 0.5rem;
+
+    @media (max-width: 1024px) {
+      width: 25rem;
+    }
+
+    @media (max-width: 820px) {
+      width: 18rem;
+    }
   }
 }
 </style>
