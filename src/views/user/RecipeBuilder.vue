@@ -281,6 +281,19 @@ export default {
 
 <style lang="scss" scoped>
 .flex {
+  @media (max-width: 1023px) {
+    .middle__buttons {
+        display: flex;
+        gap: 1.5rem;
+        width: 100%;
+        place-content: flex-end;
+
+        .cancel {
+          display: flex;
+        
+        }
+      }
+  }
   @media (min-width: 1024px) {
     display: flex;
     flex-direction: row;
