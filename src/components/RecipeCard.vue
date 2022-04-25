@@ -120,8 +120,8 @@ export default {
     width: 16rem;
     margin-left: 0.5rem;
 
-    @media (max-width: 1024px) {
-      width: 25rem;
+    @media (max-width: 1700px) {
+      width: 13rem;
     }
 
     @media (max-width: 820px) {
