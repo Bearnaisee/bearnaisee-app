@@ -291,17 +291,17 @@ export default {
       .cancel {
         display: flex;
         padding: 0.2rem 1rem;
-          border-radius: 4px;
-          border: 1px solid var(--color-highlight);
-          background-color: #fff;
-          color: var(--color-highlight);
-          place-items: center;
+        border-radius: 4px;
+        border: 1px solid var(--color-highlight);
+        background-color: #fff;
+        color: var(--color-highlight);
+        place-items: center;
 
-          &:hover {
-            transition: 0.2s;
-            background-color: var(--color-highlight);
-            color: #fff;
-          }
+        &:hover {
+          transition: 0.2s;
+          background-color: var(--color-highlight);
+          color: #fff;
+        }
       }
     }
   }
@@ -445,7 +445,7 @@ export default {
       // height: 2rem;
       padding: 0.25rem;
     }
-    select{
+    select {
       border-radius: 4px;
       border: 2px solid rgba($color: #7e7e7e, $alpha: 0.3);
       background-color: #ffffff;
