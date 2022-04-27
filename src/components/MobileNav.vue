@@ -5,8 +5,8 @@
     </router-link>
 
     <!-- TODO: implement search -->
-    <router-link to="/" class="nav__link">
-      <Icon icon="search" width="25" height="25" />
+    <router-link v-if="getUserInfo?.id" to="/settings" class="nav__link">
+      <Icon icon="settings" width="30" height="30" />
     </router-link>
 
     <router-link v-if="getUserInfo?.id" to="/create" class="nav__link">
@@ -17,8 +17,8 @@
       <Icon icon="bookmark" width="25" height="25" />
     </router-link>
 
-    <router-link v-if="getUserInfo?.id" to="/settings" class="nav__link">
-      <Icon icon="settings" width="25" height="25" />
+    <router-link v-if="getUserInfo?.id" :to="`/${getUserInfo.username}#profile`" class="nav__link">
+      <Icon icon="profile" width="25" height="25" />
     </router-link>
   </div>
 </template>
