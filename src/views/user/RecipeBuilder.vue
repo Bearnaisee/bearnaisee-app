@@ -249,7 +249,7 @@ export default {
     },
 
     async saveRecipe() {
-      if (!this.recipe?.title?.length || !this.recipe?.steps?.length || this.recipe?.ingredients?.length) {
+      if (!this.recipe?.title?.length || !this.recipe?.steps?.length || !this.recipe?.ingredients?.length) {
         return;
       }
 

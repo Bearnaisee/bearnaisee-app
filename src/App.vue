@@ -82,7 +82,7 @@ h6 {
 .container {
   width: 100%;
   margin: auto;
-  padding-bottom: 10rem;
+  padding-bottom: 5rem;
 
   @media (max-width: 625px) {
   }
