@@ -285,6 +285,30 @@ export default {
 
 <style lang="scss" scoped>
 .flex {
+  @media (max-width: 1023px) {
+    .middle__buttons {
+      display: flex;
+      gap: 1.5rem;
+      width: 100%;
+      place-content: flex-end;
+
+      .cancel {
+        display: flex;
+        padding: 0.2rem 1rem;
+        border-radius: 4px;
+        border: 1px solid var(--color-highlight);
+        background-color: #fff;
+        color: var(--color-highlight);
+        place-items: center;
+
+        &:hover {
+          transition: 0.2s;
+          background-color: var(--color-highlight);
+          color: #fff;
+        }
+      }
+    }
+  }
   @media (min-width: 1024px) {
     display: flex;
     flex-direction: row;
@@ -402,7 +426,7 @@ export default {
     }
 
     h6 {
-      color: rgba(0, 0, 0, 0.2);
+      color: rgba(0, 0, 0, 1);
       font-size: 14px;
       margin-top: 1.25rem;
     }
@@ -424,6 +448,11 @@ export default {
       width: 100%;
       // height: 2rem;
       padding: 0.25rem;
+    }
+    select {
+      border-radius: 4px;
+      border: 2px solid rgba($color: #7e7e7e, $alpha: 0.3);
+      background-color: #ffffff;
     }
 
     // Estimated time slider

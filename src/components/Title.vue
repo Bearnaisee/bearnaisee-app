@@ -114,7 +114,7 @@ h3 {
   }
 
   @media (min-width: 1536px) {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 }
 </style>

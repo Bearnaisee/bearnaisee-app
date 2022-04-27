@@ -66,5 +66,16 @@ export default {
       width: 25rem;
     }
   }
+
+  .slider__text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 25rem;
+
+    @media (max-width: 1024px) {
+      width: 15rem;
+    }
+  }
 }
 </style>
