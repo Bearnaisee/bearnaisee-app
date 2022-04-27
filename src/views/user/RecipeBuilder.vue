@@ -22,7 +22,7 @@
           <div>
             <h6>Recipe name</h6>
 
-            <input v-model="recipe.title" type="text" maxlength="100" />
+            <input v-model="recipe.title" type="text" maxlength="100" required />
           </div>
 
           <div>
@@ -249,6 +249,10 @@ export default {
     },
 
     async saveRecipe() {
+      if (!this.recipe?.title?.length || !this.recipe?.steps?.length || this.recipe?.ingredients?.length) {
+        return;
+      }
+
       await axios
         .post(`${process.env.VUE_APP_API_URL}/recipe`, {
           ...this.recipe,
