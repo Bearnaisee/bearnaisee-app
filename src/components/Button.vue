@@ -1,5 +1,5 @@
 <template>
-  <button class="button" :class="`button--${kind}`" :type="type" @click="detectClick">
+  <button class="button" :class="`button--${kind || 'primary'}`" :type="type || 'button'" @click="detectClick">
     {{ label }}
   </button>
 </template>
