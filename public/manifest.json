@@ -1,10 +1,10 @@
-{  
-    "name": "Bearnais.ee",
-    "short_name": "Bearnaisee",
-    "theme_color": "#ff7d61",
-    "background_color": "#fff",
-    "display": "fullScreen",
-    "orientation": "portrait",
-    "scope": "/",
-    "start_url": "/"
+{
+  "name": "Bearnais.ee",
+  "short_name": "Bearnaisee",
+  "theme_color": "#ff7d61",
+  "background_color": "#fff",
+  "display": "fullScreen",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/"
 }
