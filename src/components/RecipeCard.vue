@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <router-link v-if="image" :to="`/${author}/${slug}`">
+    <router-link v-if="image?.length" :to="`/${author}/${slug}`">
       <Image class="card__image" :src="image" />
     </router-link>
 
@@ -46,7 +46,7 @@ export default {
     },
     image: {
       type: String,
-      required: true,
+      default: null,
     },
     avatar: {
       type: String,
