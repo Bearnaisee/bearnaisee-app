@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <router-link :to="`/${author}/${slug}`">
+    <router-link v-if="image" :to="`/${author}/${slug}`">
       <Image class="card__image" :src="image" />
     </router-link>
 
@@ -10,7 +10,7 @@
 
     <router-link :to="`/${author}/`">
       <div class="flex">
-        <img :src="avatar" alt="" class="card__avatar" />
+        <img :src="avatar" :alt="`${author} profile image`" class="card__avatar" />
         <p class="card__author">{{ author }}</p>
       </div>
     </router-link>
