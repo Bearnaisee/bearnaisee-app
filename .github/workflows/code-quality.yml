@@ -46,6 +46,9 @@ jobs:
       - name: Run lint:style
         run: npm run lint:style
 
+      - name: Run test:unit 👀
+        run: npm run test:unit
+
       - uses: EndBug/add-and-commit@v7
         with:
           message: 'Code quality fixes from code-quality.yml'
