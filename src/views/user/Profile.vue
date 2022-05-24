@@ -73,7 +73,7 @@
 
         <keep-alive>
           <div v-if="tab === 'recipes'">
-            <RecipeGrid v-if="recipes?.length" :recipes="recipes" />
+            <RecipeGrid v-if="recipes?.length" :recipes="recipes" :show-author="false" />
             <p v-else>User has no recipes :(</p>
           </div>
         </keep-alive>

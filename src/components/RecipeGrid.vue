@@ -33,6 +33,7 @@ export default {
     },
     showAuthor: {
       type: Boolean,
+      default: true,
     },
   },
 };

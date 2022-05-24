@@ -8,7 +8,7 @@
       <Title :text="title" size="h3" />
     </router-link>
 
-    <router-link :to="`/${author}/`">
+    <router-link v-if="showAuthor" :to="`/${author}/`">
       <div class="flex">
         <img v-if="avatar?.length" :src="avatar" :alt="`${author} profile image`" class="card__avatar" />
         <p class="card__author">{{ author }}</p>
@@ -39,6 +39,7 @@ export default {
     },
     showAuthor: {
       type: Boolean,
+      default: true,
     },
     slug: {
       type: String,
@@ -70,6 +71,7 @@ export default {
   border: 1px solid #eff3f4;
   border-radius: var(--border-radius);
   box-shadow: 0 1px 5px rgb(0 0 0 / 5%);
+  padding-bottom: 0.5rem;
 
   .card__image {
     width: 100%;
