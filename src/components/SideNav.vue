@@ -1,6 +1,6 @@
 <template>
   <div class="nav">
-    <Title text="Bearnaisee" size="h1" />
+    <router-link to="/"><Title text="Bearnaisee" size="h1" /> </router-link>
 
     <router-link to="/" class="nav__link"> Home </router-link>
 
