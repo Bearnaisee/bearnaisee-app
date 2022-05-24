@@ -3,7 +3,7 @@
   "short_name": "Bearnaisee",
   "theme_color": "#ff7d61",
   "background_color": "#fff",
-  "display": "fullScreen",
+  "display": "fullscreen",
   "orientation": "portrait",
   "scope": "/",
   "start_url": "/",
