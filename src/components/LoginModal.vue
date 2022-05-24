@@ -141,7 +141,7 @@ export default {
     async register() {
       if (this.username?.length && this.email?.length && this.password?.length) {
         const result = await axios
-          .post(`${process.env.VUE_APP_API_URL}/user/create`, {
+          .post(`${process.env.VUE_APP_API_URL}/users`, {
             username: this.username,
             email: this.email,
             password: this.password,
