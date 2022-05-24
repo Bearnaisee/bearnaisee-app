@@ -308,8 +308,6 @@ export default {
       }
 
       if (this.getEditRecipeId !== null && this.getEditRecipeId !== undefined) {
-        console.log('EXISTING RECIPE ');
-
         await axios
           .put(`${process.env.VUE_APP_API_URL}/recipe`, {
             ...this.recipe,
@@ -338,8 +336,6 @@ export default {
             console.error('Error editing recipe', error);
           });
       } else {
-        console.log('NEW RECIPE ');
-
         await axios
           .post(`${process.env.VUE_APP_API_URL}/recipe`, {
             ...this.recipe,
