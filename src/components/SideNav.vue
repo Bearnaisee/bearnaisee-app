@@ -14,7 +14,7 @@
 
     <button v-if="getUserInfo?.id" type="button" class="nav__button" @click="logout">Log out</button>
 
-    <button v-if="getUserInfo?.id" class="add" style="cursor: pointer" @click="goToCreateRecipe">Create Recipe</button>
+    <button v-if="getUserInfo?.id" class="add" @click="goToCreateRecipe">Create Recipe</button>
 
     <div v-if="!getUserInfo" class="buttons">
       <Button kind="secondary" label="Signup" @clicked="switchLoginModal(false)" />
@@ -107,10 +107,6 @@ export default {
     width: 100%;
     color: var(--color-highlight);
 
-    &.router-link-exact-active {
-      color: black;
-    }
-
     @media (min-width: 1024px) {
       margin-top: 1.25rem;
     }
@@ -145,6 +141,8 @@ export default {
     text-align: center;
     border-radius: 4px;
     font-weight: 700;
+    cursor: pointer;
+    border: none;
   }
 }
 </style>
