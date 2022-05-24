@@ -15,3 +15,5 @@
 export const getUserInfo = (state) => state?.userInfo;
 
 export const getMetrics = (state) => state?.metrics ?? [];
+
+export const getEditRecipeId = (state) => state?.editRecipeId;

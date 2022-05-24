@@ -39,7 +39,6 @@ const routes = [
   {
     path: '/create',
     name: 'CreateRecipe',
-
     meta: {
       title: 'Create Recipe',
       requiresAuth: true,

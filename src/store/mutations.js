@@ -14,3 +14,7 @@ export const setUserInfo = (state, payload) => {
 export const setMetrics = (state, payload) => {
   state.metrics = payload;
 };
+
+export const setEditRecipeId = (state, payload) => {
+  state.editRecipeId = payload;
+};

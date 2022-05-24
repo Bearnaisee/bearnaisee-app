@@ -7,6 +7,7 @@ export default createStore({
   state: {
     userInfo: null,
     metrics: [],
+    editRecipeId: null,
   },
   mutations,
   getters,

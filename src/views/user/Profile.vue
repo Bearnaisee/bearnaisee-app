@@ -225,7 +225,7 @@ export default {
 
     async fetchUserRecipes() {
       this.recipes = await axios
-        .get(`${process.env.VUE_APP_API_URL}/recipes/${this.$route.params.username}`)
+        .get(`${process.env.VUE_APP_API_URL}/recipes/user/${this.$route.params.username}`)
         .then((res) => res?.data?.recipes || [])
         .catch((error) => {
           console.error('Error fetching recipes', error);

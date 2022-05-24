@@ -35,7 +35,8 @@ export default {
     },
     author: {
       type: String,
-      required: true,
+      required: false,
+      default: null,
     },
     showAuthor: {
       type: Boolean,
@@ -51,7 +52,8 @@ export default {
     },
     avatar: {
       type: String,
-      required: true,
+      required: false,
+      default: null,
     },
     time: {
       type: Number,

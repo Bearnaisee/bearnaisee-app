@@ -12,7 +12,7 @@
         >
           <div class="recipe__header">
             <button class="recipe__button" @click="goBack">
-              <Icon icon="arrow" width="24" height="auto" />
+              <Icon icon="arrow" width="24" height="24" />
             </button>
 
             <button
@@ -20,10 +20,16 @@
               class="recipe__button"
               @click="likeRecipe"
             >
-              <Icon icon="heart" :color="userLikedRecipe ? '#FF7D61' : '#000'" width="24" height="auto" />
+              <Icon icon="heart" :color="userLikedRecipe ? '#FF7D61' : '#000'" width="24" height="24" />
             </button>
 
-            <button v-if="recipe?.userId == getUserInfo?.id" class="recipe__button edit">Edit</button>
+            <button
+              v-if="getUserInfo?.id && recipe?.userId && recipe?.userId === getUserInfo?.id"
+              class="recipe__button edit"
+              @click="goToBuilder"
+            >
+              Edit
+            </button>
           </div>
         </div>
 
@@ -31,17 +37,22 @@
           <Title :text="recipe?.title" class="recipe__title" size="h1" />
 
           <div>
-            <router-link :to="`/${$route.params.username}`"> By @{{ $route.params.username }} </router-link>
+            <router-link
+              v-if="getUserInfo?.id && recipe?.userId && recipe?.userId !== getUserInfo?.id"
+              :to="`/${$route.params.username}`"
+            >
+              By @{{ $route.params.username }}
+            </router-link>
 
             <div>
               <div v-if="recipe?.estimatedTime > 0" class="recipe__icon">
-                <Icon icon="time" color="#D53F29" width="12" height="auto" />
+                <Icon icon="time" color="#D53F29" width="12" height="12" />
 
                 <p>{{ recipe.estimatedTime }} minutes</p>
               </div>
 
               <div class="recipe__icon">
-                <Icon icon="tag" color="#D53F29" width="12" height="auto" />
+                <Icon icon="tag" color="#D53F29" width="12" height="12" />
 
                 <div>
                   <router-link
@@ -141,7 +152,7 @@
 
 <script>
 import { defineAsyncComponent } from 'vue';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import axios from 'axios';
 import unslugText from '@/helpers/unslugText';
 
@@ -197,6 +208,8 @@ export default {
   },
 
   methods: {
+    ...mapMutations(['setEditRecipeId']),
+
     goBack() {
       this.$router.go(-1);
     },
@@ -249,6 +262,12 @@ export default {
           console.error('Something went wrong liking recipe', error);
           return false;
         });
+    },
+
+    goToBuilder() {
+      this.setEditRecipeId(this.recipe.id);
+
+      this.$router.push('/create');
     },
   },
 };

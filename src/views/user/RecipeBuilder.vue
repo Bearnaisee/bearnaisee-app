@@ -5,11 +5,11 @@
     </div>
     <div class="middle">
       <div class="recipe-builder">
-        <h2>Create recipe</h2>
+        <h2>{{ getEditRecipeId !== null && getEditRecipeId !== undefined ? 'Edit' : 'Create' }} recipe</h2>
 
         <div class="cover-upload" :style="uploadImageBackground">
           <label>
-            <Icon icon="upload" width="56" height="auto" />
+            <Icon icon="upload" width="56" height="56" />
             <h5>Upload image</h5>
 
             <p>Click here to upload cover image</p>
@@ -59,6 +59,8 @@
 
               <h6>Metric</h6>
 
+              <div></div>
+
               <template v-for="(ingredient, ingredientIndex) of recipe.ingredients" :key="ingredientIndex">
                 <input v-model="ingredient.ingredient" type="text" style="width: auto" maxlength="255" />
 
@@ -69,6 +71,8 @@
                     {{ metric.metric }}
                   </option>
                 </select>
+
+                <button @click="removeIngredient(ingredientIndex)">X</button>
               </template>
             </div>
 
@@ -84,14 +88,23 @@
           <div class="steps">
             <h6>Steps</h6>
 
-            <div v-for="(step, stepIndex) of recipe.steps" :key="stepIndex" class="description">
-              <p>Step: {{ stepIndex + 1 }}</p>
+            <div
+              v-for="(step, stepIndex) of recipe.steps"
+              :key="stepIndex"
+              class="description"
+              style="padding-bottom: 2rem"
+            >
+              <div style="display: flex">
+                <p>Step: {{ stepIndex + 1 }}</p>
+              </div>
 
               <textarea v-model="step.content" type="text" rows="5"></textarea>
 
               <div class="optional">
                 <p>Optional</p>
                 <input v-model="step.optional" type="checkbox" />
+
+                <button @click="removeStep(stepIndex)">X</button>
               </div>
             </div>
 
@@ -100,7 +113,12 @@
         </div>
         <div class="middle__buttons">
           <router-link to="/" class="cancel">Cancel</router-link>
-          <Button kind="primary" class="create" label="Create recipe" @clicked="saveRecipe" />
+          <Button
+            kind="primary"
+            class="create"
+            :label="`${getEditRecipeId !== null && getEditRecipeId !== undefined ? 'Save' : 'Create'} recipe`"
+            @clicked="saveRecipe"
+          />
         </div>
       </div>
     </div>
@@ -129,7 +147,7 @@
 
 <script>
 import { defineAsyncComponent } from 'vue';
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 import axios from 'axios';
 import uploadImage from '@/helpers/uploadImage';
 
@@ -167,7 +185,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['getMetrics', 'getUserInfo']),
+    ...mapGetters(['getMetrics', 'getUserInfo', 'getEditRecipeId']),
 
     uploadImageBackground() {
       if (this.recipe?.coverImage) {
@@ -179,7 +197,7 @@ export default {
     },
 
     metaTitle() {
-      return 'Create Recipe | Bearnaisee';
+      return `${this.getEditRecipeId ? 'Edit' : 'Create'} Recipe | Bearnaisee`;
     },
 
     metaDescription() {
@@ -188,13 +206,35 @@ export default {
   },
 
   created() {
+    if (this.getEditRecipeId !== null && this.getEditRecipeId !== undefined) {
+      this.fetchExistingRecipe(this.getEditRecipeId);
+    }
+
     if (!this.getMetrics?.length) {
       this.fetchMetrics();
     }
   },
 
   methods: {
+    ...mapMutations(['setEditRecipeId']),
+
     ...mapActions(['fetchMetrics']),
+
+    /**
+     * @param {number} recipeId
+     */
+    async fetchExistingRecipe(recipeId) {
+      const recipe = await axios
+        .get(`${process.env.VUE_APP_API_URL}/recipes/${recipeId}`)
+        .then((res) => res?.data)
+        .catch((error) => {
+          console.error('Error getting recipe', error);
+        });
+
+      if (recipe) {
+        this.recipe = recipe;
+      }
+    },
 
     addStep() {
       this.recipe.steps.push({
@@ -231,6 +271,20 @@ export default {
       this.recipe.tags.splice(index, 1);
     },
 
+    /**
+     * @param {number} index
+     */
+    removeStep(index) {
+      this.recipe.steps.splice(index, 1);
+    },
+
+    /**
+     * @param {number} index
+     */
+    removeIngredient(index) {
+      this.recipe.ingredients.splice(index, 1);
+    },
+
     async uploadRecipeThumbnail(files) {
       if (files?.length) {
         const result = await uploadImage(files[0]);
@@ -253,31 +307,65 @@ export default {
         return;
       }
 
-      await axios
-        .post(`${process.env.VUE_APP_API_URL}/recipe`, {
-          ...this.recipe,
-          userId: this.getUserInfo.id,
-        })
-        .then(async (result) => {
-          await this.$swal({
-            icon: 'success',
-            title: 'Created recipe successfully',
-            showConfirmButton: false,
-            timer: 1000,
-          });
+      if (this.getEditRecipeId !== null && this.getEditRecipeId !== undefined) {
+        console.log('EXISTING RECIPE ');
 
-          this.$router.push(`/${this.getUserInfo.username}/${result?.data.recipe.slug}`);
-        })
-        .catch((error) => {
-          this.$swal({
-            icon: 'error',
-            title: 'Something went wrong, please try again later',
-            timer: 800,
-            showConfirmButton: false,
-          });
+        await axios
+          .put(`${process.env.VUE_APP_API_URL}/recipe`, {
+            ...this.recipe,
+            userId: this.getUserInfo.id,
+          })
+          .then(async (result) => {
+            await this.$swal({
+              icon: 'success',
+              title: 'Edited recipe successfully',
+              showConfirmButton: false,
+              timer: 1000,
+            });
 
-          console.error('Error creating recipe', error);
-        });
+            this.setEditRecipeId(null);
+
+            this.$router.push(`/${this.getUserInfo.username}/${result?.data?.recipe.slug}`);
+          })
+          .catch((error) => {
+            this.$swal({
+              icon: 'error',
+              title: 'Something went wrong, please try again later',
+              timer: 800,
+              showConfirmButton: false,
+            });
+
+            console.error('Error editing recipe', error);
+          });
+      } else {
+        console.log('NEW RECIPE ');
+
+        await axios
+          .post(`${process.env.VUE_APP_API_URL}/recipe`, {
+            ...this.recipe,
+            userId: this.getUserInfo.id,
+          })
+          .then(async (result) => {
+            await this.$swal({
+              icon: 'success',
+              title: 'Created recipe successfully',
+              showConfirmButton: false,
+              timer: 1000,
+            });
+
+            this.$router.push(`/${this.getUserInfo.username}/${result?.data.recipe.slug}`);
+          })
+          .catch((error) => {
+            this.$swal({
+              icon: 'error',
+              title: 'Something went wrong, please try again later',
+              timer: 800,
+              showConfirmButton: false,
+            });
+
+            console.error('Error creating recipe', error);
+          });
+      }
     },
   },
 };
@@ -569,7 +657,7 @@ export default {
     // Add ingredients
     .ingredients {
       display: grid;
-      grid: auto-flow / 0fr 0.6fr 0fr;
+      grid: auto-flow / 0fr 0.6fr 0fr 0fr;
       justify-content: space-between;
       row-gap: 0.3rem;
     }

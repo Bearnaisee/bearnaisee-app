@@ -14,7 +14,7 @@
 
     <button v-if="getUserInfo?.id" type="button" class="nav__button" @click="logout">Log out</button>
 
-    <router-link v-if="getUserInfo?.id" to="/create" class="add"> Create Recipe </router-link>
+    <button v-if="getUserInfo?.id" class="add" style="cursor: pointer" @click="goToCreateRecipe">Create Recipe</button>
 
     <div v-if="!getUserInfo" class="buttons">
       <Button kind="secondary" label="Signup" @clicked="switchLoginModal(false)" />
@@ -51,7 +51,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['setUserInfo']),
+    ...mapMutations(['setUserInfo', 'setEditRecipeId']),
 
     /**
      * @param {boolean | null} tab
@@ -65,6 +65,11 @@ export default {
       this.setUserInfo(null);
       localStorage.clear();
       window.location.reload();
+    },
+
+    goToCreateRecipe() {
+      this.setEditRecipeId(null);
+      this.$router.push('/create');
     },
   },
 };
