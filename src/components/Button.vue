@@ -57,4 +57,12 @@ export default {
     color: var(--color-highlight);
   }
 }
+
+.button:disabled,
+.button[disabled] {
+  border: 2px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+}
 </style>

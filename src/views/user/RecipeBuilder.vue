@@ -11,9 +11,7 @@
           <label>
             <Icon icon="upload" width="56" height="56" />
             <h5>Upload image</h5>
-
             <p>Click here to upload cover image</p>
-
             <input type="file" accept="image/*" @change="uploadRecipeThumbnail($event.target.files)" />
           </label>
         </div>
@@ -21,20 +19,28 @@
         <div class="builder">
           <div>
             <h6>Recipe name</h6>
-
-            <input v-model="recipe.title" type="text" maxlength="100" required />
+            <input
+              v-model="recipe.title"
+              :class="buttonClicked && !recipe.title.length ? 'alert' : ''"
+              type="text"
+              placeholder="ex. My Favorite Pasta Dish"
+              maxlength="100"
+            />
           </div>
 
           <div>
             <h6>Description</h6>
-
-            <textarea v-model="recipe.description" type="text" rows="5" />
+            <textarea
+              v-model="recipe.description"
+              :class="buttonClicked && !recipe.description.length ? 'alert' : ''"
+              type="text"
+              rows="5"
+            />
           </div>
 
           <div>
             <div class="slider">
               <h6>Estimated time</h6>
-
               <p>{{ recipe.estimatedTime }} min.</p>
             </div>
 
@@ -43,9 +49,7 @@
 
           <div>
             <h6>Tags</h6>
-
-            <input v-model="newTag" type="text" maxlength="45" @keydown.enter="addTag" />
-
+            <input v-model="newTag" type="text" placeholder="ex. Pasta" maxlength="45" @keydown.enter="addTag" />
             <div v-if="recipe?.tags?.length" class="tags__list">
               <Tag v-for="(tag, tagIndex) of recipe.tags" :key="tagIndex" :label="tag" @click="removeTag(tagIndex)" />
             </div>
@@ -53,18 +57,30 @@
 
           <div>
             <div class="ingredients">
-              <h6>Ingredient</h6>
-
+              <div></div>
+              <h4>Ingredient {{ recipe.ingredients.length }} of 5</h4>
               <h6>Amount</h6>
-
               <h6>Metric</h6>
-
               <div></div>
 
               <template v-for="(ingredient, ingredientIndex) of recipe.ingredients" :key="ingredientIndex">
-                <input v-model="ingredient.ingredient" type="text" style="width: auto" maxlength="255" />
+                <p class="ingredients__index">{{ ingredientIndex + 1 }}.</p>
+                <input
+                  v-model="ingredient.ingredient"
+                  :class="buttonClicked && !ingredient.ingredient.length ? 'alert' : ''"
+                  type="text"
+                  style="width: auto"
+                  placeholder="Ingredient"
+                  maxlength="255"
+                />
 
-                <input v-model.number="ingredient.amount" type="number" />
+                <input
+                  v-model.number="ingredient.amount"
+                  :class="buttonClicked && !ingredient.amount ? 'alert' : ''"
+                  min="0"
+                  type="number"
+                  placeholder="Qty"
+                />
 
                 <select v-model="ingredient.metricId">
                   <option v-for="metric of getMetrics" :key="metric.id" :value="metric.id">
@@ -72,15 +88,16 @@
                   </option>
                 </select>
 
-                <button @click="removeIngredient(ingredientIndex)">X</button>
+                <Button label="X" class="ingredients-btn" kind="primary" @click="removeIngredient(ingredientIndex)" />
               </template>
             </div>
 
             <Button
               label="Add ingredient"
+              :disabled="recipe.ingredients.length >= 5"
               class="add-step"
               kind="secondary"
-              style="margin-top: 0.3rem"
+              style="margin-top: 0.8rem"
               @click="addIngredient"
             />
           </div>
@@ -97,14 +114,11 @@
               <div style="display: flex">
                 <p>Step: {{ stepIndex + 1 }}</p>
               </div>
-
-              <textarea v-model="step.content" type="text" rows="5"></textarea>
-
+              <textarea v-model="step.content" placeholder="ex. Boil water for Pasta" type="text" rows="5"></textarea>
               <div class="optional">
                 <p>Optional</p>
-                <input v-model="step.optional" type="checkbox" />
-
-                <button @click="removeStep(stepIndex)">X</button>
+                <input v-model="step.optional" type="checkbox" name="optional" />
+                <button class="optional__btn" @click="removeStep(stepIndex)">X</button>
               </div>
             </div>
 
@@ -165,6 +179,7 @@ export default {
   data() {
     return {
       newTag: '',
+      buttonClicked: false,
 
       recipe: {
         title: '',
@@ -244,11 +259,13 @@ export default {
     },
 
     addIngredient() {
-      this.recipe.ingredients.push({
-        amount: null,
-        metricId: null,
-        ingredient: '',
-      });
+      if (this.recipe.ingredients.length < 5) {
+        this.recipe.ingredients.push({
+          amount: null,
+          metricId: null,
+          ingredient: '',
+        });
+      }
     },
 
     addTag() {
@@ -303,6 +320,7 @@ export default {
     },
 
     async saveRecipe() {
+      this.buttonClicked = true;
       if (!this.recipe?.title?.length || !this.recipe?.steps?.length || !this.recipe?.ingredients?.length) {
         return;
       }
@@ -380,7 +398,7 @@ export default {
         display: flex;
         padding: 0.2rem 1rem;
         border-radius: 4px;
-        border: 1px solid var(--color-highlight);
+        border: 2px solid var(--color-highlight);
         background-color: #fff;
         color: var(--color-highlight);
         place-items: center;
@@ -416,10 +434,11 @@ export default {
           display: flex;
           padding: 0.2rem 1rem;
           border-radius: 4px;
-          border: 1px solid var(--color-highlight);
+          border: 2px solid var(--color-highlight);
           background-color: #fff;
           color: var(--color-highlight);
           place-items: center;
+          font-weight: bold;
 
           &:hover {
             transition: 0.2s;
@@ -515,6 +534,10 @@ export default {
       margin-top: 1.25rem;
     }
 
+    h4 {
+      margin-top: 1.25rem;
+    }
+
     textarea {
       border-color: rgba(126, 126, 126, 0.3);
       border-radius: 4px;
@@ -530,9 +553,13 @@ export default {
       border-radius: 4px;
       border: 2px solid rgba($color: #7e7e7e, $alpha: 0.3);
       width: 100%;
-      // height: 2rem;
       padding: 0.25rem;
     }
+
+    .alert {
+      border: 2px solid rgba($color: #ff1818, $alpha: 0.4);
+    }
+
     select {
       border-radius: 4px;
       border: 2px solid rgba($color: #7e7e7e, $alpha: 0.3);
@@ -653,9 +680,19 @@ export default {
     // Add ingredients
     .ingredients {
       display: grid;
-      grid: auto-flow / 0fr 0.6fr 0fr 0fr;
+      grid: auto-flow / 0fr 0.5fr 0.2fr 0.2fr 0.04fr;
       justify-content: space-between;
       row-gap: 0.3rem;
+
+      .ingredients-btn {
+        padding: 0rem 0.4rem;
+        font-size: 0.9rem;
+      }
+
+      .ingredients__index {
+        font-size: 1.2rem;
+        font-weight: bolder;
+      }
     }
 
     // Steps
@@ -677,12 +714,24 @@ export default {
       textarea {
         width: 100%;
         resize: vertical;
+        height: 3rem;
       }
 
       .optional {
         display: flex;
         align-items: center;
         gap: 0.5rem;
+
+        .optional__btn {
+          padding: 0rem 0.4rem;
+          font-weight: bold;
+          background: none;
+          border: none;
+        }
+
+        input {
+          padding: 0 4px;
+        }
       }
 
       input[type='checkbox'] {
@@ -699,7 +748,7 @@ export default {
       }
       input[type='checkbox']:checked:before {
         background-color: rgba($color: var(--color-highlight), $alpha: 0.3);
-        color: #ffffff;
+        color: #000;
       }
     }
   }

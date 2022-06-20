@@ -1,6 +1,10 @@
 <template>
   <div class="nav">
     <router-link to="/"><Title text="Bearnaisee" size="h1" /> </router-link>
+    <h3>
+      <span style="font-size: 1.3rem; font-weight: 700">5-ingredient</span>
+      <span style="font-weight: 100"> recipes</span>
+    </h3>
 
     <router-link to="/" class="nav__link"> Home </router-link>
 
