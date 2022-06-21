@@ -104,7 +104,10 @@ export default {
 
 <style lang="scss" scoped>
 .container {
-  display: none;
+  border-color: rgba(126, 126, 126, 0.3);
+      border-radius: 4px;
+      border: 2px solid rgba($color: #7e7e7e, $alpha: 0.3);
+      margin-bottom: 10px;
 
   @media (min-width: 1024px) {
     border-radius: 10px;
@@ -121,6 +124,7 @@ export default {
       width: 100%;
       gap: 1rem;
       padding: 0.6rem 0rem;
+      
 
       .list__users {
         display: flex;

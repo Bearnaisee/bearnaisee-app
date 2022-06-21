@@ -74,7 +74,9 @@
       </div>
       <div v-if="getUserInfo?.id">
         <RecommendedFollow />
+        
       </div>
+      <TrendingTags />
     </div>
   </div>
 
@@ -100,20 +102,22 @@
 import { defineAsyncComponent } from 'vue';
 import axios from 'axios';
 import { mapGetters } from 'vuex';
+import TrendingTags from '../components/TrendingTags.vue';
 
 export default {
   name: 'Frontpage',
 
   components: {
-    Icon: defineAsyncComponent(() => import('@/components/Icon.vue')),
-    RecipeGrid: defineAsyncComponent(() => import('@/components/RecipeGrid.vue')),
-    Title: defineAsyncComponent(() => import('@/components/Title.vue')),
-    TopNav: defineAsyncComponent(() => import('@/components/TopNav.vue')),
-    RecipeSlider: defineAsyncComponent(() => import('@/components/RecipeSlider.vue')),
-    SideNav: defineAsyncComponent(() => import('@/components/SideNav.vue')),
-    SearchBar: defineAsyncComponent(() => import('@/components/SearchBar.vue')),
-    RecommendedFollow: defineAsyncComponent(() => import('@/components/RecommendedFollow.vue')),
-  },
+    Icon: defineAsyncComponent(() => import("@/components/Icon.vue")),
+    RecipeGrid: defineAsyncComponent(() => import("@/components/RecipeGrid.vue")),
+    Title: defineAsyncComponent(() => import("@/components/Title.vue")),
+    TopNav: defineAsyncComponent(() => import("@/components/TopNav.vue")),
+    RecipeSlider: defineAsyncComponent(() => import("@/components/RecipeSlider.vue")),
+    SideNav: defineAsyncComponent(() => import("@/components/SideNav.vue")),
+    SearchBar: defineAsyncComponent(() => import("@/components/SearchBar.vue")),
+    RecommendedFollow: defineAsyncComponent(() => import("@/components/RecommendedFollow.vue")),
+    TrendingTags
+},
 
   data() {
     return {

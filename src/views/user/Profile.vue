@@ -12,17 +12,16 @@
       </div>
 
       <div v-else>
+        <div class="content__header">
         <Image :src="avatarUrl" class="content__avatar" />
-
+        
         <div class="content__social">
-          <div>
             <h1 size="h1" class="content__name">
               {{ user?.displayName || user?.username || $route.params.username }}
             </h1>
 
             <p class="content__username">@{{ user?.username || $route.params.username }}</p>
-          </div>
-
+          
           <Button
             v-if="user?.id !== getUserInfo?.id"
             :label="following ? 'Unfollow' : 'Follow'"
@@ -44,7 +43,6 @@
             </span>
             followers
           </p>
-
           <p>
             <span>
               {{ followingCount || 0 }}
@@ -52,7 +50,7 @@
             following
           </p>
         </div>
-
+        </div>
         <div class="tabs">
           <button
             class="tabs__button"
@@ -88,8 +86,10 @@
       </div>
     </div>
 
-    <div class="search">
-      <input type="text" placeholder="Search for something..." class="searchbar" />
+    <div class="right">
+       <SearchBar />
+          <RecommendedFollow @click="reloadPage" />
+          
     </div>
   </div>
 
@@ -119,16 +119,23 @@ import md5 from 'md5';
 import { defineAsyncComponent } from 'vue';
 import axios from 'axios';
 import abbreviateNumber from '@/helpers/abbreviateNumber';
+import SearchBar from '../../components/SearchBar.vue';
+import RecommendedFollow from '../../components/RecommendedFollow.vue';
+
+
+
 
 export default {
   name: 'Profile',
 
   components: {
-    Image: defineAsyncComponent(() => import('@/components/Image.vue')),
-    RecipeGrid: defineAsyncComponent(() => import('@/components/RecipeGrid.vue')),
-    Button: defineAsyncComponent(() => import('@/components/Button.vue')),
-    SideNav: defineAsyncComponent(() => import('@/components/SideNav.vue')),
-  },
+    Image: defineAsyncComponent(() => import("@/components/Image.vue")),
+    RecipeGrid: defineAsyncComponent(() => import("@/components/RecipeGrid.vue")),
+    Button: defineAsyncComponent(() => import("@/components/Button.vue")),
+    SideNav: defineAsyncComponent(() => import("@/components/SideNav.vue")),
+    SearchBar,
+    RecommendedFollow,
+},
 
   data() {
     return {
@@ -284,6 +291,10 @@ export default {
 
       this.checkIfFollowing();
     },
+
+    reloadPage() {
+      window.location.reload();
+    }
   },
 };
 </script>
@@ -357,6 +368,7 @@ export default {
       border-radius: 50%;
     }
 
+
     .content__social {
       display: flex;
       gap: 2.5rem;
@@ -377,30 +389,21 @@ export default {
       }
     }
 
+  
+
     @media (min-width: 1024px) {
       width: 60%;
       margin-top: 2.5rem;
     }
   }
 
-  .search {
-    display: none;
-
-    .searchbar {
-      border-radius: 4px;
-      border: solid 1px var(--color-black);
-      width: 100%;
-      height: 2rem;
-      padding-left: 0.25rem;
-    }
-
-    @media (min-width: 1024px) {
-      display: block;
+  .right {
       width: 20%;
-      padding-top: 2.5rem;
-      height: fit-content;
-      gap: 1rem;
+      
+
+      @media (max-width: 1024px) {
+        display: none;
+      }
     }
-  }
 }
 </style>

@@ -10,7 +10,7 @@
         <div class="cover-upload" :style="uploadImageBackground">
           <label>
             <Icon icon="upload" width="56" height="56" />
-            <h5>Upload image</h5>
+            <Title text="Upload image" size="h5" />
 
             <p>Click here to upload cover image</p>
 
@@ -20,20 +20,20 @@
 
         <div class="builder">
           <div>
-            <h6>Recipe name</h6>
+            <Title text="Recipe name" size="h6" class="builder__title" />
 
             <input v-model="recipe.title" type="text" maxlength="100" required />
           </div>
 
           <div>
-            <h6>Description</h6>
+            <Title text="Description" size="h6" />
 
             <textarea v-model="recipe.description" type="text" rows="5" />
           </div>
 
           <div>
             <div class="slider">
-              <h6>Estimated time</h6>
+              <Title text="Estimated time" size="h6" />
 
               <p>{{ recipe.estimatedTime }} min.</p>
             </div>
@@ -42,7 +42,7 @@
           </div>
 
           <div>
-            <h6>Tags</h6>
+            <Title text="Tags" size="h6" />
 
             <input v-model="newTag" type="text" maxlength="45" @keydown.enter="addTag" />
 
@@ -53,12 +53,11 @@
 
           <div>
             <div class="ingredients">
-              <h6>Ingredient</h6>
+              <Title text="Ingredient" size="h6" class="ingredients__title" />
 
-              <h6>Amount</h6>
+              <Title text="Amount" size="h6" class="ingredients__title" />
 
-              <h6>Metric</h6>
-
+              <Title text="Metric" size="h6" class="ingredients__title" />
               <div></div>
 
               <template v-for="(ingredient, ingredientIndex) of recipe.ingredients" :key="ingredientIndex">
@@ -72,22 +71,24 @@
                   </option>
                 </select>
 
-                <button @click="removeIngredient(ingredientIndex)">X</button>
+                <Button kind="secondary" class="close" @click="removeIngredient(ingredientIndex)" label="&times;" />
               </template>
             </div>
 
             <Button
               label="Add ingredient"
-              class="add-step"
+              class="add-ingre"
               kind="secondary"
-              style="margin-top: 0.3rem"
+              style="
+              padding: 0.3rem;
+              margin-top: 0.3rem;
+              font-size: 12px;"
               @click="addIngredient"
             />
           </div>
 
           <div class="steps">
-            <h6>Steps</h6>
-
+          <Title text="Steps" size="h6" class="steps__title" />
             <div
               v-for="(step, stepIndex) of recipe.steps"
               :key="stepIndex"
@@ -104,7 +105,7 @@
                 <p>Optional</p>
                 <input v-model="step.optional" type="checkbox" />
 
-                <button @click="removeStep(stepIndex)">X</button>
+                <Button kind="secondary" class="removestep" @click="removeStep(stepIndex)" label="&times;"/>
               </div>
             </div>
 
@@ -124,6 +125,10 @@
     </div>
     <div class="right">
       <SearchBar />
+      <div v-if="getUserInfo?.id">
+       <RecommendedFollow />
+        
+      </div>
     </div>
   </div>
 
@@ -150,17 +155,21 @@ import { defineAsyncComponent } from 'vue';
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 import axios from 'axios';
 import uploadImage from '@/helpers/uploadImage';
+import RecommendedFollow from '../../components/RecommendedFollow.vue';
+import Title from '../../components/Title.vue';
 
 export default {
   name: 'RecipeBuilder',
 
   components: {
-    Button: defineAsyncComponent(() => import('@/components/Button.vue')),
-    Icon: defineAsyncComponent(() => import('@/components/Icon.vue')),
-    Tag: defineAsyncComponent(() => import('@/components/Tag.vue')),
-    SideNav: defineAsyncComponent(() => import('@/components/SideNav.vue')),
-    SearchBar: defineAsyncComponent(() => import('@/components/SearchBar.vue')),
-  },
+    Button: defineAsyncComponent(() => import("@/components/Button.vue")),
+    Icon: defineAsyncComponent(() => import("@/components/Icon.vue")),
+    Tag: defineAsyncComponent(() => import("@/components/Tag.vue")),
+    SideNav: defineAsyncComponent(() => import("@/components/SideNav.vue")),
+    SearchBar: defineAsyncComponent(() => import("@/components/SearchBar.vue")),
+    RecommendedFollow,
+    Title
+},
 
   data() {
     return {
@@ -497,6 +506,15 @@ export default {
       }
     }
 
+    .builder{
+
+      &__title{
+        color: rgba(0, 0, 0, 1);
+      font-size: 14px;
+      margin-top: 1.25rem;
+      }
+    }
+
     .tags__list {
       display: flex;
       flex-wrap: wrap;
@@ -656,7 +674,30 @@ export default {
       grid: auto-flow / 0fr 0.6fr 0fr 0fr;
       justify-content: space-between;
       row-gap: 0.3rem;
+         
+        &__titel{
+          color: rgba(0, 0, 0, 1);
+          font-size: 14px;
+          margin-top: 1.25rem;
+        }
+
+         .close{
+          border: none;
+          background: none;
+          font-weight: 700;
+          font-size: 18px;
+          padding: 0;
+         }
+
+         .add-ingre{
+          font-weight: 400 !important;
+        padding: 0.2rem;
+        margin-top: 0.5rem;
+         }
+    
     }
+
+
 
     // Steps
 
@@ -668,7 +709,6 @@ export default {
       }
 
       .add-step {
-        height: auto;
         font-weight: 400 !important;
         padding: 0.25rem 0.5rem;
         margin-top: 0.5rem;
@@ -683,6 +723,13 @@ export default {
         display: flex;
         align-items: center;
         gap: 0.5rem;
+      }
+
+      .removestep{
+        background-color: none;
+        border: none;
+        padding: 0;
+        font-size: 22px;
       }
 
       input[type='checkbox'] {

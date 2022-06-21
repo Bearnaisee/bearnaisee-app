@@ -108,17 +108,20 @@
 
           <section class="recipe__section">
             <Title size="h3" text="Steps" class="section__title" />
-
+            
             <div v-for="(step, stepIndex) of recipe?.recipeSteps" :key="stepIndex" class="step">
+            
               <div class="step__circle" @click="switchStep(stepIndex)">
                 <Title :text="(stepIndex + 1).toString()" size="h3" class="step__circle__text" />
               </div>
-
-              <p v-if="step.show">
-                {{ step.content }}
+              
+              
+              <p v-if="step.show">{{ step.content }}
               </p>
             </div>
           </section>
+          
+          
         </div>
       </div>
     </div>
@@ -156,16 +159,18 @@ import { mapGetters, mapMutations } from 'vuex';
 import axios from 'axios';
 import unslugText from '@/helpers/unslugText';
 
+
 export default {
   name: 'Recipe',
 
   components: {
-    Icon: defineAsyncComponent(() => import('@/components/Icon.vue')),
-    Title: defineAsyncComponent(() => import('@/components/Title.vue')),
-    SearchBar: defineAsyncComponent(() => import('@/components/SearchBar.vue')),
-    SideNav: defineAsyncComponent(() => import('@/components/SideNav.vue')),
-    RecommendedFollow: defineAsyncComponent(() => import('@/components/RecommendedFollow.vue')),
-  },
+    Icon: defineAsyncComponent(() => import("@/components/Icon.vue")),
+    Title: defineAsyncComponent(() => import("@/components/Title.vue")),
+    SearchBar: defineAsyncComponent(() => import("@/components/SearchBar.vue")),
+    SideNav: defineAsyncComponent(() => import("@/components/SideNav.vue")),
+    RecommendedFollow: defineAsyncComponent(() => import("@/components/RecommendedFollow.vue")),
+    
+},
 
   data() {
     return {
