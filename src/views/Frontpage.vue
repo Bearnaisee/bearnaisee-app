@@ -75,6 +75,9 @@
       <div v-if="getUserInfo?.id">
         <RecommendedFollow />
       </div>
+      <div>
+        <Seasonal :recipes="seasonalRecipes" />
+      </div>
     </div>
   </div>
 
@@ -113,6 +116,7 @@ export default {
     SideNav: defineAsyncComponent(() => import('@/components/SideNav.vue')),
     SearchBar: defineAsyncComponent(() => import('@/components/SearchBar.vue')),
     RecommendedFollow: defineAsyncComponent(() => import('@/components/RecommendedFollow.vue')),
+    Seasonal: defineAsyncComponent(() => import('@/components/Seasonal.vue')),
   },
 
   data() {
@@ -121,6 +125,8 @@ export default {
       categories: ['meat', 'fish', 'poultry', 'vegetarian', 'pasta', 'soup', 'baking', 'dessert'],
       recipes: [],
       trendingRecipes: [],
+      seasonalRecipes: [],
+
       feed: [],
     };
   },
@@ -153,6 +159,8 @@ export default {
     this.fetchTrendingRecipes();
 
     this.fetchfeedRecipes();
+
+    this.fetchSeasonalRecipes();
   },
 
   methods: {
@@ -193,6 +201,16 @@ export default {
 
     async fetchTrendingRecipes() {
       this.trendingRecipes = await axios
+        .get(`${process.env.VUE_APP_API_URL}/recipes/recent`)
+        .then((res) => res?.data?.recipes ?? [])
+        .catch((error) => {
+          console.error('ERROR fetching recent recipes', error);
+          return [];
+        });
+    },
+
+    async fetchSeasonalRecipes() {
+      this.seasonalRecipes = await axios
         .get(`${process.env.VUE_APP_API_URL}/recipes/trending`)
         .then((res) => res?.data?.recipes ?? [])
         .catch((error) => {

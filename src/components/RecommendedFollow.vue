@@ -108,8 +108,9 @@ export default {
 
   @media (min-width: 1024px) {
     border-radius: 10px;
-    padding: 0.8rem;
+    padding: 1rem;
     display: block;
+    background: #fbfbfb;
 
     .container__title {
       padding-bottom: 0.8rem;

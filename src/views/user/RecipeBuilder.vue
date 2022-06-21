@@ -130,7 +130,7 @@
           <Button
             kind="primary"
             class="create"
-            :label="`${getEditRecipeId !== null && getEditRecipeId !== undefined ? 'Save' : 'Create'} recipe`"
+            :label="`${getEditRecipeId !== null && getEditRecipeId !== undefined ? 'Save' : 'Create'} Recipe`"
             @clicked="saveRecipe"
           />
         </div>
@@ -557,7 +557,7 @@ export default {
     }
 
     .alert {
-      border: 2px solid rgba($color: #ff1818, $alpha: 0.4);
+      border: 2.5px solid rgba($color: #ff1818, $alpha: 0.5);
     }
 
     select {
