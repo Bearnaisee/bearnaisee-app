@@ -2,13 +2,11 @@
   <img v-lazy="src" :alt="alt" />
 </template>
 
-<script>
-export default {
-  name: 'Image',
+<script lang="ts" setup>
+import { defineProps } from 'vue';
 
-  props: {
-    src: { type: String, default: 'https://picsum.photos/1000/1000' },
-    alt: { type: String, default: null },
-  },
-};
+defineProps({
+  src: { type: String, default: 'https://picsum.photos/1000/1000' },
+  alt: { type: String, default: null },
+});
 </script>

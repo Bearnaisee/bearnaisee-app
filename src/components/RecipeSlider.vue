@@ -8,24 +8,14 @@
   </div>
 </template>
 
-<script>
-import { defineAsyncComponent } from 'vue';
+<script lang="ts" setup>
+import { defineAsyncComponent, defineProps } from 'vue';
+import { Recipe } from 'types';
 
-export default {
-  name: 'RecipeSlider',
+const Title = defineAsyncComponent(() => import('@/components/Title.vue'));
+const Image = defineAsyncComponent(() => import('@/components/Image.vue'));
 
-  components: {
-    Image: defineAsyncComponent(() => import('@/components/Image.vue')),
-    Title: defineAsyncComponent(() => import('@/components/Title.vue')),
-  },
-
-  props: {
-    recipes: {
-      type: Array,
-      required: true,
-    },
-  },
-};
+defineProps<{ recipes: Recipe[] }>();
 </script>
 
 <style lang="scss" scoped>

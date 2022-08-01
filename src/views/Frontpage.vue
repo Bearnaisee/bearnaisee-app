@@ -47,25 +47,20 @@
       </div>
 
       <keep-alive>
-        <div v-if="tab === 'recipes'">
-          <RecipeGrid v-if="recipes?.length" :recipes="recipes" />
+        <div v-show="tab === 'recipes'">
+          <RecipeGrid v-if="recipes?.length" :recipes="recipes" :show-author="true" />
+
           <p v-else>No recent recipes :(</p>
         </div>
       </keep-alive>
 
       <keep-alive>
-        <div v-if="tab === 'feed'">
-          <RecipeGrid v-if="feed?.length" :recipes="feed" />
+        <div v-show="tab === 'feed'">
+          <RecipeGrid v-if="feed?.length" :recipes="feed" :show-author="true" />
 
-          <p v-else>User has no feed :(</p>
+          <p v-else>Your feed is empty :(</p>
         </div>
       </keep-alive>
-      <!-- <div>
-        <Title text="Recent" size="h2" class="content__title" />
-
-        <RecipeGrid v-if="recipes?.length" :recipes="recipes" :show-author="true" />
-        <p v-else>No recent recipes</p>
-      </div> -->
     </div>
 
     <div class="search">
@@ -96,112 +91,86 @@
   </Teleport>
 </template>
 
-<script>
-import { defineAsyncComponent } from 'vue';
+<script lang="ts" setup>
+import { defineAsyncComponent, computed, watch, ref } from 'vue';
 import axios from 'axios';
-import { mapGetters } from 'vuex';
+import { useStore } from 'vuex';
+import { Recipe } from 'types';
 
-export default {
-  name: 'Frontpage',
+const Icon = defineAsyncComponent(() => import('@/components/Icon.vue'));
+const RecipeGrid = defineAsyncComponent(() => import('@/components/RecipeGrid.vue'));
+const Title = defineAsyncComponent(() => import('@/components/Title.vue'));
+const TopNav = defineAsyncComponent(() => import('@/components/TopNav.vue'));
+const RecipeSlider = defineAsyncComponent(() => import('@/components/RecipeSlider.vue'));
+const SideNav = defineAsyncComponent(() => import('@/components/SideNav.vue'));
+const SearchBar = defineAsyncComponent(() => import('@/components/SearchBar.vue'));
+const RecommendedFollow = defineAsyncComponent(() => import('@/components/RecommendedFollow.vue'));
 
-  components: {
-    Icon: defineAsyncComponent(() => import('@/components/Icon.vue')),
-    RecipeGrid: defineAsyncComponent(() => import('@/components/RecipeGrid.vue')),
-    Title: defineAsyncComponent(() => import('@/components/Title.vue')),
-    TopNav: defineAsyncComponent(() => import('@/components/TopNav.vue')),
-    RecipeSlider: defineAsyncComponent(() => import('@/components/RecipeSlider.vue')),
-    SideNav: defineAsyncComponent(() => import('@/components/SideNav.vue')),
-    SearchBar: defineAsyncComponent(() => import('@/components/SearchBar.vue')),
-    RecommendedFollow: defineAsyncComponent(() => import('@/components/RecommendedFollow.vue')),
-  },
+const categories = ['meat', 'fish', 'poultry', 'vegetarian', 'pasta', 'soup', 'baking', 'dessert'];
+const tab = ref('recipes');
+const recipes = ref([] as Recipe[]);
+const trendingRecipes = ref([] as Recipe[]);
+const feed = ref([] as Recipe[]);
 
-  data() {
-    return {
-      tab: 'recipes',
-      categories: ['meat', 'fish', 'poultry', 'vegetarian', 'pasta', 'soup', 'baking', 'dessert'],
-      recipes: [],
-      trendingRecipes: [],
-      feed: [],
-    };
-  },
+const metaTitle = computed(() => 'Home | Bearnaisee');
+const metaDescription = computed(() => process?.env?.VUE_APP_META_DESC);
 
-  computed: {
-    ...mapGetters(['getUserInfo']),
+const store = useStore();
+const getUserInfo = computed(() => store?.getters?.getUserInfo);
 
-    metaTitle() {
-      return 'Home | Bearnaisee';
-    },
-
-    metaDescription() {
-      return process?.env?.VUE_APP_META_DESC;
-    },
-  },
-
-  watch: {
-    getUserInfo: {
-      handler() {
-        if (this.getUserInfo?.id) {
-          this.fetchfeedRecipes();
-        }
-      },
-    },
-  },
-
-  created() {
-    this.fetchRecentRecipes();
-
-    this.fetchTrendingRecipes();
-
-    this.fetchfeedRecipes();
-  },
-
-  methods: {
-    /**
-     * @param {string} tab
-     */
-    switchTab(tab) {
-      if (tab === 'recipes') {
-        this.tab = 'recipes';
-      } else if (tab === 'feed') {
-        this.fetchfeedRecipes();
-
-        this.tab = 'feed';
-      }
-    },
-
-    async fetchRecentRecipes() {
-      this.recipes = await axios
-        .get(`${process.env.VUE_APP_API_URL}/recipes/recent`)
-        .then((res) => res?.data?.recipes || [])
-        .catch((error) => {
-          console.error('ERROR fetching recent recipes', error);
-          return [];
-        });
-    },
-
-    async fetchfeedRecipes() {
-      if (!this.getUserInfo?.id || this.feed?.length) return;
-
-      this.feed = await axios
-        .get(`${process.env.VUE_APP_API_URL}/feed/${this.getUserInfo.id}`)
-        .then((res) => res?.data?.feed ?? [])
-        .catch((error) => {
-          console.error('ERROR fetching feed recipes', error);
-          return [];
-        });
-    },
-
-    async fetchTrendingRecipes() {
-      this.trendingRecipes = await axios
-        .get(`${process.env.VUE_APP_API_URL}/recipes/trending`)
-        .then((res) => res?.data?.recipes ?? [])
-        .catch((error) => {
-          console.error('ERROR fetching recent recipes', error);
-          return [];
-        });
-    },
-  },
+const fetchRecentRecipes = async (): Promise<void> => {
+  recipes.value = await axios
+    .get(`${process.env.VUE_APP_API_URL}/recipes/recent`)
+    .then((res) => res?.data?.recipes || [])
+    .catch((error) => {
+      console.error('ERROR fetching recent recipes', error);
+      return [];
+    });
 };
+
+const fetchfeedRecipes = async () => {
+  if (!getUserInfo?.value?.id || feed?.value?.length) return;
+
+  feed.value = await axios
+    .get(`${process.env.VUE_APP_API_URL}/feed/${getUserInfo.value.id}`)
+    .then((res) => res?.data?.feed ?? [])
+    .catch((error) => {
+      console.error('ERROR fetching feed recipes', error);
+      return [];
+    });
+};
+
+const fetchTrendingRecipes = async () => {
+  trendingRecipes.value = await axios
+    .get(`${process.env.VUE_APP_API_URL}/recipes/trending`)
+    .then((res) => res?.data?.recipes ?? [])
+    .catch((error) => {
+      console.error('ERROR fetching recent recipes', error);
+      return [];
+    });
+};
+
+const switchTab = (clickedTab: string) => {
+  if (clickedTab === 'recipes') {
+    tab.value = 'recipes';
+  } else if (clickedTab === 'feed') {
+    fetchfeedRecipes();
+
+    tab.value = 'feed';
+  }
+};
+
+fetchRecentRecipes();
+
+fetchTrendingRecipes();
+
+fetchfeedRecipes();
+
+watch(getUserInfo, () => {
+  if (getUserInfo?.value?.id) {
+    fetchfeedRecipes();
+  }
+});
 </script>
 
 <style lang="scss" scoped>

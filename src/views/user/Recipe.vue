@@ -150,126 +150,131 @@
   </Teleport>
 </template>
 
-<script>
-import { defineAsyncComponent } from 'vue';
-import { mapGetters, mapMutations } from 'vuex';
+<script lang="ts" setup>
+import { defineAsyncComponent, ref, computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 import axios from 'axios';
 import unslugText from '@/helpers/unslugText';
+import { Recipe } from 'types';
 
-export default {
-  name: 'Recipe',
+const Icon = defineAsyncComponent(() => import('@/components/Icon.vue'));
+const Title = defineAsyncComponent(() => import('@/components/Title.vue'));
+const SearchBar = defineAsyncComponent(() => import('@/components/SearchBar.vue'));
+const SideNav = defineAsyncComponent(() => import('@/components/SideNav.vue'));
+const RecommendedFollow = defineAsyncComponent(() => import('@/components/RecommendedFollow.vue'));
 
-  components: {
-    Icon: defineAsyncComponent(() => import('@/components/Icon.vue')),
-    Title: defineAsyncComponent(() => import('@/components/Title.vue')),
-    SearchBar: defineAsyncComponent(() => import('@/components/SearchBar.vue')),
-    SideNav: defineAsyncComponent(() => import('@/components/SideNav.vue')),
-    RecommendedFollow: defineAsyncComponent(() => import('@/components/RecommendedFollow.vue')),
-  },
+type ExtendedRecipe = Recipe & {
+  recipeSteps: {
+    id: number;
+    step: number;
+    optional: boolean;
+    content: string;
+    show: boolean;
+  }[];
+};
 
-  data() {
-    return {
-      showMore: false,
-      recipe: null,
-      userLikedRecipe: false,
-    };
-  },
+const showMore = ref(false);
+const recipe = ref(null as ExtendedRecipe | null);
+const userLikedRecipe = ref(false);
 
-  computed: {
-    ...mapGetters(['getUserInfo']),
+const route = useRoute();
+const router = useRouter();
+const store = useStore();
+const getUserInfo = computed(() => store?.getters?.getUserInfo);
 
-    computedDescription() {
-      if (this.recipe?.description) {
-        if (this.showMore) {
-          return this.recipe?.description;
-        }
+const computedDescription = computed(() => {
+  if (recipe.value?.description) {
+    if (showMore.value) {
+      return recipe.value?.description;
+    }
 
-        const description = this.recipe?.description?.split(' ');
+    const description = recipe.value?.description?.trim()?.split(' ');
 
-        return `${description.splice(0, description.length > 20 ? 20 : description.length).join(' ')}${
-          description.length > 20 ? '...' : ''
-        }`;
-      }
+    return `${description.splice(0, description.length > 20 ? 20 : description.length).join(' ')}${
+      description.length > 20 ? '...' : ''
+    }`;
+  }
 
-      return '';
-    },
+  return '';
+});
 
-    metaTitle() {
-      return `${this.recipe?.title || unslugText(this.$route?.params?.slug) || 'Recipe'} | Bearnaisee`;
-    },
+const metaTitle = computed(
+  () => `${recipe?.value?.title || unslugText(route?.params?.slug as string) || 'Recipe'} | Bearnaisee`,
+);
 
-    metaDescription() {
-      return this?.recipe?.description || process?.env?.VUE_APP_META_DESC;
-    },
-  },
+const metaDescription = computed(() => recipe.value?.description ?? process?.env?.VUE_APP_META_DESC);
 
-  created() {
-    this.fetchRecipe();
-  },
+const toggleShowMore = () => {
+  showMore.value = !showMore.value;
+};
 
-  methods: {
-    ...mapMutations(['setEditRecipeId']),
+const goBack = () => {
+  router.go(-1);
+};
 
-    goBack() {
-      this.$router.go(-1);
-    },
+const checkIfLiked = async () => {
+  const userId = getUserInfo?.value?.id;
+  const recipeId = recipe.value?.id;
 
-    async fetchRecipe() {
-      const recipe = await axios
-        .get(`${process.env.VUE_APP_API_URL}/recipe/${this.$route.params.username}/${this.$route.params.slug}`)
-        .then((res) => res?.data)
-        .catch((error) => console.error('ERROR fetching recipe', error));
+  if (userId && recipeId) {
+    userLikedRecipe.value = await axios
+      .get(`${process.env.VUE_APP_API_URL}/recipe/like/${recipeId}/${userId}`)
+      .then((res) => res?.data?.userLiked ?? false)
+      .catch((error) => {
+        console.error('Something went wrong liking recipe', error);
+        return false;
+      });
+  }
+};
 
-      for (let i = 0; i < recipe?.recipeSteps?.length; i += 1) {
-        recipe.recipeSteps[i].show = true;
-      }
+const fetchRecipe = async () => {
+  const response = await axios
+    .get(
+      `${process.env.VUE_APP_API_URL}/recipe/${(route.params.username as string).toLowerCase()}/${(
+        route.params.slug as string
+      ).toLowerCase()}`,
+    )
+    .then((res) => res?.data)
+    .catch((error) => console.error('ERROR fetching recipe', error));
 
-      this.recipe = recipe;
+  for (let i = 0; i < response?.recipeSteps?.length; i += 1) {
+    response.recipeSteps[i].show = true;
+  }
 
-      if (this.getUserInfo?.id !== this.recipe?.userId) {
-        this.checkIfLiked();
-      }
-    },
+  recipe.value = response;
 
-    toggleShowMore() {
-      this.showMore = !this.showMore;
-    },
+  if (getUserInfo.value?.id !== recipe.value?.userId) {
+    checkIfLiked();
+  }
+};
 
-    switchStep(index) {
-      this.recipe.recipeSteps[index].show = !this.recipe.recipeSteps[index].show;
-    },
+const likeRecipe = async () => {
+  const userId = getUserInfo.value?.id;
+  const recipeId = recipe?.value?.id;
 
-    async likeRecipe() {
-      const userId = this.getUserInfo.id;
-      const recipeId = this.recipe.id;
+  if (userId && recipeId) {
+    await axios
+      .post(`${process.env.VUE_APP_API_URL}/recipe/like/${recipeId}/${userId}`)
+      .then((res) => res?.data)
+      .catch((error) => console.error('Something went wrong liking recipe', error));
 
-      await axios
-        .post(`${process.env.VUE_APP_API_URL}/recipe/like/${recipeId}/${userId}`)
-        .then((res) => res?.data)
-        .catch((error) => console.error('Something went wrong liking recipe', error));
+    checkIfLiked();
+  }
+};
 
-      this.checkIfLiked();
-    },
+const switchStep = (index: number) => {
+  if (recipe.value?.recipeSteps?.length) {
+    recipe.value.recipeSteps[index].show = !recipe.value.recipeSteps[index].show;
+  }
+};
 
-    async checkIfLiked() {
-      const userId = this.getUserInfo.id;
-      const recipeId = this.recipe.id;
+fetchRecipe();
 
-      this.userLikedRecipe = await axios
-        .get(`${process.env.VUE_APP_API_URL}/recipe/like/${recipeId}/${userId}`)
-        .then((res) => res?.data?.userLiked || false)
-        .catch((error) => {
-          console.error('Something went wrong liking recipe', error);
-          return false;
-        });
-    },
+const goToBuilder = () => {
+  store.commit('setEditRecipeId', recipe.value?.id);
 
-    goToBuilder() {
-      this.setEditRecipeId(this.recipe.id);
-
-      this.$router.push('/create');
-    },
-  },
+  router.push('/create');
 };
 </script>
 

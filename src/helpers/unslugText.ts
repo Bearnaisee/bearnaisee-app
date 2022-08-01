@@ -1,8 +1,4 @@
-/**
- * @param { string } text
- * @returns {string}
- */
-export default function unslugText(text) {
+export default function unslugText(text: string): string {
   if (!text?.length) return text;
 
   const decodedURI = decodeURI(text)?.replaceAll('-', ' ');

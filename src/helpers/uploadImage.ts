@@ -2,7 +2,6 @@ import axios from 'axios';
 
 /**
  * @summary helper for uploading files
- * @param {*} file
  * @usage
  * <template>
  *  ...
@@ -20,9 +19,13 @@ import axios from 'axios';
  *  }
  *  ...
  * </script>
- * @returns {{ msg: string, file_name: string, bucket_name: string, error: string }}
  */
-export default async function uploadImage(file) {
+export default async function uploadImage(file: File): Promise<{
+  msg?: string;
+  file_name?: string;
+  bucket_name?: string;
+  error?: unknown;
+}> {
   const formData = new FormData();
 
   formData.append('image', file);
@@ -34,6 +37,6 @@ export default async function uploadImage(file) {
     .then((res) => res?.data)
     .catch((error) => {
       console.error('uploadImage error', error);
-      return error;
+      return error?.response?.data;
     });
 }

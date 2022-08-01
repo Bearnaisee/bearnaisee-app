@@ -1,32 +1,18 @@
 <template>
-  <p class="tag" :style="`background-color: ${generateRandomColor()}`">
+  <p class="tag" :style="`background-color: ${tagColor}`">
     {{ label }}
   </p>
 </template>
 
-<script>
+<script lang="ts" setup>
+import { defineProps, computed } from 'vue';
 import generatePseudoRandomColor from '@/helpers/generatePseudoRandomColor';
 
-export default {
-  name: 'Tag',
+const props = defineProps<{ label: string }>();
 
-  props: {
-    label: {
-      type: String,
-      default: '',
-    },
-  },
-
-  methods: {
-    /**
-     * @summary generates a psuedo random color.
-     * Will always return the same if a text is passed
-     */
-    generateRandomColor() {
-      return generatePseudoRandomColor(null, 100, 70, this.label);
-    },
-  },
-};
+const tagColor = computed((): string => {
+  return generatePseudoRandomColor(undefined, 100, 70, props.label);
+});
 </script>
 
 <style lang="scss" scoped>

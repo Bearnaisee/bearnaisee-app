@@ -2,12 +2,6 @@
   <input type="text" placeholder="Search for something..." class="searchbar" />
 </template>
 
-<script>
-export default {
-  name: 'SearchBar',
-};
-</script>
-
 <style lang="scss" scoped>
 .searchbar {
   display: none;

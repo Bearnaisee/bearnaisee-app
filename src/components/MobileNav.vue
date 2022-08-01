@@ -23,21 +23,15 @@
   </div>
 </template>
 
-<script>
-import { defineAsyncComponent } from 'vue';
-import { mapGetters } from 'vuex';
+<script lang="ts" setup>
+import { defineAsyncComponent, computed } from 'vue';
+import { useStore } from 'vuex';
 
-export default {
-  name: 'MobileNav',
+const Icon = defineAsyncComponent(() => import('@/components/Icon.vue'));
 
-  components: {
-    Icon: defineAsyncComponent(() => import('@/components/Icon.vue')),
-  },
+const store = useStore();
 
-  computed: {
-    ...mapGetters(['getUserInfo']),
-  },
-};
+const getUserInfo = computed(() => store?.getters?.getUserInfo);
 </script>
 
 <style lang="scss" scoped>

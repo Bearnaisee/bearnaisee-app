@@ -67,6 +67,8 @@
                 <input v-model.number="ingredient.amount" type="number" />
 
                 <select v-model="ingredient.metricId">
+                  <option :value="null">Piece</option>
+
                   <option v-for="metric of getMetrics" :key="metric.id" :value="metric.id">
                     {{ metric.metric }}
                   </option>
@@ -113,6 +115,7 @@
         </div>
         <div class="middle__buttons">
           <router-link to="/" class="cancel">Cancel</router-link>
+
           <Button
             kind="primary"
             class="create"
@@ -145,225 +148,199 @@
   </Teleport>
 </template>
 
-<script>
-import { defineAsyncComponent } from 'vue';
-import { mapGetters, mapMutations, mapActions } from 'vuex';
+<script lang="ts" setup>
+import { defineAsyncComponent, ref, computed } from 'vue';
+import swal from 'sweetalert2';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 import axios from 'axios';
 import uploadImage from '@/helpers/uploadImage';
 
-export default {
-  name: 'RecipeBuilder',
+const SearchBar = defineAsyncComponent(() => import('@/components/SearchBar.vue'));
+const Button = defineAsyncComponent(() => import('@/components/Button.vue'));
+const Icon = defineAsyncComponent(() => import('@/components/Icon.vue'));
+const Tag = defineAsyncComponent(() => import('@/components/Tag.vue'));
+const SideNav = defineAsyncComponent(() => import('@/components/SideNav.vue'));
 
-  components: {
-    Button: defineAsyncComponent(() => import('@/components/Button.vue')),
-    Icon: defineAsyncComponent(() => import('@/components/Icon.vue')),
-    Tag: defineAsyncComponent(() => import('@/components/Tag.vue')),
-    SideNav: defineAsyncComponent(() => import('@/components/SideNav.vue')),
-    SearchBar: defineAsyncComponent(() => import('@/components/SearchBar.vue')),
-  },
+const router = useRouter();
 
-  data() {
-    return {
-      newTag: '',
+const newTag = ref('');
 
-      recipe: {
-        title: '',
-        description: '',
-        coverImage: null,
-        estimatedTime: 0,
-        ingredients: [
-          {
-            amount: null,
-            metricId: null,
-            ingredient: '',
-          },
-        ],
-        steps: [],
-        tags: [],
-      },
-    };
-  },
-
-  computed: {
-    ...mapGetters(['getMetrics', 'getUserInfo', 'getEditRecipeId']),
-
-    uploadImageBackground() {
-      if (this.recipe?.coverImage) {
-        return `background: linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
-          url('${this.recipe.coverImage}');`;
-      }
-
-      return 'background-color: rgba(0, 0, 0, 5%);';
+const recipe = ref({
+  title: '',
+  description: '',
+  coverImage: null as string | null,
+  estimatedTime: 0,
+  ingredients: [
+    {
+      amount: null as number | null,
+      metricId: null as number | null,
+      ingredient: '',
     },
+  ],
+  steps: [] as {
+    content: string;
+    optional: boolean;
+  }[],
+  tags: [] as string[],
+});
 
-    metaTitle() {
-      return `${this.getEditRecipeId ? 'Edit' : 'Create'} Recipe | Bearnaisee`;
-    },
+const store = useStore();
 
-    metaDescription() {
-      return process?.env?.VUE_APP_META_DESC;
-    },
-  },
+const getMetrics = computed(() => store?.getters?.getMetrics);
+const getUserInfo = computed(() => store?.getters?.getUserInfo);
+const getEditRecipeId = computed(() => store?.getters?.getEditRecipeId);
 
-  created() {
-    if (this.getEditRecipeId !== null && this.getEditRecipeId !== undefined) {
-      this.fetchExistingRecipe(this.getEditRecipeId);
+const uploadImageBackground = computed(() => {
+  if (recipe?.value?.coverImage) {
+    return `background: linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+          url('${recipe?.value?.coverImage}');`;
+  }
+
+  return 'background-color: rgba(0, 0, 0, 5%);';
+});
+
+const metaTitle = `${getEditRecipeId.value ? 'Edit' : 'Create'} Recipe | Bearnaisee`;
+const metaDescription = process?.env?.VUE_APP_META_DESC;
+
+const fetchExistingRecipe = async (recipeId: number): Promise<void> => {
+  const response = await axios
+    .get(`${process.env.VUE_APP_API_URL}/recipes/${recipeId}`)
+    .then((res) => res?.data)
+    .catch((error) => {
+      console.error('Error getting recipe', error);
+    });
+
+  if (response) {
+    recipe.value = response;
+  }
+};
+
+if (getEditRecipeId.value !== null && getEditRecipeId.value !== undefined) {
+  fetchExistingRecipe(getEditRecipeId.value);
+}
+
+const addStep = () => {
+  recipe.value.steps.push({
+    content: '',
+    optional: false,
+  });
+};
+
+const addIngredient = () => {
+  recipe.value.ingredients.push({
+    amount: null,
+    metricId: null,
+    ingredient: '',
+  });
+};
+
+const addTag = () => {
+  const cleanedNewTag = newTag.value
+    ?.trim()
+    ?.toLowerCase()
+    ?.replaceAll(/[^a-z0-9-]/gi, '');
+
+  if (cleanedNewTag.length && recipe.value.tags.indexOf(cleanedNewTag) === -1) {
+    recipe.value.tags.push(cleanedNewTag);
+  }
+
+  newTag.value = '';
+};
+
+if (!getMetrics?.value?.length) {
+  store.dispatch('fetchMetrics');
+}
+
+const removeTag = (index: number) => {
+  recipe.value.tags.splice(index, 1);
+};
+
+const removeStep = (index: number) => {
+  recipe.value.steps.splice(index, 1);
+};
+
+const removeIngredient = (index: number) => {
+  recipe.value.ingredients.splice(index, 1);
+};
+
+const uploadRecipeThumbnail = async (files: FileList) => {
+  if (files?.length) {
+    const result = await uploadImage(files[0]);
+
+    if (result?.file_name?.length && result?.bucket_name?.length) {
+      recipe.value.coverImage = `https://${result.bucket_name}.s3.eu-central-1.amazonaws.com/${result.file_name}`;
+    } else {
+      swal.fire({
+        icon: 'error',
+        title: 'Error uploading image',
+        timer: 800,
+        showConfirmButton: false,
+      });
     }
+  }
+};
 
-    if (!this.getMetrics?.length) {
-      this.fetchMetrics();
-    }
-  },
+const saveRecipe = async () => {
+  if (!recipe.value?.title?.length || !recipe.value?.steps?.length || !recipe.value?.ingredients?.length) {
+    return;
+  }
 
-  methods: {
-    ...mapMutations(['setEditRecipeId']),
-
-    ...mapActions(['fetchMetrics']),
-
-    /**
-     * @param {number} recipeId
-     */
-    async fetchExistingRecipe(recipeId) {
-      const recipe = await axios
-        .get(`${process.env.VUE_APP_API_URL}/recipes/${recipeId}`)
-        .then((res) => res?.data)
-        .catch((error) => {
-          console.error('Error getting recipe', error);
+  if (getEditRecipeId.value !== null && getEditRecipeId.value !== undefined) {
+    await axios
+      .put(`${process.env.VUE_APP_API_URL}/recipe`, {
+        ...recipe.value,
+        userId: getUserInfo.value.id,
+      })
+      .then(async (result) => {
+        await swal.fire({
+          icon: 'success',
+          title: 'Edited recipe successfully',
+          showConfirmButton: false,
+          timer: 1000,
         });
 
-      if (recipe) {
-        this.recipe = recipe;
-      }
-    },
+        store.dispatch('setEditRecipeId', null);
 
-    addStep() {
-      this.recipe.steps.push({
-        content: '',
-        optional: false,
+        router.push(`/${getUserInfo.value.username}/${result?.data?.recipe.slug}`);
+      })
+      .catch((error) => {
+        swal.fire({
+          icon: 'error',
+          title: 'Something went wrong, please try again later',
+          timer: 800,
+          showConfirmButton: false,
+        });
+
+        console.error('Error editing recipe', error);
       });
-    },
+  } else {
+    await axios
+      .post(`${process.env.VUE_APP_API_URL}/recipe`, {
+        ...recipe.value,
+        userId: getUserInfo.value.id,
+      })
+      .then(async (result) => {
+        await swal.fire({
+          icon: 'success',
+          title: 'Created recipe successfully',
+          showConfirmButton: false,
+          timer: 1000,
+        });
 
-    addIngredient() {
-      this.recipe.ingredients.push({
-        amount: null,
-        metricId: null,
-        ingredient: '',
+        router.push(`/${getUserInfo.value.username}/${result?.data.recipe.slug}`);
+      })
+      .catch((error) => {
+        swal.fire({
+          icon: 'error',
+          title: 'Something went wrong, please try again later',
+          timer: 800,
+          showConfirmButton: false,
+        });
+
+        console.error('Error creating recipe', error);
       });
-    },
-
-    addTag() {
-      const cleanedNewTag = this.newTag
-        ?.trim()
-        ?.toLowerCase()
-        ?.replaceAll(/[^a-z0-9-]/gi, '');
-
-      if (cleanedNewTag.length && this.recipe.tags.indexOf(cleanedNewTag) === -1) {
-        this.recipe.tags.push(cleanedNewTag);
-      }
-
-      this.newTag = '';
-    },
-
-    /**
-     * @param {number} index
-     */
-    removeTag(index) {
-      this.recipe.tags.splice(index, 1);
-    },
-
-    /**
-     * @param {number} index
-     */
-    removeStep(index) {
-      this.recipe.steps.splice(index, 1);
-    },
-
-    /**
-     * @param {number} index
-     */
-    removeIngredient(index) {
-      this.recipe.ingredients.splice(index, 1);
-    },
-
-    async uploadRecipeThumbnail(files) {
-      if (files?.length) {
-        const result = await uploadImage(files[0]);
-
-        if (result?.file_name?.length && result?.bucket_name?.length) {
-          this.recipe.coverImage = `https://${result.bucket_name}.s3.eu-central-1.amazonaws.com/${result.file_name}`;
-        } else {
-          this.$swal({
-            icon: 'error',
-            title: 'Error uploading image',
-            timer: 800,
-            showConfirmButton: false,
-          });
-        }
-      }
-    },
-
-    async saveRecipe() {
-      if (!this.recipe?.title?.length || !this.recipe?.steps?.length || !this.recipe?.ingredients?.length) {
-        return;
-      }
-
-      if (this.getEditRecipeId !== null && this.getEditRecipeId !== undefined) {
-        await axios
-          .put(`${process.env.VUE_APP_API_URL}/recipe`, {
-            ...this.recipe,
-            userId: this.getUserInfo.id,
-          })
-          .then(async (result) => {
-            await this.$swal({
-              icon: 'success',
-              title: 'Edited recipe successfully',
-              showConfirmButton: false,
-              timer: 1000,
-            });
-
-            this.setEditRecipeId(null);
-
-            this.$router.push(`/${this.getUserInfo.username}/${result?.data?.recipe.slug}`);
-          })
-          .catch((error) => {
-            this.$swal({
-              icon: 'error',
-              title: 'Something went wrong, please try again later',
-              timer: 800,
-              showConfirmButton: false,
-            });
-
-            console.error('Error editing recipe', error);
-          });
-      } else {
-        await axios
-          .post(`${process.env.VUE_APP_API_URL}/recipe`, {
-            ...this.recipe,
-            userId: this.getUserInfo.id,
-          })
-          .then(async (result) => {
-            await this.$swal({
-              icon: 'success',
-              title: 'Created recipe successfully',
-              showConfirmButton: false,
-              timer: 1000,
-            });
-
-            this.$router.push(`/${this.getUserInfo.username}/${result?.data.recipe.slug}`);
-          })
-          .catch((error) => {
-            this.$swal({
-              icon: 'error',
-              title: 'Something went wrong, please try again later',
-              timer: 800,
-              showConfirmButton: false,
-            });
-
-            console.error('Error creating recipe', error);
-          });
-      }
-    },
-  },
+  }
 };
 </script>
 
@@ -689,14 +666,8 @@ export default {
         cursor: pointer;
         width: 1.5rem;
         height: 1.5rem;
-        appearance: none;
       }
-      input[type='checkbox']:before {
-        content: '\2714';
-        color: transparent;
-        padding: 0.1em;
-        padding-bottom: 0.2em;
-      }
+
       input[type='checkbox']:checked:before {
         background-color: rgba($color: var(--color-highlight), $alpha: 0.3);
         color: #ffffff;

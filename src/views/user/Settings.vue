@@ -51,85 +51,62 @@
   </Teleport>
 </template>
 
-<script>
-import { defineAsyncComponent } from 'vue';
+<script lang="ts" setup>
+import { defineAsyncComponent, computed, watch, reactive } from 'vue';
 import axios from 'axios';
-import { mapGetters, mapActions } from 'vuex';
+import { useStore } from 'vuex';
+import { User } from 'types';
 
-export default {
-  name: 'Settings',
+const SideNav = defineAsyncComponent(() => import('@/components/SideNav.vue'));
+const TopNav = defineAsyncComponent(() => import('@/components/TopNav.vue'));
+const Button = defineAsyncComponent(() => import('@/components/Button.vue'));
 
-  components: {
-    SideNav: defineAsyncComponent(() => import('@/components/SideNav.vue')),
-    TopNav: defineAsyncComponent(() => import('@/components/TopNav.vue')),
-    Button: defineAsyncComponent(() => import('@/components/Button.vue')),
-  },
+const user = reactive({
+  displayName: null,
+  description: null,
+  location: null,
+  website: null,
+} as User);
 
-  data() {
-    return {
-      user: {
-        displayName: null,
-        description: null,
-        location: null,
-        website: null,
-      },
-    };
-  },
+const store = useStore();
+const getUserInfo = computed(() => store?.getters?.getUserInfo);
 
-  computed: {
-    ...mapGetters(['getUserInfo']),
+const metaTitle = 'Settings | Bearnaisee';
+const metaDescription = process?.env?.VUE_APP_META_DESC;
 
-    metaTitle() {
-      return 'Settings | Bearnaisee';
-    },
-
-    metaDescription() {
-      return process?.env?.VUE_APP_META_DESC;
-    },
-  },
-
-  watch: {
-    getUserInfo: {
-      handler() {
-        this.initSettings();
-      },
-    },
-  },
-
-  created() {
-    this.initSettings();
-  },
-
-  methods: {
-    ...mapActions(['saveUserInfo']),
-
-    initSettings() {
-      if (!this.user?.displayName && this.getUserInfo?.id) {
-        this.user.displayName = this.getUserInfo?.displayName ?? this.getUserInfo?.username;
-        this.user.description = this.getUserInfo?.description;
-        this.user.location = this.getUserInfo?.location;
-        this.user.website = this.getUserInfo?.website;
-      }
-    },
-
-    async saveSettings() {
-      await axios
-        .post('/user/settings', {
-          ...this.user,
-          userId: this.getUserInfo.id,
-        })
-        .then(() => {
-          this.saveUserInfo({
-            ...this.getUserInfo,
-            ...this.user,
-          });
-        })
-        .catch((error) => {
-          console.error('Error saving user settings', error?.response?.data || error?.response || error);
-        });
-    },
-  },
+const initSettings = () => {
+  if (!user?.displayName && getUserInfo?.value?.id) {
+    user.displayName = getUserInfo?.value?.displayName ?? getUserInfo?.value?.username;
+    user.description = getUserInfo?.value?.description;
+    user.location = getUserInfo?.value?.location;
+    user.website = getUserInfo?.value?.website;
+  }
 };
+
+const saveSettings = async () => {
+  await axios
+    .post('/user/settings', {
+      ...user,
+      userId: getUserInfo.value.id,
+    })
+    .then(() => {
+      store.dispatch('saveUserInfo', {
+        ...getUserInfo.value,
+        ...user,
+      });
+    })
+    .catch((error) => {
+      console.error('Error saving user settings', error?.response?.data || error?.response || error);
+    });
+};
+
+watch(getUserInfo, () => {
+  if (getUserInfo?.value?.id) {
+    initSettings();
+  }
+});
+
+initSettings();
 </script>
 
 <style lang="scss" scoped>

@@ -48,81 +48,67 @@
   </Teleport>
 </template>
 
-<script>
-import { defineAsyncComponent } from 'vue';
-import { mapGetters } from 'vuex';
-
+<script lang="ts" setup>
+import { defineAsyncComponent, ref, computed } from 'vue';
+import { useStore } from 'vuex';
 import axios from 'axios';
+import { Recipe } from 'types';
+import { useRoute } from 'vue-router';
 
-export default {
-  name: 'Category',
+const Title = defineAsyncComponent(() => import('@/components/Title.vue'));
+const RecipeGrid = defineAsyncComponent(() => import('@/components/RecipeGrid.vue'));
+const TopNav = defineAsyncComponent(() => import('@/components/TopNav.vue'));
+const RecipeSlider = defineAsyncComponent(() => import('@/components/RecipeSlider.vue'));
+const SideNav = defineAsyncComponent(() => import('@/components/SideNav.vue'));
+const SearchBar = defineAsyncComponent(() => import('@/components/SearchBar.vue'));
+const RecommendedFollow = defineAsyncComponent(() => import('@/components/RecommendedFollow.vue'));
 
-  components: {
-    RecipeGrid: defineAsyncComponent(() => import('@/components/RecipeGrid.vue')),
-    Title: defineAsyncComponent(() => import('@/components/Title.vue')),
-    TopNav: defineAsyncComponent(() => import('@/components/TopNav.vue')),
-    RecipeSlider: defineAsyncComponent(() => import('@/components/RecipeSlider.vue')),
-    SideNav: defineAsyncComponent(() => import('@/components/SideNav.vue')),
-    SearchBar: defineAsyncComponent(() => import('@/components/SearchBar.vue')),
-    RecommendedFollow: defineAsyncComponent(() => import('@/components/RecommendedFollow.vue')),
-  },
+const store = useStore();
 
-  data() {
-    return {
-      recipes: null,
-      trendingRecipes: [],
-    };
-  },
+const getUserInfo = computed(() => store?.getters?.getUserInfo);
 
-  computed: {
-    ...mapGetters(['getUserInfo']),
+const recipes = ref([] as Recipe[]);
+const trendingRecipes = ref([] as Recipe[]);
 
-    /**
-     * @returns {string}
-     */
-    categoryTitle() {
-      return `${this.$route.params.category.slice(0, 1).toUpperCase()}${this.$route.params.category.slice(
-        1,
-        this.$route.params.category.length,
-      )}`;
-    },
+const route = useRoute();
 
-    metaTitle() {
-      return `${this.categoryTitle} | Bearnaisee`;
-    },
+const category = typeof route.params.category === 'string' ? route.params.category : route.params.category[0];
 
-    metaDescription() {
-      return process?.env?.VUE_APP_META_DESC;
-    },
-  },
+const categoryTitle = computed((): string => {
+  return `${category.slice(0, 1).toUpperCase()}${category.slice(1, category.length)}`;
+});
 
-  created() {
-    this.fetchRecentRecipes();
-    this.fetchTrendingRecipes();
-  },
+const metaTitle = computed((): string => {
+  return `${categoryTitle.value} | Bearnaisee`;
+});
 
-  methods: {
-    async fetchRecentRecipes() {
-      this.recipes = await axios
-        .get(`${process.env.VUE_APP_API_URL}/recipes/${this.$route.params.category.toLowerCase()}/recent`)
-        .then((res) => res?.data?.recipes || [])
-        .catch((error) => {
-          console.error('ERROR fetching recent recipes', error);
-          return [];
-        });
-    },
+const metaDescription = computed((): string => {
+  return process?.env?.VUE_APP_META_DESC;
+});
 
-    async fetchTrendingRecipes() {
-      this.trendingRecipes = await axios
-        .get(`${process.env.VUE_APP_API_URL}/recipes/${this.$route.params.category.toLowerCase()}/trending`)
-        .then((res) => res?.data?.recipes || [])
-        .catch((error) => {
-          console.error('ERROR fetching recent recipes', error);
-          return [];
-        });
-    },
-  },
+const fetchRecentRecipes = async (): Promise<void> => {
+  recipes.value = await axios
+    .get(`${process.env.VUE_APP_API_URL}/recipes/${category.toLowerCase()}/recent`)
+    .then((res) => res?.data?.recipes || [])
+    .catch((error) => {
+      console.error('ERROR fetching recent recipes', error);
+      return [];
+    });
 };
+
+const fetchTrendingRecipes = async (): Promise<void> => {
+  trendingRecipes.value = await axios
+    .get(`${process.env.VUE_APP_API_URL}/recipes/${category.toLowerCase()}/trending`)
+    .then((res) => res?.data?.recipes || [])
+    .catch((error) => {
+      console.error('ERROR fetching recent recipes', error);
+      return [];
+    });
+};
+
+fetchRecentRecipes();
+
+fetchTrendingRecipes();
 </script>
 
 <style lang="scss" scoped>

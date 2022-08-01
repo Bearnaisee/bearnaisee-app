@@ -26,52 +26,37 @@
   <LoginModal v-if="showLoginModal" :start-tab="startTab" @close="switchLoginModal" />
 </template>
 
-<script>
-import { mapGetters, mapMutations } from 'vuex';
-import { defineAsyncComponent } from 'vue';
+<script lang="ts" setup>
+import { defineAsyncComponent, ref, computed } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 
-export default {
-  name: 'SideNav',
+const store = useStore();
+const showLoginModal = ref(false);
+const startTab = ref(null);
 
-  components: {
-    Title: defineAsyncComponent(() => import('@/components/Title.vue')),
-    Button: defineAsyncComponent(() => import('@/components/Button.vue')),
-    LoginModal: defineAsyncComponent(() => import('@/components/LoginModal.vue')),
-  },
+const Button = defineAsyncComponent(() => import('@/components/Button.vue'));
+const Title = defineAsyncComponent(() => import('@/components/Title.vue'));
+const LoginModal = defineAsyncComponent(() => import('@/components/LoginModal.vue'));
 
-  data() {
-    return {
-      showLoginModal: false,
-      startTab: null,
-    };
-  },
+const getUserInfo = computed(() => store?.getters?.getUserInfo);
 
-  computed: {
-    ...mapGetters(['getUserInfo']),
-  },
+const switchLoginModal = (tab = null) => {
+  startTab.value = tab;
+  showLoginModal.value = !showLoginModal.value;
+};
 
-  methods: {
-    ...mapMutations(['setUserInfo', 'setEditRecipeId']),
+const logout = () => {
+  store.commit('setUserInfo', null);
+  localStorage.clear();
+  window.location.reload();
+};
 
-    /**
-     * @param {boolean | null} tab
-     */
-    switchLoginModal(tab = null) {
-      this.startTab = tab;
-      this.showLoginModal = !this.showLoginModal;
-    },
+const router = useRouter();
 
-    logout() {
-      this.setUserInfo(null);
-      localStorage.clear();
-      window.location.reload();
-    },
-
-    goToCreateRecipe() {
-      this.setEditRecipeId(null);
-      this.$router.push('/create');
-    },
-  },
+const goToCreateRecipe = () => {
+  store.commit('setEditRecipeId', null);
+  router.push('/create');
 };
 </script>
 

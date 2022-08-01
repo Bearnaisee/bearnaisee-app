@@ -72,15 +72,15 @@
         </div>
 
         <keep-alive>
-          <div v-if="tab === 'recipes'">
+          <div v-show="tab === 'recipes'">
             <RecipeGrid v-if="recipes?.length" :recipes="recipes" :show-author="false" />
             <p v-else>User has no recipes :(</p>
           </div>
         </keep-alive>
 
         <keep-alive>
-          <div v-if="tab === 'bookmarks'">
-            <RecipeGrid v-if="bookmarks?.length" :recipes="bookmarks" />
+          <div v-show="tab === 'bookmarks'">
+            <RecipeGrid v-if="bookmarks?.length" :recipes="bookmarks" :show-author="true" />
 
             <p v-else>User has no bookmarks :(</p>
           </div>
@@ -113,178 +113,153 @@
   </Teleport>
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
-import md5 from 'md5';
-import { defineAsyncComponent } from 'vue';
+<script lang="ts" setup>
+import { ref, computed, defineAsyncComponent, watch } from 'vue';
+import { useStore } from 'vuex';
+import { useRoute } from 'vue-router';
 import axios from 'axios';
 import abbreviateNumber from '@/helpers/abbreviateNumber';
+import { User, Recipe } from 'types';
 
-export default {
-  name: 'Profile',
+const Image = defineAsyncComponent(() => import('@/components/Image.vue'));
+const RecipeGrid = defineAsyncComponent(() => import('@/components/RecipeGrid.vue'));
+const Button = defineAsyncComponent(() => import('@/components/Button.vue'));
+const SideNav = defineAsyncComponent(() => import('@/components/SideNav.vue'));
 
-  components: {
-    Image: defineAsyncComponent(() => import('@/components/Image.vue')),
-    RecipeGrid: defineAsyncComponent(() => import('@/components/RecipeGrid.vue')),
-    Button: defineAsyncComponent(() => import('@/components/Button.vue')),
-    SideNav: defineAsyncComponent(() => import('@/components/SideNav.vue')),
-  },
+const route = useRoute();
 
-  data() {
-    return {
-      tab: 'recipes',
-      loading: true,
-      user: null,
-      followerCount: 0,
-      followingCount: 0,
-      following: false,
-      recipes: [],
-      bookmarks: [],
-    };
-  },
+const tab = ref('recipes');
+const loading = ref(true);
+const user = ref(null as User | null);
+const followerCount = ref('0');
+const followingCount = ref('0');
+const following = ref(false);
+const recipes = ref([] as Recipe[]);
+const bookmarks = ref([] as Recipe[]);
 
-  computed: {
-    ...mapGetters(['getUserInfo']),
+const avatarUrl = computed(() => user?.value?.avatarUrl ?? 'https://www.gravatar.com/avatar/?d=mp&s=192');
+const metaTitle = computed(
+  () => `${user?.value?.username || route?.params?.username} (@${route?.params?.username}) | Bearnaisee`,
+);
 
-    avatarUrl() {
-      if (this.user?.avatarUrl) {
-        return this.user.avatarUrl;
-      }
+const store = useStore();
+const getUserInfo = computed(() => store?.getters?.getUserInfo);
 
-      if (this.user?.email) {
-        const emailHash = md5(this.user.email.toLowerCase());
+const metaDescription = process?.env?.VUE_APP_META_DESC;
 
-        return `https://gravatar.com/avatar/${emailHash}?s=192`;
-      }
+watch(route, () => {
+  if (route?.hash?.toLowerCase() === '#bookmarks') {
+    tab.value = 'bookmarks';
+  } else {
+    tab.value = 'recipes';
+  }
+});
 
-      return 'http://www.gravatar.com/avatar/?d=mp&s=192';
-    },
+const fetchLikedRecipes = async () => {
+  if (user?.value?.id) {
+    bookmarks.value = await axios
+      .get(`${process.env.VUE_APP_API_URL}/user/liked/recipes/${user.value.id}`)
+      .then((res) => res?.data?.recipes ?? [])
+      .catch((error) => {
+        console.error('Error fetching liked recipes', error);
+        return [];
+      });
+  }
+};
 
-    metaTitle() {
-      return `${this?.user?.username || this?.$route?.params?.username} (@${
-        this?.$route?.params?.username
-      }) | Bearnaisee`;
-    },
+const fetchUserStats = async () => {
+  if (user.value?.id) {
+    const stats = await axios
+      .get(`${process.env.VUE_APP_API_URL}/user/stats/${user.value.id}`)
+      .then((res) => res?.data)
+      .catch((error) => {
+        console.error('Error fetching user stats', error);
+      });
 
-    metaDescription() {
-      return process?.env?.VUE_APP_META_DESC;
-    },
-  },
+    followerCount.value = abbreviateNumber(stats?.followerCount ?? 0);
+    followingCount.value = abbreviateNumber(stats?.followingCount ?? 0);
+  }
+};
 
-  watch: {
-    '$route.hash': {
-      handler() {
-        if (this.$route?.hash?.toLowerCase() === '#bookmarks') {
-          this.tab = 'bookmarks';
-        } else {
-          this.tab = 'recipes';
-        }
-      },
-    },
-  },
+const checkIfFollowing = async () => {
+  const userId = user?.value?.id;
+  const followerId = getUserInfo?.value?.id;
 
-  created() {
-    this.fetchUserInfo();
-    this.fetchUserRecipes();
-  },
+  if (userId && followerId) {
+    following.value = await axios
+      .get(`${process.env.VUE_APP_API_URL}/user/follow/${userId}/${followerId}`)
+      .then((res) => res?.data?.following ?? false)
+      .catch((error) => {
+        console.error('Error checking if following', error);
+        return false;
+      });
+  }
+};
 
-  methods: {
-    /**
-     * @param {string} tab
-     */
-    switchTab(tab) {
-      if (tab === 'recipes') {
-        this.tab = 'recipes';
-        window.location.hash = '';
-      } else if (tab === 'bookmarks') {
-        this.tab = 'bookmarks';
-        window.location.hash = '#bookmarks';
-      }
-    },
+const fetchUserInfo = async () => {
+  const username = (route.params.username as string).toLowerCase();
 
-    async fetchUserInfo() {
-      this.user = await axios
-        .get(`${process.env.VUE_APP_API_URL}/user/${this.$route.params.username}`)
-        .then((res) => res?.data)
-        .catch((error) => {
-          console.error('Error fetching userinfo', error);
-        });
+  user.value = await axios
+    .get(`${process.env.VUE_APP_API_URL}/user/${username}`)
+    .then((res) => res?.data)
+    .catch((error) => {
+      console.error('Error fetching userinfo', error);
+    });
 
-      this.loading = false;
+  loading.value = false;
 
-      if (this.user?.id) {
-        this.fetchUserStats();
+  if (user.value?.id) {
+    fetchUserStats();
 
-        this.fetchLikedRecipes();
+    fetchLikedRecipes();
 
-        if (this.getUserInfo?.id && this.user.id !== this.getUserInfo.id) {
-          this.checkIfFollowing();
-        }
-      }
-    },
+    if (getUserInfo.value?.id && user.value.id !== getUserInfo.value.id) {
+      checkIfFollowing();
+    }
+  }
+};
 
-    async fetchUserRecipes() {
-      this.recipes = await axios
-        .get(`${process.env.VUE_APP_API_URL}/recipes/user/${this.$route.params.username}`)
-        .then((res) => res?.data?.recipes || [])
-        .catch((error) => {
-          console.error('Error fetching recipes', error);
-          return [];
-        });
-    },
+const fetchUserRecipes = async () => {
+  const username = (route.params.username as string).toLowerCase();
 
-    async fetchLikedRecipes() {
-      this.bookmarks = await axios
-        .get(`${process.env.VUE_APP_API_URL}/user/liked/recipes/${this.user.id}`)
-        .then((res) => res?.data?.recipes || [])
-        .catch((error) => {
-          console.error('Error fetching liked recipes', error);
-          return [];
-        });
-    },
+  recipes.value = await axios
+    .get(`${process.env.VUE_APP_API_URL}/recipes/user/${username}`)
+    .then((res) => res?.data?.recipes || [])
+    .catch((error) => {
+      console.error('Error fetching recipes', error);
+      return [];
+    });
+};
 
-    async fetchUserStats() {
-      if (this.user.id) {
-        const stats = await axios
-          .get(`${process.env.VUE_APP_API_URL}/user/stats/${this.user.id}`)
-          .then((res) => res?.data)
-          .catch((error) => {
-            console.error('Error fetching user stats', error);
-          });
+const followUser = async () => {
+  const userId = user?.value?.id;
+  const followerId = getUserInfo?.value?.id;
 
-        this.followerCount = abbreviateNumber(stats?.followerCount || 0);
-        this.followingCount = abbreviateNumber(stats?.followingCount || 0);
-      }
-    },
+  if (userId && followerId) {
+    await axios
+      .post(`${process.env.VUE_APP_API_URL}/user/follow/${userId}/${followerId}`)
+      .then((res) => res?.data?.following || false)
+      .catch((error) => {
+        console.error('Error checking following user', error);
+        return false;
+      });
 
-    async checkIfFollowing() {
-      const userId = this.user.id;
-      const followerId = this.getUserInfo.id;
+    checkIfFollowing();
+  }
+};
 
-      this.following = await axios
-        .get(`${process.env.VUE_APP_API_URL}/user/follow/${userId}/${followerId}`)
-        .then((res) => res?.data?.following || false)
-        .catch((error) => {
-          console.error('Error checking if following', error);
-          return false;
-        });
-    },
+fetchUserInfo();
 
-    async followUser() {
-      const userId = this.user.id;
-      const followerId = this.getUserInfo.id;
+fetchUserRecipes();
 
-      await axios
-        .post(`${process.env.VUE_APP_API_URL}/user/follow/${userId}/${followerId}`)
-        .then((res) => res?.data?.following || false)
-        .catch((error) => {
-          console.error('Error checking following user', error);
-          return false;
-        });
-
-      this.checkIfFollowing();
-    },
-  },
+const switchTab = (newTab: string) => {
+  if (newTab === 'recipes') {
+    tab.value = 'recipes';
+    window.location.hash = '';
+  } else if (newTab === 'bookmarks') {
+    tab.value = 'bookmarks';
+    window.location.hash = '#bookmarks';
+  }
 };
 </script>
 

@@ -4,26 +4,32 @@
       <router-view />
     </div>
   </div>
+
   <MobileNav />
 </template>
 
-<script>
+<script lang="ts" setup>
 import { defineAsyncComponent } from 'vue';
-import { mapActions } from 'vuex';
+import { useStore } from 'vuex';
+import { useMainStore as usePiniaStore } from '@/pinia-example';
+import { useTestFunction } from '@/helpers/useTestFunction';
 
-export default {
-  components: {
-    MobileNav: defineAsyncComponent(() => import('@/components/MobileNav.vue')),
-  },
+const { count } = useTestFunction();
 
-  created() {
-    this.initStore();
-  },
+console.log('count before', count);
 
-  methods: {
-    ...mapActions(['initStore']),
-  },
-};
+count.value += 1;
+
+console.log('count after', count);
+
+const MobileNav = defineAsyncComponent(() => import('@/components/MobileNav.vue'));
+
+const store = useStore();
+store.dispatch('initStore');
+
+// dummy pinia store
+const { fetchMetrics, getMetrics } = usePiniaStore();
+fetchMetrics().then(() => console.log('piniaGetMetrics', getMetrics()));
 </script>
 
 <style lang="scss">

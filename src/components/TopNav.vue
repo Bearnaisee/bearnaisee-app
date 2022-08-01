@@ -24,47 +24,31 @@
   </div>
 </template>
 
-<script>
-import { defineAsyncComponent } from 'vue';
-import { mapGetters, mapMutations } from 'vuex';
+<script lang="ts" setup>
+import { defineAsyncComponent, ref, computed } from 'vue';
+import { useStore } from 'vuex';
 
-export default {
-  name: 'Frontpage',
+const Button = defineAsyncComponent(() => import('@/components/Button.vue'));
+const Title = defineAsyncComponent(() => import('@/components/Title.vue'));
+const LoginModal = defineAsyncComponent(() => import('@/components/LoginModal.vue'));
+const Icon = defineAsyncComponent(() => import('@/components/Icon.vue'));
 
-  components: {
-    Button: defineAsyncComponent(() => import('@/components/Button.vue')),
-    Title: defineAsyncComponent(() => import('@/components/Title.vue')),
-    LoginModal: defineAsyncComponent(() => import('@/components/LoginModal.vue')),
-    Icon: defineAsyncComponent(() => import('@/components/Icon.vue')),
-  },
+const showLoginModal = ref(false);
+const loginModalTab = ref(true);
 
-  data() {
-    return {
-      showLoginModal: false,
-      loginModalTab: null,
-    };
-  },
+const store = useStore();
 
-  computed: {
-    ...mapGetters(['getUserInfo']),
-  },
+const getUserInfo = computed(() => store?.getters?.getUserInfo);
 
-  methods: {
-    ...mapMutations(['setUserInfo']),
-    /**
-     * @param {boolean | null} tab
-     */
-    switchLoginModal(tab = null) {
-      this.startTab = tab;
-      this.showLoginModal = !this.showLoginModal;
-    },
+const switchLoginModal = (tab: boolean) => {
+  loginModalTab.value = tab;
+  showLoginModal.value = !showLoginModal.value;
+};
 
-    logout() {
-      this.setUserInfo(null);
-      localStorage.clear();
-      window.location.reload();
-    },
-  },
+const logout = () => {
+  store.commit('setUserInfo', null);
+  localStorage.clear();
+  window.location.reload();
 };
 </script>
 

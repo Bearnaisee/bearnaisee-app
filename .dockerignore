@@ -1,0 +1,8 @@
+tests
+tests/
+tests/*
+*.spec.js
+*.test.js
+.eslintrc.js
+.editorconfig
+prettier.config.js

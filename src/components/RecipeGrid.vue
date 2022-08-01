@@ -16,27 +16,16 @@
   </div>
 </template>
 
-<script>
-import { defineAsyncComponent } from 'vue';
+<script lang="ts" setup>
+import { defineAsyncComponent, defineProps } from 'vue';
+import { Recipe } from 'types';
 
-export default {
-  name: 'RecipeGrid',
+const RecipeCard = defineAsyncComponent(() => import('@/components/RecipeCard.vue'));
 
-  components: {
-    RecipeCard: defineAsyncComponent(() => import('@/components/RecipeCard.vue')),
-  },
-
-  props: {
-    recipes: {
-      type: Array,
-      required: true,
-    },
-    showAuthor: {
-      type: Boolean,
-      default: true,
-    },
-  },
-};
+defineProps<{
+  recipes: Recipe[];
+  showAuthor: boolean;
+}>();
 </script>
 
 <style lang="scss" scoped>

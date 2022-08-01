@@ -24,22 +24,20 @@
   </h6>
 </template>
 
-<script>
-export default {
-  name: 'Title',
+<script lang="ts" setup>
+import { defineProps } from 'vue';
 
-  props: {
-    text: {
-      type: String,
-      required: true,
-    },
-
-    size: {
-      type: String,
-      default: 'h6',
-    },
+defineProps({
+  text: {
+    type: String,
+    required: true,
   },
-};
+
+  size: {
+    type: String,
+    default: 'h6',
+  },
+});
 </script>
 
 <style lang="scss" scoped>

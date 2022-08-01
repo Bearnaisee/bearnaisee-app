@@ -6,17 +6,13 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Modal',
+<script lang="ts" setup>
+import { defineEmits } from 'vue';
 
-  emits: ['close'],
+const emit = defineEmits(['close']);
 
-  methods: {
-    close() {
-      this.$emit('close');
-    },
-  },
+const close = () => {
+  emit('close');
 };
 </script>
 

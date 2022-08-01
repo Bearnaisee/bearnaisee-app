@@ -17,54 +17,48 @@
   </div>
 </template>
 
-<script>
-import { defineAsyncComponent } from 'vue';
+<script lang="ts" setup>
+import { defineAsyncComponent, defineProps } from 'vue';
 
-export default {
-  name: 'RecipeCard',
+const Title = defineAsyncComponent(() => import('@/components/Title.vue'));
+const Image = defineAsyncComponent(() => import('@/components/Image.vue'));
 
-  components: {
-    Image: defineAsyncComponent(() => import('@/components/Image.vue')),
-    Title: defineAsyncComponent(() => import('@/components/Title.vue')),
+defineProps({
+  title: {
+    type: String,
+    required: true,
   },
-
-  props: {
-    title: {
-      type: String,
-      required: true,
-    },
-    author: {
-      type: String,
-      required: false,
-      default: null,
-    },
-    showAuthor: {
-      type: Boolean,
-      default: true,
-    },
-    slug: {
-      type: String,
-      required: true,
-    },
-    image: {
-      type: String,
-      default: null,
-    },
-    avatar: {
-      type: String,
-      required: false,
-      default: null,
-    },
-    time: {
-      type: Number,
-      default: null,
-    },
-    tags: {
-      type: Array,
-      default: () => [],
-    },
+  author: {
+    type: String,
+    required: false,
+    default: null,
   },
-};
+  showAuthor: {
+    type: Boolean,
+    default: true,
+  },
+  slug: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
+    default: null,
+  },
+  avatar: {
+    type: String,
+    required: false,
+    default: null,
+  },
+  time: {
+    type: Number,
+    default: null,
+  },
+  tags: {
+    type: Array,
+    default: () => [],
+  },
+});
 </script>
 
 <style lang="scss" scoped>

@@ -44,16 +44,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
 import { defineAsyncComponent } from 'vue';
 
-export default {
-  name: 'TermOfService',
-
-  components: {
-    Title: defineAsyncComponent(() => import('@/components/Title.vue')),
-  },
-};
+const Title = defineAsyncComponent(() => import('@/components/Title.vue'));
 </script>
 
 <style lang="scss" scoped>

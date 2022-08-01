@@ -10,12 +10,14 @@
           <img :src="user.avatarUrl" :alt="`${user.username || ''} profile image`" class="list__avatar" />
         </router-link>
       </div>
+
       <div class="list__users">
         <router-link :to="`/${user.username}`" class="displayname">
           {{ user?.displayName || user?.username }}
         </router-link>
         <router-link :to="`/${user.username}`" class="username"> @{{ user.username }} </router-link>
       </div>
+
       <Button
         :label="user?.following ? 'Unfollow' : 'Follow'"
         class="button"
@@ -27,78 +29,66 @@
   </div>
 </template>
 
-<script>
-import { defineAsyncComponent } from 'vue';
+<script lang="ts" setup>
+import { defineAsyncComponent, ref, computed } from 'vue';
 import axios from 'axios';
-import { mapGetters } from 'vuex';
+import { useStore } from 'vuex';
+import { User } from 'types';
 
-export default {
-  name: 'RecommendedFollow',
+const users = ref<(User & { following?: boolean })[]>([]);
 
-  components: {
-    Title: defineAsyncComponent(() => import('@/components/Title.vue')),
-    Button: defineAsyncComponent(() => import('@/components/Button.vue')),
-  },
+const Button = defineAsyncComponent(() => import('@/components/Button.vue'));
+const Title = defineAsyncComponent(() => import('@/components/Title.vue'));
 
-  data() {
-    return {
-      users: null,
-    };
-  },
+const store = useStore();
 
-  computed: {
-    ...mapGetters(['getUserInfo']),
-  },
+const getUserInfo = computed(() => store?.getters?.getUserInfo);
 
-  created() {
-    this.getUserToFollow();
-  },
+const getUserToFollow = async () => {
+  users.value = await axios
+    .get(`${process.env.VUE_APP_API_URL}/user/who-to-follow/${getUserInfo.value.id}`)
+    .then((res) => res?.data?.users || [])
+    .catch((error) => {
+      console.error('Error fetching user to follow', error);
+      return [];
+    });
+};
 
-  methods: {
-    async getUserToFollow() {
-      this.users = await axios
-        .get(`${process.env.VUE_APP_API_URL}/user/who-to-follow/${this.getUserInfo.id}`)
-        .then((res) => res?.data?.users || [])
-        .catch((error) => {
-          console.error('Error fetching user to follow', error);
-          return [];
-        });
-    },
+getUserToFollow();
 
-    /**
-     * @param {number} userId
-     */
-    async checkIfFollowing(userId) {
-      const followerId = this.getUserInfo.id;
+const checkIfFollowing = async (userId: number) => {
+  const followerId = getUserInfo.value.id;
 
-      const following = await axios
-        .get(`${process.env.VUE_APP_API_URL}/user/follow/${userId}/${followerId}`)
-        .then((res) => res?.data?.following || false)
-        .catch((error) => {
-          console.error('Error checking if following', error);
-          return false;
-        });
+  if (!followerId) return;
 
-      const userIndex = this.users.findIndex((u) => u?.id === userId);
-      if (userIndex > -1) {
-        this.users[userIndex].following = following;
-      }
-    },
+  const following = await axios
+    .get(`${process.env.VUE_APP_API_URL}/user/follow/${userId}/${followerId}`)
+    .then((res) => res?.data?.following || false)
+    .catch((error) => {
+      console.error('Error checking if following', error);
+      return false;
+    });
 
-    async followUser(userId) {
-      const followerId = this.getUserInfo.id;
+  const userIndex = users.value?.findIndex((u) => u?.id === userId) ?? -1;
 
-      await axios
-        .post(`${process.env.VUE_APP_API_URL}/user/follow/${userId}/${followerId}`)
-        .then((res) => res?.data?.following || false)
-        .catch((error) => {
-          console.error('Error checking following user', error);
-          return false;
-        });
+  if (userIndex > -1 && users.value.length) {
+    users.value[userIndex].following = following;
+  }
+};
 
-      this.checkIfFollowing(userId);
-    },
-  },
+const followUser = async (userId: number) => {
+  const followerId = getUserInfo.value.id;
+  if (!followerId) return;
+
+  await axios
+    .post(`${process.env.VUE_APP_API_URL}/user/follow/${userId}/${followerId}`)
+    .then((res) => res?.data?.following || false)
+    .catch((error) => {
+      console.error('Error checking following user', error);
+      return false;
+    });
+
+  checkIfFollowing(userId);
 };
 </script>
 

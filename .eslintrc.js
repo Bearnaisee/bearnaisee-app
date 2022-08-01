@@ -3,9 +3,9 @@ module.exports = {
   env: {
     node: true,
   },
-  extends: ['plugin:vue/vue3-recommended', '@vue/airbnb', 'prettier'],
+  extends: ['plugin:vue/vue3-recommended', '@vue/airbnb', '@vue/typescript/recommended', 'prettier'],
   parserOptions: {
-    parser: 'babel-eslint',
+    ecmaVersion: 2020,
   },
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
@@ -18,6 +18,13 @@ module.exports = {
     'vue/singleline-html-element-content-newline': 'off',
 
     'import/prefer-default-export': 'off',
+    'import/no-unresolved': 'off',
+    camelcase: 'off',
+
+    'vue/component-api-style': [
+      'error',
+      ['script-setup', 'composition'], // "script-setup", "composition", "composition-vue2", or "options"
+    ],
   },
   overrides: [
     {

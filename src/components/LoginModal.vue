@@ -23,6 +23,7 @@
           v-model="password"
           type="password"
           placeholder="Password"
+          autocomplete="current-password"
           required
           class="modal__form-input"
           minlength="6"
@@ -50,140 +51,124 @@
   </Modal>
 </template>
 
-<script>
+<script lang="ts" setup>
 import axios from 'axios';
-import { defineAsyncComponent } from 'vue';
-import { mapGetters, mapActions } from 'vuex';
+import { defineAsyncComponent, defineEmits, defineProps, ref } from 'vue';
+import { useStore } from 'vuex';
 import log from '@/helpers/log';
+import swal from 'sweetalert2';
 
-export default {
-  name: 'LoginModal',
+const props = defineProps<{
+  startTab: boolean;
+}>();
 
-  components: {
-    Modal: defineAsyncComponent(() => import('@/components/Modal.vue')),
-    Button: defineAsyncComponent(() => import('@/components/Button.vue')),
-    Title: defineAsyncComponent(() => import('@/components/Title.vue')),
-  },
+const loginTab = ref(props.startTab);
 
-  props: {
-    startTab: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  emits: ['close'],
+const Button = defineAsyncComponent(() => import('@/components/Button.vue'));
+const Title = defineAsyncComponent(() => import('@/components/Title.vue'));
+const Modal = defineAsyncComponent(() => import('@/components/Modal.vue'));
 
-  data() {
-    return {
-      loginTab: this.startTab,
-      username: '',
-      email: '',
-      password: '',
-    };
-  },
+const store = useStore();
 
-  computed: {
-    ...mapGetters(['getUserInfo']),
-  },
+const emit = defineEmits(['close']);
 
-  methods: {
-    ...mapActions(['saveUserInfo']),
+const closeModal = () => {
+  emit('close');
+};
 
-    closeModal() {
-      this.$emit('close');
-    },
+const username = ref('');
+const email = ref('');
+const password = ref('');
 
-    async login() {
-      if (this.email?.length && this.password?.length) {
-        const result = await axios
-          .post(`${process.env.VUE_APP_API_URL}/user/login`, {
-            email: this.email,
-            password: this.password,
-          })
-          .then((res) => res?.data)
-          .catch((error) => {
-            if (error?.response?.data?.msg) {
-              this.$swal({
-                icon: 'error',
-                title: error?.response?.data?.msg,
-                timer: 800,
-                showConfirmButton: false,
-              });
-            } else {
-              this.$swal({
-                icon: 'error',
-                title: 'Something went wrong, please try again later',
-                timer: 800,
-                showConfirmButton: false,
-              });
-            }
-
-            return error?.response?.data || error?.response || error;
-          });
-
-        log('result', result);
-
-        if (result?.user) {
-          this.saveUserInfo(result.user);
-
-          this.$swal({
-            icon: 'success',
-            title: 'Logged in successfully',
+const login = async () => {
+  if (email.value?.length && password.value?.length) {
+    const result = await axios
+      .post(`${process.env.VUE_APP_API_URL}/user/login`, {
+        email: email.value,
+        password: password.value,
+      })
+      .then((res) => res?.data)
+      .catch((error) => {
+        if (error?.response?.data?.msg) {
+          swal.fire({
+            icon: 'error',
+            title: error?.response?.data?.msg,
+            timer: 800,
             showConfirmButton: false,
-            timer: 1000,
           });
-
-          this.$emit('close');
-        }
-      }
-    },
-
-    async register() {
-      if (this.username?.length && this.email?.length && this.password?.length) {
-        const result = await axios
-          .post(`${process.env.VUE_APP_API_URL}/users`, {
-            username: this.username,
-            email: this.email,
-            password: this.password,
-          })
-          .then((res) => res?.data)
-          .catch((error) => {
-            if (error?.response?.data?.msg) {
-              this.$swal({
-                icon: 'error',
-                title: error?.response?.data?.msg,
-                timer: 800,
-                showConfirmButton: false,
-              });
-            } else {
-              this.$swal({
-                icon: 'error',
-                title: 'Something went wrong, please try again later',
-                timer: 800,
-                showConfirmButton: false,
-              });
-            }
-
-            return error?.response?.data || error?.response || error;
-          });
-
-        log('result', result);
-
-        if (result?.user) {
-          this.saveUserInfo(result.user);
-
-          this.$swal({
-            icon: 'success',
-            title: 'Created user successfully',
+        } else {
+          swal.fire({
+            icon: 'error',
+            title: 'Something went wrong, please try again later',
+            timer: 800,
             showConfirmButton: false,
-            timer: 1000,
           });
-
-          this.$emit('close');
         }
-      }
-    },
-  },
+
+        return error?.response?.data || error?.response || error;
+      });
+
+    log('result', result);
+
+    if (result?.user) {
+      store.dispatch('saveUserInfo', result.user);
+
+      swal.fire({
+        icon: 'success',
+        title: 'Logged in successfully',
+        showConfirmButton: false,
+        timer: 1000,
+      });
+
+      emit('close');
+    }
+  }
+};
+
+const register = async () => {
+  if (username.value?.length && email?.value.length && password.value?.length) {
+    const result = await axios
+      .post(`${process.env.VUE_APP_API_URL}/users`, {
+        username: username.value,
+        email: email.value,
+        password: password.value,
+      })
+      .then((res) => res?.data)
+      .catch((error) => {
+        if (error?.response?.data?.msg) {
+          swal.fire({
+            icon: 'error',
+            title: error?.response?.data?.msg,
+            timer: 800,
+            showConfirmButton: false,
+          });
+        } else {
+          swal.fire({
+            icon: 'error',
+            title: 'Something went wrong, please try again later',
+            timer: 800,
+            showConfirmButton: false,
+          });
+        }
+
+        return error?.response?.data || error?.response || error;
+      });
+
+    log('result', result);
+
+    if (result?.user) {
+      store.dispatch('saveUserInfo', result.user);
+
+      swal.fire({
+        icon: 'success',
+        title: 'Created user successfully',
+        showConfirmButton: false,
+        timer: 1000,
+      });
+
+      emit('close');
+    }
+  }
 };
 </script>
 

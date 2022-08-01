@@ -1,13 +1,13 @@
 /**
  * @summary generates a psuedo random hsl color
  * Will always return the same if a string is passed
- * @param {number} hue - 0 - 255
- * @param {number} saturation 0 - 100
- * @param {number} light 0 - 100
- * @param {string} text text to generate from
- * @returns {string} hsl color
  */
-export default (hue = null, saturation = null, light = null, text = null) => {
+export default function generatePseudoRandomColor(
+  hue: number | null = null,
+  saturation: number | null = null,
+  light: number | null = null,
+  text: string | null = null,
+): string {
   if (text) {
     let sum = 0;
     for (let i = 0; i < text.length; i += 1) {
@@ -37,4 +37,4 @@ export default (hue = null, saturation = null, light = null, text = null) => {
   }
 
   return `hsl(${hue}, ${saturation}%, ${light}%)`;
-};
+}

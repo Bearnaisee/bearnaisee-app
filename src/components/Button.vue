@@ -4,33 +4,27 @@
   </button>
 </template>
 
-<script>
-export default {
-  name: 'Button',
+<script lang="ts" setup>
+import { defineProps, defineEmits } from 'vue';
 
-  props: {
-    label: {
-      type: String,
-      required: true,
-    },
-    type: {
-      type: String,
-      default: 'button',
-    },
-    kind: {
-      type: String,
-      default: 'primary',
-    },
+defineProps({
+  label: {
+    type: String,
+    required: true,
   },
-
-  emits: ['clicked'],
-
-  methods: {
-    detectClick() {
-      this.$emit('clicked');
-    },
+  type: {
+    type: String,
+    default: 'button',
   },
-};
+  kind: {
+    type: String,
+    default: 'primary',
+  },
+});
+
+const emit = defineEmits(['clicked']);
+
+const detectClick = () => emit('clicked');
 </script>
 
 <style lang="scss" scoped>

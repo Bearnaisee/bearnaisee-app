@@ -1,7 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import store from '@/store/index';
 
-const routes = [
+const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Frontpage',
@@ -10,7 +10,7 @@ const routes = [
   {
     path: '/tos',
     name: 'Tos',
-    component: () => import(/* webpackChunkName: "[request]" */ '../components/TermsOfService.vue'),
+    component: () => import(/* webpackChunkName: "[request]" */ '../views/TermsOfService.vue'),
   },
   {
     path: '/category/:category',
@@ -57,7 +57,6 @@ const routes = [
 ];
 
 const router = createRouter({
-  mode: 'history',
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });

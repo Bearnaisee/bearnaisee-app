@@ -332,30 +332,25 @@
   </svg>
 </template>
 
-<script>
-export default {
-  name: 'Icon',
+<script lang="ts" setup>
+import { defineProps } from 'vue';
 
-  props: {
-    icon: {
-      type: String,
-      required: true,
-    },
-
-    height: {
-      type: [Number, String],
-      default: () => this.width || '20',
-    },
-
-    width: {
-      type: [Number, String],
-      default: () => this.height || '20',
-    },
-
-    color: {
-      type: String,
-      default: '#101010',
-    },
+defineProps({
+  icon: {
+    type: String,
+    required: true,
   },
-};
+  height: {
+    type: [Number, String],
+    default: '20',
+  },
+  width: {
+    type: [Number, String],
+    default: '20',
+  },
+  color: {
+    type: String,
+    default: '#101010',
+  },
+});
 </script>
